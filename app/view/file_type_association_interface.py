@@ -32,7 +32,7 @@ class TreeFrame(Frame):
     def __init__(self, parent=None, data: dict = None):
         super().__init__(parent)
 
-        self.data = data
+        self.data = json5.loads(json5.dumps(data, sort_keys=True))
 
         self.tree = TreeWidget(self)
         self.tree.setColumnCount(2)

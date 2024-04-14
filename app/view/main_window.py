@@ -9,26 +9,14 @@ from qfluentwidgets import FluentIcon as FIF
 
 from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
-from .basic_input_interface import BasicInputInterface
-from .date_time_interface import DateTimeInterface
-from .dialog_interface import DialogInterface
-from .layout_interface import LayoutInterface
-from .icon_interface import IconInterface
-from .material_interface import MaterialInterface
-from .menu_interface import MenuInterface
-from .navigation_view_interface import NavigationViewInterface
-from .scroll_interface import ScrollInterface
-from .status_info_interface import StatusInfoInterface
-from .setting_interface import SettingInterface
-from .text_interface import TextInterface
-from .view_interface import ViewInterface
 from .scoop_interface import ScoopInterface
-from .extra_stuff_interface import ExtraStuffInterface
 from .file_type_association_interface import FTAInterface
 from ..common.config import ZH_SUPPORT_URL, EN_SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 from ..common.translator import Translator
+
+# DO NOT REMOVE THIS LINE
 from ..common import resource
 
 from data import data
@@ -41,19 +29,6 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.iconInterface = IconInterface(self)
-        self.basicInputInterface = BasicInputInterface(self)
-        self.dateTimeInterface = DateTimeInterface(self)
-        self.dialogInterface = DialogInterface(self)
-        self.layoutInterface = LayoutInterface(self)
-        self.menuInterface = MenuInterface(self)
-        self.materialInterface = MaterialInterface(self)
-        self.navigationViewInterface = NavigationViewInterface(self)
-        self.scrollInterface = ScrollInterface(self)
-        self.statusInfoInterface = StatusInfoInterface(self)
-        self.settingInterface = SettingInterface(self)
-        self.textInterface = TextInterface(self)
-        self.viewInterface = ViewInterface(self)
         self.scoopInterface = ScoopInterface(self, data["scoop"])
         self.pipInterface = ScoopInterface(self, data["pip"])
         self.npmInterface = ScoopInterface(self, data["npm"])
@@ -91,8 +66,6 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, self.tr('Taskbar Pins'))
         self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, self.tr('File Type Associations'))
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, self.tr('Git Repositories'))
-
-        pos = NavigationItemPosition.SCROLL
 
         # add custom widget to bottom
         self.navigationInterface.addItem(
