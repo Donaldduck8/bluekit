@@ -1,5 +1,4 @@
 
-import ctypes
 import json
 import logging
 import os
@@ -12,7 +11,7 @@ from typing import List
 
 import win32com.client
 
-import utils
+import app.utils as utils
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

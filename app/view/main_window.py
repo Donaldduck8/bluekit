@@ -64,11 +64,14 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
         self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, 'File Type Associations')
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, 'Git Repositories')
-        self.navigationInterface.addSeparator()
-        self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution')
+
+        self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution', position=NavigationItemPosition.BOTTOM)
+
+        # Incredible hack to make the icons actually spaced properly !! :SMILE:
+        self.navigationInterface.resize(48, self.height() + 1000)
 
         # add custom widget to bottom
-        self.navigationInterface.addItem(
+        '''self.navigationInterface.addItem(
             routeKey='price',
             icon=Icon.PRICE,
             text="Price",
@@ -76,7 +79,7 @@ class MainWindow(FluentWindow):
             selectable=False,
             tooltip="Price",
             position=NavigationItemPosition.BOTTOM
-        )
+        )'''
 
     def initWindow(self):
         self.resize(960, 780)

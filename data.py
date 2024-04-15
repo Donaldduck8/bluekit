@@ -1,11 +1,14 @@
 import json5
 
-PYTHON_VERSION_OF_CHOICE = ("python311", "Python 3.11", "The newest Python version currently compatible with IDA Pro.")
-NERD_FONT_OF_CHOICE = ("FiraCode-NF-Mono", "Fira Code (Mono)", "A monospaced font with programming ligatures.")
-BROWSER_OF_CHOICE = ("chromium", "Chromium", "A web browser that is the basis for Google Chrome.")
-TEXT_EDITOR_OF_CHOICE = ("sublime-text", "Sublime Text", "A sophisticated text editor for code, markup, and prose.")
-ARCHIVER_OF_CHOICE = ("7zip", "7-Zip", "A file archiver with a high compression ratio.")
-JDK_OF_CHOICE = ("temurin17-jdk", "Temurin JDK 17", "A free and open-source implementation of the Java Platform, Standard Edition.")
+from app import utils
+
+required_paths = [
+    utils.resolve_path("%USERPROFILE%\\scoop\\shims"),
+    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current"),
+    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\Scripts"),
+    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin"),
+    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\nodejs\\current")
+]
 
 data = {
     "scoop": {
@@ -20,15 +23,15 @@ data = {
         "Required": [
             ("git", "Git", "A distributed version control system."),
             ("pwsh", "PowerShell", "A task automation and configuration management framework."),
+            ("python311", "Python 3.11", "The newest Python version currently compatible with IDA Pro.")
         ],
 
         "Basics": [
             # Basics
-            NERD_FONT_OF_CHOICE,
-            PYTHON_VERSION_OF_CHOICE,
-            BROWSER_OF_CHOICE,
-            TEXT_EDITOR_OF_CHOICE,
-            ARCHIVER_OF_CHOICE,
+            ("FiraCode-NF-Mono", "Fira Code (Mono)", "A monospaced font with programming ligatures."),
+            ("chromium", "Chromium", "A web browser that is the basis for Google Chrome."),
+            ("sublime-text", "Sublime Text", "A sophisticated text editor for code, markup, and prose."),
+            ("7zip", "7-Zip", "A file archiver with a high compression ratio."),
             ("vscode", "Visual Studio Code", "A code editor redefined and optimized for building and debugging modern web and cloud applications."),
         ],
 
@@ -244,7 +247,7 @@ data = {
 
     "pip": [
         # Binref
-        ("binary-refinery[all]", "Binary Refinery", "A collection of tools for reverse engineering and binary analysis."),
+        ("binary-refinery", "Binary Refinery", "A collection of tools for reverse engineering and binary analysis."),
 
         # IDA Pro
         ("envi", "Envi", "A minimal environment variables reader, required for IDAPython."),
@@ -340,7 +343,7 @@ data = {
         ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
     ],
 
-    "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll",
+    "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python*\\current\\python3*.dll",
 
     "file_type_associations": {
         "Text": {
