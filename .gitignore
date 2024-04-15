@@ -2,3 +2,7 @@
 *.pyc
 app/common/resource.py
 *.pyc
+/dist
+*.spec
+*.exe
+/build
