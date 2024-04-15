@@ -119,6 +119,7 @@ class FTAInterface(QWidget):
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
         self.vBoxLayout.addWidget(self.titleLabel)
+        self.vBoxLayout.addSpacing(10)
 
         # Tree view interface
         self.tree_view = TreeFrame(parent=self, data=self.data)

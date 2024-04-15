@@ -45,13 +45,13 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
     """
     try:
         if command:
-            logger.info(f"run_shell_command {command}")
+            logger.info(f"Running Shell command: '{command}'")
             subprocess.run(command.split(" "), check=True)
         elif powershell_command:
-            logger.info(f"run_powershell_command {powershell_command}")
+            logger.info(f"Running PowerShell command: '{powershell_command}'")
             subprocess.run(["powershell", "-Command", powershell_command], check=True)
         elif command_parts:
-            logger.info(f"run_shell_command {json.dumps(command_parts)}")
+            logger.info(f"Running Shell command: '{json.dumps(command_parts)}'")
             subprocess.run(command_parts, check=True)
     except Exception as e:
         if failure_okay:
@@ -65,7 +65,7 @@ def install_scoop() -> None:
     """
     Installs Scoop package manager if it is not already installed.
     """
-    logger.info("install_scoop")
+    logger.info("Installing Scoop")
 
     # Check if scoop is already installed
     if shutil.which("scoop.cmd") is not None:
@@ -89,7 +89,7 @@ def scoop_install_git() -> None:
 
     Git is required for various operations, such as updating Scoop or adding buckets, so an explicit installation is nice-to-have.
     """
-    logger.info("scoop_install_git")
+    logger.info("Scoop: Install Git")
 
     run_shell_command(command="scoop.cmd install git")
 
@@ -104,7 +104,7 @@ def scoop_add_buckets(buckets: List[str]):
     Returns:
         None
     """
-    logger.info("scoop_add_buckets")
+    logger.info("Scoop: Add buckets")
 
     for bucket in buckets:
         if isinstance(bucket, str):
@@ -123,7 +123,7 @@ def pip_install_packages(packages: List[str]):
     Returns:
         None
     """
-    logger.info("pip_install_packages")
+    logger.info("PIP: Install packages")
 
     for package in packages:
         if isinstance(package, str):
@@ -133,7 +133,7 @@ def pip_install_packages(packages: List[str]):
 
 
 def install_build_tools():
-    logger.info("install_build_tools")
+    logger.info("Install Visual C++ build tools")
 
     download_command = r"Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vs_BuildTools.exe' -OutFile vs_BuildTools.exe"
     install_command = " ".join([
@@ -159,7 +159,7 @@ def scoop_install_tool(tool_name: str) -> bool:
     Returns:
         bool: If the tool installed successfully or not.
     """
-    logger.info(f"scoop_install_tool {tool_name}")
+    logger.info(f"Scoop: Install '{tool_name}'")
 
     try:
         if tool_name.endswith(".json"):
@@ -189,7 +189,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
     Returns:
         None
     """
-    logger.info("scoop_install_tooling")
+    logger.info("Scoop: Install Tooling")
 
     # Ensure aria2 is installed first in order to make use of potential scoop cache
     subprocess.run("scoop.cmd install aria2".split(" "), check=True)
@@ -243,7 +243,7 @@ def prepare_quick_access():
     """
     Pins the user folder to Quick Access and unpins all other items.
     """
-    logger.info("prepare_quick_access")
+    logger.info("Prepare the Quick Access folder")
 
     # Function to pin a folder to Quick Access
     def pin_to_quick_access(path):
@@ -281,7 +281,7 @@ def obtain_and_place_malware_analysis_configurations():
 
     The configurations include color schemes, extensions, and settings for various tools used in malware analysis.
     """
-    logger.info("obtain_and_place_malware_analysis_configurations")
+    logger.info("Obtain and place malware analysis configurations")
 
     config_path = utils.resolve_path(r"%USERPROFILE%\.config\malware-analysis-configurations")
 
@@ -351,7 +351,7 @@ def remove_taskbar_pin(app_name):
     Returns:
         None
     """
-    logger.info(f"remove_taskbar_pin {app_name}")
+    logger.info(f"Remove from Taskbar: '{app_name}'")
 
     command = "".join([
         # Get all currently pinned items
@@ -372,7 +372,7 @@ def remove_task_view():
     """
     Removes the Task View button from the taskbar.
     """
-    logger.info("remove_task_view")
+    logger.info("Remove the Task View button")
 
     path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
     value = 0
@@ -387,7 +387,7 @@ def pin_to_taskbar(program_path, shortcut_path):
     """
     Pins an application to the taskbar.
     """
-    logger.info(f"pin_to_taskbar: {program_path}")
+    logger.info(f"Pin to Taskbar: '{program_path}'")
 
     # PowerShell script to create a shortcut and pin it to the taskbar
     ps_script = rf'''
@@ -430,7 +430,7 @@ def pin_apps_to_taskbar(apps: List[str]):
         elif isinstance(app, list) or isinstance(app, tuple):
             app_paths.append(app[0])
 
-    logger.info(f"pin_apps_to_taskbar: {app_paths}")
+    logger.info(f"Pin Apps to Taskbar: '{app_paths}'")
 
     xml_content = utils.create_start_layout_xml(apps=app_paths)
 
@@ -501,7 +501,7 @@ def make_vm_stay_awake():
     """
     Disables sleep mode and hibernation on the VM using powercfg.
     """
-    logger.info("make_vm_stay_awake")
+    logger.info("Make VM stay awake")
 
     ps_script = "\n".join([
         # Disable Hibernation
@@ -532,7 +532,7 @@ def hide_desktop_icons():
     """
     Hides desktop icons by modifying the registry.
     """
-    logger.info("hide_desktop_icons")
+    logger.info("Hide Desktop icons")
 
     path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
     value = 1
@@ -547,7 +547,7 @@ def hide_onedrive_pin():
     """
     Hides the OneDrive icon from the File Explorer navigation pane.
     """
-    logger.info("hide_onedrive_pin")
+    logger.info("Hide OneDrive pin")
 
     ps_script = r'''New-PSDrive -Name "HKCR" -PSProvider Registry -Root "HKEY_CLASSES_ROOT"
 
@@ -577,7 +577,7 @@ def common_post_install():
     """
     Executes common post-installation tasks.
     """
-    logger.info("common_post_install")
+    logger.info("Common post-installation steps")
 
     functions = [
         prepare_quick_access,
@@ -608,7 +608,7 @@ def make_scoop_buckets_safe():
     """
     Adds the Scoop buckets to the safe directories list in git config.
     """
-    logger.info("make_scoop_buckets_safe")
+    logger.info("Make Scoop buckets safe")
 
     # Since this installer is run as admin, some file ownership nonsense is happening.
     # This function adds the buckets to the safe directories list in git config.
@@ -634,7 +634,7 @@ def extract_and_install_application(application_name: str):
     Returns:
         None
     """
-    logger.info(f"extract_and_install_{application_name}")
+    logger.info(f"Extract and install bundled application: '{application_name}'")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
 
@@ -672,7 +672,7 @@ def extract_and_place_file(file_name: str, target_directory: str, extract: bool 
     """
     Extracts and places all contents of a .zip file to a target directory.
     """
-    logger.info(f"extract_and_place_file_{file_name}")
+    logger.info(f"Extract and place bundled file '{file_name}' to '{target_directory}'")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
     file_p = os.path.join(appdata_temp_p, f"{file_name}")
@@ -748,7 +748,7 @@ def extract_scoop_cache(cache_name: str = "scoop_cache"):
     Args:
         cache_name (str): The name of the cache ZIP file to extract. Defaults to "scoop_cache".
     """
-    logger.info(f"extract_scoop_cache {cache_name}")
+    logger.info(f"Extract bundled Scoop cache, if available")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
     cache_zip_p = os.path.join(appdata_temp_p, f"{cache_name}.zip")
@@ -768,7 +768,7 @@ def install_zsh_over_git():
     """
     Installs Zsh and Oh My Zsh and symlinks Zsh binaries over Git. Also installs Powerlevel10k theme.
     """
-    logger.info("install_zsh_over_git")
+    logger.info("Install Zsh over Git using Symlinks")
 
     # Has this already been done?
     zsh_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\git\current\usr\bin\zsh.exe")
@@ -895,7 +895,7 @@ def git_clone_repository(url, output_dir=None):
         output_dir (str, optional): The directory to clone the repository to.
             Defaults to None, in which case the repository is cloned to %USERPROFILE%\\repositories\\{repo_name}.
     """
-    logger.info("git_clone_repository %s", url)
+    logger.info("Git: Clone repository %s", url)
 
     repo_name = url.split("/")[-1].replace(".git", "")
 
@@ -918,7 +918,7 @@ def clone_git_repositories(repositories: List[str]):
     Args:
         repositories (List[str]): A list of Git repository URLs to clone.
     """
-    logger.info("clone_git_repositories")
+    logger.info("Git: Clone configured repositories")
 
     for repository in repositories:
         if isinstance(repository, str):
@@ -934,7 +934,7 @@ def npm_install_libraries(libs: List[str]):
     Args:
         libs (List[str], optional): A list of NPM libraries to install.
     """
-    logger.info("install_common_npm_libraries")
+    logger.info("NPM: Install libraries")
 
     npm_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\nodejs\current\npm.cmd")
 
@@ -956,7 +956,7 @@ def extract_bundled_zip():
 
     The bundled .zip file is expected to be in the same directory as the script, with the name "bundled.zip".
     """
-    logger.info("extract_bundled_zip")
+    logger.info("Extracted bundled ZIP file to Temp directory")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
 
@@ -983,6 +983,8 @@ def add_npcap_installer_to_runonce():
     """
     Adds the Npcap installer to the RunOnce registry key to run at the next login.
     """
+    logger.info("Add Npcap installer to RunOnce")
+
     npcap_installer_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\wireshark\current\npcap-installer.exe")
 
     if not os.path.isfile(npcap_installer_p):
@@ -1004,6 +1006,8 @@ def remove_worthless_python_exes():
     """
     Removes the worthless python.exe and python3.exe files from the WindowsApps directory, if they exist.
     """
+    logger.info("Remove worthless Python executables")
+
     # Check if the worthless files exist
 
     # Just delete the entire fucking folder wtf
@@ -1022,6 +1026,8 @@ def make_bindiff_available_to_programs():
     """
     Configures BinDiff to be available to other programs like IDA Pro and Binary Ninja.
     """
+    logger.info("Make BinDiff available to other programs like IDA Pro and Binary Ninja")
+
     bindiff_dir = utils.resolve_path(r"%USERPROFILE%\scoop\apps\bindiff\current")
 
     if not os.path.isdir(bindiff_dir):
@@ -1071,6 +1077,8 @@ def install_net_3_5():
     """
     Installs .NET Framework 3.5 using DISM.
     """
+    logger.info("Install .NET Framework 3.5")
+
     run_shell_command(powershell_command="Dism /online /Enable-Feature /FeatureName:NetFx3", failure_okay=True)
 
 
@@ -1078,6 +1086,8 @@ def enable_dark_mode():
     """
     Enables dark mode using the registry.
     """
+    logger.info("Enable Dark Mode")
+
     path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
     value = 0
     name = "AppsUseLightTheme"
@@ -1093,7 +1103,7 @@ def ida_py_switch(python_dll_path: str):
 
     This function assumes that IDA Pro is installed using Scoop.
     """
-    logger.info("ida_py_switch")
+    logger.info("Execute idapyswitch to configure Python version for IDA Pro")
 
     python_dll_path = utils.resolve_path(python_dll_path)
 
@@ -1141,7 +1151,7 @@ def add_paths_to_path(paths: List[str]) -> bool:
     Returns:
         bool: True if any paths were added, False otherwise.
     """
-    logger.info("add_paths_to_path %s", json.dumps(paths))
+    logger.info("Add paths to PATH: %s", json.dumps(paths))
 
     added_entries = False
 
@@ -1165,6 +1175,8 @@ def scoop_install_pwsh():
     """
     Installs PowerShell Core using Scoop.
     """
+    logger.info("Install PowerShell Core using Scoop")
+
     run_shell_command(powershell_command="scoop.cmd install pwsh")
 
 
@@ -1175,6 +1187,7 @@ def install_ida_plugins(plugins: List[str]):
     Args:
         plugins (List[str]): A list of python files to place into the plugins folder
     """
+    logger.info("Install IDA Pro plugins")
 
     possible_ida_names = ["ida_pro", "ida-free"]
     possible_plugin_paths = [fr"%USERPROFILE%\scoop\apps\{name}\current\plugins" for name in possible_ida_names]

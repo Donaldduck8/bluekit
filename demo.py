@@ -2,8 +2,10 @@
 import os
 import sys
 import ctypes
+import traceback
 
 from app import utils
+from app import installation_steps
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
@@ -11,17 +13,23 @@ from PyQt5.QtWidgets import QApplication
 from app.common.config import cfg
 from app.view.main_window import MainWindow
 
+from data import required_paths
+
 
 def main():
     # Ensure that the required paths are in the PATH environment variable
-    # installation_steps.add_paths_to_path(required_paths)
 
-    if not utils.is_admin() and False:
-        # Not running as admin, try to get admin privileges
-        ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", sys.executable, " ".join(sys.argv), None, 1
-        )
-        sys.exit()
+    # If we are frozen
+    if getattr(sys, "frozen", False):
+        # Add the paths to the PATH environment variable
+        installation_steps.add_paths_to_path(required_paths)
+
+        if not utils.is_admin():
+            # Not running as admin, try to get admin privileges
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, " ".join(sys.argv), None, 1
+            )
+            sys.exit()
 
     # enable dpi scale
     if cfg.get(cfg.dpiScale) == "Auto":
@@ -46,4 +54,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        exception_traceback = traceback.format_exc()
+        # Show the error message box using windows message box API
+        ctypes.windll.user32.MessageBoxW(0, exception_traceback, "Error", 0x10)

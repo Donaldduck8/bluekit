@@ -26,6 +26,8 @@ class MainWindow(FluentWindow):
         super().__init__()
         self.initWindow()
 
+        self._executing = False
+
         # create sub interface
         self.homeInterface = HomeInterface(self)
         self.scoopInterface = ScoopInterface(self, "Scoop Packages", data["scoop"])
@@ -65,7 +67,20 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, 'File Type Associations')
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, 'Git Repositories')
 
-        self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution', position=NavigationItemPosition.BOTTOM)
+        # add custom widget to bottom
+        self.navigationInterface.addItem(
+            routeKey='price',
+            icon=FIF.PLAY,
+            text="Execute",
+            onClick=self.onExecute,
+            selectable=False,
+            tooltip="Execute",
+            position=NavigationItemPosition.BOTTOM
+        )
+
+        self.stackedWidget.addWidget(self.executionInterface)
+
+        # self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution', position=NavigationItemPosition.BOTTOM, isTransparent=True)
 
         # Incredible hack to make the icons actually spaced properly !! :SMILE:
         self.navigationInterface.resize(48, self.height() + 1000)
@@ -80,6 +95,38 @@ class MainWindow(FluentWindow):
             tooltip="Price",
             position=NavigationItemPosition.BOTTOM
         )'''
+
+    def onExecute(self, _):
+        if not self._executing:
+            self._executing = True
+
+            # Collect the data from all sub-interfaces
+            scoop_data = self.scoopInterface.data
+            pip_data = self.pipInterface.data
+            npm_data = self.npmInterface.data
+            ida_plugin_data = self.idaPluginInterface.data
+            vscode_extension_data = self.vsCodeExtensionInterface.data
+            taskbar_pins_data = self.taskbarPinsInterface.data
+            file_type_associations_data = self.fileTypeAssociationsInterface.data
+            git_repositories_data = self.gitRepositoryInterface.data
+
+            data = {
+                'scoop': scoop_data,
+                'pip': pip_data,
+                'npm': npm_data,
+                'ida_plugins': ida_plugin_data,
+                'vscode_extensions': vscode_extension_data,
+                'taskbar_pins': taskbar_pins_data,
+                'file_type_associations': file_type_associations_data,
+                'git_repositories': git_repositories_data
+            }
+
+            self.executionInterface.execute(
+                data
+            )
+
+        # Open the executionInterface
+        self.stackedWidget.setCurrentWidget(self.executionInterface, popOut=False)
 
     def initWindow(self):
         self.resize(960, 780)
