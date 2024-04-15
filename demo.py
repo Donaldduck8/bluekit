@@ -15,6 +15,8 @@ from app.view.main_window import MainWindow
 
 from data import required_paths
 
+import pyi_splash
+
 
 def main():
     # Ensure that the required paths are in the PATH environment variable
@@ -45,6 +47,8 @@ def main():
     # create application
     app = QApplication(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
+
+    pyi_splash.close()
 
     # create main window
     w = MainWindow()

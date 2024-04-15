@@ -17,6 +17,7 @@ from ..common.signal_bus import signalBus
 
 # DO NOT REMOVE THIS LINE
 from ..common import resource
+from .. import utils
 
 from data import data
 
@@ -80,8 +81,6 @@ class MainWindow(FluentWindow):
 
         self.stackedWidget.addWidget(self.executionInterface)
 
-        # self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution', position=NavigationItemPosition.BOTTOM, isTransparent=True)
-
         # Incredible hack to make the icons actually spaced properly !! :SMILE:
         self.navigationInterface.resize(48, self.height() + 1000)
 
@@ -110,7 +109,7 @@ class MainWindow(FluentWindow):
             file_type_associations_data = self.fileTypeAssociationsInterface.data
             git_repositories_data = self.gitRepositoryInterface.data
 
-            data = {
+            execution_data = {
                 'scoop': scoop_data,
                 'pip': pip_data,
                 'npm': npm_data,
@@ -118,11 +117,12 @@ class MainWindow(FluentWindow):
                 'vscode_extensions': vscode_extension_data,
                 'taskbar_pins': taskbar_pins_data,
                 'file_type_associations': file_type_associations_data,
-                'git_repositories': git_repositories_data
+                'git_repositories': git_repositories_data,
+                "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
             }
 
             self.executionInterface.execute(
-                data
+                execution_data
             )
 
         # Open the executionInterface
@@ -146,13 +146,6 @@ class MainWindow(FluentWindow):
         self.move(w//2 - self.width()//2, h//2 - self.height()//2)
         self.show()
         QApplication.processEvents()
-
-    def onSupport(self):
-        language = cfg.get(cfg.language).value
-        if language.name() == "zh_CN":
-            QDesktopServices.openUrl(QUrl(ZH_SUPPORT_URL))
-        else:
-            QDesktopServices.openUrl(QUrl(EN_SUPPORT_URL))
 
     def resizeEvent(self, e):
         super().resizeEvent(e)

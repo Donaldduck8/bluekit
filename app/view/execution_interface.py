@@ -163,7 +163,7 @@ def threading_function(widget: ExecutionInterface, data: dict):
     widget.rightListView.scrollToBottom()
 
     # Install .NET 3.5, which is required by some older malware samples
-    installation_steps.install_net_3_5()
+    # installation_steps.install_net_3_5()
     widget.rightListView.addItem(QListWidgetItem("Success: Installed .NET 3.5"))
     widget.rightListView.scrollToBottom()
 

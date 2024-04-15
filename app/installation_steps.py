@@ -9,6 +9,7 @@ import traceback
 import winreg
 from typing import List
 
+import pythoncom
 import win32com.client
 
 import app.utils as utils
@@ -244,6 +245,9 @@ def prepare_quick_access():
     Pins the user folder to Quick Access and unpins all other items.
     """
     logger.info("Prepare the Quick Access folder")
+
+    # Required to use COM objects in a multi-threaded environment
+    pythoncom.CoInitialize()
 
     # Function to pin a folder to Quick Access
     def pin_to_quick_access(path):
