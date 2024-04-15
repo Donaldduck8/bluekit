@@ -1,23 +1,13 @@
 # coding:utf-8
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath, QLinearGradient
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 import json5.host
-from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon
-from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
-from ..common.icon import Icon, FluentIconBase
-from ..components.link_card import LinkCardView
-from ..components.sample_card import SampleCardView
 from ..common.style_sheet import StyleSheet
-import sys
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QTreeWidgetItem, QFileSystemModel, QHBoxLayout, QFrame, QTreeWidgetItemIterator, QTabWidget, QTextEdit, QListWidgetItem
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QFrame, QListWidgetItem
 
-from qfluentwidgets import TreeWidget, setTheme, Theme, TreeView
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QStackedWidget, QMessageBox, QTextEdit)
-from PyQt5.QtCore import Qt
-from qfluentwidgets import Pivot, SegmentedWidget, FluentIcon, TextEdit, ListWidget, LineEdit
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox)
+from qfluentwidgets import SegmentedWidget, TextEdit, ListWidget
 from qfluentwidgets import FluentIcon as FIF
 
 import PyQt5
