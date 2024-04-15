@@ -36,8 +36,5 @@
         <file>qss/light/view_interface.qss</file>
         <file>qss/light/navigation_view_interface.qss</file>
 
-        <file>i18n/gallery.zh_CN.qm</file>
-        <file>i18n/gallery.zh_HK.qm</file>
-
     </qresource>
 </RCC>

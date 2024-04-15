@@ -10,10 +10,10 @@ from qfluentwidgets import FluentIcon as FIF
 from .home_interface import HomeInterface
 from .scoop_interface import ScoopInterface
 from .file_type_association_interface import FTAInterface
+from .execution_interface import ExecutionInterface
 from ..common.config import ZH_SUPPORT_URL, EN_SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
-from ..common.translator import Translator
 
 # DO NOT REMOVE THIS LINE
 from ..common import resource
@@ -36,6 +36,7 @@ class MainWindow(FluentWindow):
         self.taskbarPinsInterface = ScoopInterface(self, "Taskbar Pins", data["taskbar_pins"])
         self.fileTypeAssociationsInterface = FTAInterface(self, "File Type Associations", data["file_type_associations"])
         self.gitRepositoryInterface = ScoopInterface(self, "Git Repositories", data["git_repositories"])
+        self.executionInterface = ExecutionInterface(self, "Execution")
 
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
@@ -49,31 +50,31 @@ class MainWindow(FluentWindow):
 
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
-        signalBus.switchToSampleCard.connect(self.switchToSample)
         signalBus.supportSignal.connect(self.onSupport)
 
     def initNavigation(self):
         # add navigation items
-        t = Translator()
-        self.addSubInterface(self.homeInterface, FIF.HOME, self.tr('Home'))
+        self.addSubInterface(self.homeInterface, FIF.HOME, 'Home')
         self.navigationInterface.addSeparator()
-        self.addSubInterface(self.scoopInterface, QIcon(':/gallery/images/icons/package.svg'), self.tr('Scoop'))
-        self.addSubInterface(self.pipInterface, QIcon(':/gallery/images/icons/python.svg'), self.tr('Python'))
-        self.addSubInterface(self.npmInterface, QIcon(':/gallery/images/icons/nodejs.svg'), self.tr('NodeJS'))
-        self.addSubInterface(self.idaPluginInterface, FIF.TILES, self.tr('IDA Plugins'))
-        self.addSubInterface(self.vsCodeExtensionInterface, QIcon(':/gallery/images/icons/code_test.svg'), self.tr('VSCode Extensions'))
-        self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, self.tr('Taskbar Pins'))
-        self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, self.tr('File Type Associations'))
-        self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, self.tr('Git Repositories'))
+        self.addSubInterface(self.scoopInterface, QIcon(':/gallery/images/icons/package.svg'), 'Scoop')
+        self.addSubInterface(self.pipInterface, QIcon(':/gallery/images/icons/python.svg'), 'Python')
+        self.addSubInterface(self.npmInterface, QIcon(':/gallery/images/icons/nodejs.svg'), 'NodeJS')
+        self.addSubInterface(self.idaPluginInterface, FIF.TILES, 'IDA Plugins')
+        self.addSubInterface(self.vsCodeExtensionInterface, QIcon(':/gallery/images/icons/code_test.svg'), 'VSCode Extensions')
+        self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
+        self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, 'File Type Associations')
+        self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, 'Git Repositories')
+        self.navigationInterface.addSeparator()
+        self.addSubInterface(self.executionInterface, FIF.PLAY, 'Execution')
 
         # add custom widget to bottom
         self.navigationInterface.addItem(
             routeKey='price',
             icon=Icon.PRICE,
-            text=t.price,
+            text="Price",
             onClick=self.onSupport,
             selectable=False,
-            tooltip=t.price,
+            tooltip="Price",
             position=NavigationItemPosition.BOTTOM
         )
 
@@ -107,11 +108,3 @@ class MainWindow(FluentWindow):
         super().resizeEvent(e)
         if hasattr(self, 'splashScreen'):
             self.splashScreen.resize(self.size())
-
-    def switchToSample(self, routeKey, index):
-        """ switch to sample """
-        interfaces = self.findChildren(GalleryInterface)
-        for w in interfaces:
-            if w.objectName() == routeKey:
-                self.stackedWidget.setCurrentWidget(w, False)
-                w.scrollToCard(index)
