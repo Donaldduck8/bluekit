@@ -54,9 +54,11 @@ class TreeFrame(Frame):
 
         # Make indent larger
         self.tree.setIndentation(30)
-
-        # Set a background color
-        self.tree.setStyleSheet("background: white;")
+        
+        # Set background color
+        tree_style_sheet = self.tree.styleSheet()
+        tree_style_sheet = tree_style_sheet.replace("background-color: transparent;", "background-color: rgb(251, 251, 252);")
+        self.tree.setStyleSheet(tree_style_sheet)
 
     def update_data(self, data: dict):
         self.tree.clear()  # Clear the existing items
@@ -110,6 +112,7 @@ class ScoopInterface(QWidget):
             QTextEdit{
                 font: 14px 'Segoe UI';
                 border-radius: 8px;
+                margin-top: 8px;
             }
         """)
         self.data = json5.loads(json5.dumps(data, sort_keys=True))
@@ -130,6 +133,7 @@ class ScoopInterface(QWidget):
 
         # JSON edit interface
         self.json_edit = TextEdit(parent=self)
+        self.json_edit.setContentsMargins(0, 80000, 0, 0)
         self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
         self.json_edit.setText(json5.dumps(self.data, indent=8, sort_keys=True))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)

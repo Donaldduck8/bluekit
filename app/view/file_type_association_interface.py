@@ -52,6 +52,11 @@ class TreeFrame(Frame):
         self.tree.setBorderRadius(8)
         self.setMinimumWidth(800)
 
+        # Set background color
+        tree_style_sheet = self.tree.styleSheet()
+        tree_style_sheet = tree_style_sheet.replace("background-color: transparent;", "background-color: rgb(251, 251, 252);")
+        self.tree.setStyleSheet(tree_style_sheet)
+
     def update_data(self, data: dict):
         self.tree.clear()  # Clear the existing items
         self.data = data
@@ -101,6 +106,7 @@ class FTAInterface(QWidget):
             QTextEdit{
                 font: 14px 'Segoe UI';
                 border-radius: 8px;
+                margin-top: 8px;
             }
         """)
         self.data = data
