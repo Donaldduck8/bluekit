@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QHBoxLayout, QFrame
 
 from qfluentwidgets import TreeWidget
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox)
-from qfluentwidgets import SegmentedWidget, TextEdit
+from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 import PyQt5
 import json5
@@ -94,7 +94,7 @@ class TreeFrame(Frame):
 class FTAInterface(QWidget):
     """ Home interface with a pivot to switch between tree view and a JSON editor. """
 
-    def __init__(self, parent=None, data: dict = None):
+    def __init__(self, parent=None, title: str = '', data: dict = None):
         super().__init__(parent)
         self.setStyleSheet("""
             ScoopInterface{background: white}
@@ -107,9 +107,12 @@ class FTAInterface(QWidget):
         self.resize(800, 600)
         self.setObjectName('ftaInterface' + str(id(self)))
 
+        self.titleLabel = TitleLabel(title)
+        self.titleLabel.setAlignment(PyQt5.QtCore.Qt.AlignCenter)
         self.pivot = SegmentedWidget(self)
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
+        self.vBoxLayout.addWidget(self.titleLabel)
 
         # Tree view interface
         self.tree_view = TreeFrame(parent=self, data=self.data)

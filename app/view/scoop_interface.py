@@ -6,8 +6,8 @@ from ..common.style_sheet import StyleSheet
 from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QHBoxLayout, QFrame
 
 from qfluentwidgets import TreeWidget
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox)
-from qfluentwidgets import SegmentedWidget, TextEdit
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox, QLabel)
+from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 import PyQt5
 import json5
@@ -51,6 +51,12 @@ class TreeFrame(Frame):
         self.tree.setBorderVisible(True)
         self.tree.setBorderRadius(8)
         self.setMinimumWidth(800)
+
+        # Make indent larger
+        self.tree.setIndentation(30)
+
+        # Set a background color
+        self.tree.setStyleSheet("background: white;")
 
     def update_data(self, data: dict):
         self.tree.clear()  # Clear the existing items
@@ -97,7 +103,7 @@ class TreeFrame(Frame):
 class ScoopInterface(QWidget):
     """ Home interface with a pivot to switch between tree view and a JSON editor. """
 
-    def __init__(self, parent=None, data: dict = None):
+    def __init__(self, parent=None, title: str = '', data: dict = None):
         super().__init__(parent)
         self.setStyleSheet("""
             ScoopInterface{background: white}
@@ -110,9 +116,13 @@ class ScoopInterface(QWidget):
         self.resize(800, 600)
         self.setObjectName('scoopInterface' + str(id(self)))
 
+        self.titleLabel = TitleLabel(title)
+        self.titleLabel.setAlignment(PyQt5.QtCore.Qt.AlignCenter)
+
         self.pivot = SegmentedWidget(self)
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
+        self.vBoxLayout.addWidget(self.titleLabel)
 
         # Tree view interface
         self.tree_view = TreeFrame(parent=self, data=self.data)

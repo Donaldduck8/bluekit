@@ -7,7 +7,6 @@ from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, Mess
                             SplashScreen)
 from qfluentwidgets import FluentIcon as FIF
 
-from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
 from .scoop_interface import ScoopInterface
 from .file_type_association_interface import FTAInterface
@@ -29,14 +28,14 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.scoopInterface = ScoopInterface(self, data["scoop"])
-        self.pipInterface = ScoopInterface(self, data["pip"])
-        self.npmInterface = ScoopInterface(self, data["npm"])
-        self.idaPluginInterface = ScoopInterface(self, data["ida_plugins"])
-        self.vsCodeExtensionInterface = ScoopInterface(self, data["vscode_extensions"])
-        self.taskbarPinsInterface = ScoopInterface(self, data["taskbar_pins"])
-        self.fileTypeAssociationsInterface = FTAInterface(self, data["file_type_associations"])
-        self.gitRepositoryInterface = ScoopInterface(self, data["git_repositories"])
+        self.scoopInterface = ScoopInterface(self, "Scoop Packages", data["scoop"])
+        self.pipInterface = ScoopInterface(self, "PIP Packages", data["pip"])
+        self.npmInterface = ScoopInterface(self, "NodeJS Packages", data["npm"])
+        self.idaPluginInterface = ScoopInterface(self, "IDA Plugins", data["ida_plugins"])
+        self.vsCodeExtensionInterface = ScoopInterface(self, "VSCode Extensions", data["vscode_extensions"])
+        self.taskbarPinsInterface = ScoopInterface(self, "Taskbar Pins", data["taskbar_pins"])
+        self.fileTypeAssociationsInterface = FTAInterface(self, "File Type Associations", data["file_type_associations"])
+        self.gitRepositoryInterface = ScoopInterface(self, "Git Repositories", data["git_repositories"])
 
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
@@ -58,11 +57,11 @@ class MainWindow(FluentWindow):
         t = Translator()
         self.addSubInterface(self.homeInterface, FIF.HOME, self.tr('Home'))
         self.navigationInterface.addSeparator()
-        self.addSubInterface(self.scoopInterface, FIF.DEVELOPER_TOOLS, self.tr('Scoop'))
-        self.addSubInterface(self.pipInterface, FIF.IOT, self.tr('Python'))
-        self.addSubInterface(self.npmInterface, FIF.LEAF, self.tr('NodeJS'))
+        self.addSubInterface(self.scoopInterface, QIcon(':/gallery/images/icons/package.svg'), self.tr('Scoop'))
+        self.addSubInterface(self.pipInterface, QIcon(':/gallery/images/icons/python.svg'), self.tr('Python'))
+        self.addSubInterface(self.npmInterface, QIcon(':/gallery/images/icons/nodejs.svg'), self.tr('NodeJS'))
         self.addSubInterface(self.idaPluginInterface, FIF.TILES, self.tr('IDA Plugins'))
-        self.addSubInterface(self.vsCodeExtensionInterface, FIF.ROBOT, self.tr('VSCode Extensions'))
+        self.addSubInterface(self.vsCodeExtensionInterface, QIcon(':/gallery/images/icons/code_test.svg'), self.tr('VSCode Extensions'))
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, self.tr('Taskbar Pins'))
         self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, self.tr('File Type Associations'))
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, self.tr('Git Repositories'))
@@ -81,8 +80,8 @@ class MainWindow(FluentWindow):
     def initWindow(self):
         self.resize(960, 780)
         self.setMinimumWidth(760)
-        self.setWindowIcon(QIcon(':/gallery/images/logo.png'))
-        self.setWindowTitle("Setup")
+        self.setWindowIcon(QIcon(':/gallery/images/jellyfish_logo_small.png'))
+        self.setWindowTitle("Irukandji")
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 

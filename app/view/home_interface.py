@@ -34,9 +34,9 @@ class BannerWidget(QWidget):
         self.vBoxLayout.setAlignment(Qt.AlignCenter)
 
         self.linkCardView.addCard(
-            ':/gallery/images/logo.png',
-            self.tr('Getting started'),
-            self.tr('An overview of app development options and samples.'),
+            ':/gallery/images/jellyfish_logo_small.png',
+            self.tr('Irukandji'),
+            self.tr('An all-in-one setup script for cybersecurity workstations.'),
             HELP_URL
         )
 
