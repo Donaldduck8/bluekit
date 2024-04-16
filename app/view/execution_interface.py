@@ -5,10 +5,10 @@ from enum import Enum
 from typing import Union
 
 from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, QSize, Qt,
-                          pyqtSignal, QTime, QTimer, QRect)
+                          pyqtSignal, QTime, QTimer)
 from PyQt5.QtGui import QColor, QIcon, QPainter, QResizeEvent
 from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
-                             QLabel, QListWidgetItem, QVBoxLayout, QWidget, QStackedWidget, QSizePolicy)
+                             QLabel, QListWidgetItem, QVBoxLayout, QWidget)
 from qfluentwidgets import (FluentIconBase, FluentStyleSheet,
                             IndeterminateProgressRing, InfoBarIcon,
                             InfoBarPosition, ListWidget, TitleLabel)
@@ -18,7 +18,7 @@ from qfluentwidgets.common.icon import Theme, drawIcon, isDarkTheme
 from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor
 from qfluentwidgets.components.widgets.button import TransparentToolButton
 from qfluentwidgets.components.widgets.list_view import ListWidget
-from qfluentwidgets import SubtitleLabel
+from qfluentwidgets import SubtitleLabel, Dialog
 
 from .. import installation_steps, utils
 from ..common.style_sheet import StyleSheet
@@ -406,8 +406,13 @@ class FluentTimer(QWidget):
 
 
 class ExecutionInterface(QWidget):
+    completion_signal = pyqtSignal()
+
     def __init__(self, parent=None, title=None):
         super().__init__(parent)
+
+        self.completion_signal.connect(self.show_completion_dialog)
+
         self.setObjectName('executionInterface' + str(id(self)))
 
         # Main vertical layout
@@ -483,6 +488,19 @@ class ExecutionInterface(QWidget):
             thread = threading.Thread(target=threading_function_test, args=(self, data))
         thread.start()
 
+    def show_completion_dialog(self):
+        title = 'Installation is complete!'
+        content = """Some changes (like taskbar pins) will only apply after restarting your computer. Would you like to restart now?"""
+        w = Dialog(title, content, self)
+        w.show()
+        w.setTitleBarVisible(False)
+        # w.setContentCopyable(True)
+        if w.exec():
+            w.close()
+            installation_steps.restart()
+        else:
+            w.close()
+
 
 def threading_function_test(widget: ExecutionInterface, data: dict):
     for i in range(5):
@@ -497,6 +515,8 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
         widget.rightListView.listWidget.scrollToBottom()
         import time
         time.sleep(1)
+    
+    widget.completion_signal.emit()
 
     widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
     widget.progressRing.stop()
@@ -610,4 +630,4 @@ def threading_function(widget: ExecutionInterface, data: dict):
     widget.progressRing.stop()
     widget.timerWidget.stop()
 
-    # installation_steps.restart()
+    widget.completion_signal.emit()
