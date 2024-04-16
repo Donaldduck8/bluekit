@@ -2,58 +2,17 @@
 import json5
 import json5.host
 import PyQt5
-from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QMessageBox, QStackedWidget,
+from PyQt5.QtWidgets import (QMessageBox, QStackedWidget,
                              QTreeWidgetItem, QVBoxLayout, QWidget)
-from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel, TreeWidget
+from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
-from ..common.style_sheet import StyleSheet
+from .base_tree_frame import BaseTreeFrame
 
-
-class Frame(QFrame):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
-        self.hBoxLayout = QHBoxLayout(self)
-        self.hBoxLayout.setContentsMargins(0, 8, 0, 0)
-
-        self.setObjectName('frame')
-        StyleSheet.VIEW_INTERFACE.apply(self)
-
-    def addWidget(self, widget):
-        self.hBoxLayout.addWidget(widget)
-
-
-class TreeFrame(Frame):
-
+class TreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
-        super().__init__(parent)
-
-        self.data = data
-
-        self.tree = TreeWidget(self)
-        self.tree.setColumnCount(2)
-        self.tree.setHeaderLabels(['Name', 'Description'])
-
-        self.addWidget(self.tree)
-
-        self.populate_tree()
-
-        # Make first column expand to fit
-        self.tree.header().setSectionResizeMode(0, PyQt5.QtWidgets.QHeaderView.ResizeToContents)
-
-        self.setContentsMargins(50, 30, 50, 30)
-
-        # Add a border around self.tree
-        self.tree.setBorderVisible(True)
-        self.tree.setBorderRadius(8)
-        self.setMinimumWidth(800)
-
-        # Make indent larger
-        self.tree.setIndentation(30)
-        
-        # Set background color
-        tree_style_sheet = self.tree.styleSheet()
-        tree_style_sheet = tree_style_sheet.replace("background-color: transparent;", "background-color: rgb(251, 251, 252);")
-        self.tree.setStyleSheet(tree_style_sheet)
+        headers = ["Name", "Description"]
+        super().__init__(parent, headers, data)
+        self.update_data(data)
 
     def update_data(self, data: dict):
         self.tree.clear()  # Clear the existing items
