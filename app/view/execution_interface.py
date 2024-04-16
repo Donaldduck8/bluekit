@@ -353,37 +353,10 @@ class CustomListWidget(ListWidget):
             widget.setFixedWidth(self.width() - 2)
 
 
-class Timer(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.startTime = QTime(0, 0, 0)
-
-        self.initUI()
-        
-    def initUI(self):
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.showTime)
-        
-        self.label = QLabel("00:00:00", self)
-        self.label.setAlignment(Qt.AlignCenter)
-        
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.label)
-        
-        self.timer.start(1000)  # Timer updates every second
-        
-    def showTime(self):
-        self.startTime = self.startTime.addSecs(1)
-        self.label.setText(self.startTime.toString("hh:mm:ss"))
-
-
 class FluentTimer(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
 
-    def initUI(self):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.showTime)
 
@@ -471,8 +444,6 @@ class ExecutionInterface(QWidget):
         self.vBoxLayout.addSpacing(30)
 
     def execute(self, data):
-        print("Executing")
-
         self.timerWidget.startTime = QTime(0, 0, 0)
         self.timerWidget.start()
 
@@ -489,6 +460,10 @@ class ExecutionInterface(QWidget):
         thread.start()
 
     def show_completion_dialog(self):
+        self.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
+        self.progressRing.stop()
+        self.timerWidget.stop()
+
         title = 'Installation is complete!'
         content = """Some changes (like taskbar pins) will only be applied after restarting your computer. Would you like to restart now?"""
         w = Dialog(title, content, self)
@@ -504,6 +479,7 @@ class ExecutionInterface(QWidget):
 
 def threading_function_test(widget: ExecutionInterface, data: dict):
     for i in range(5):
+        import time
         import random
 
         # widget.rightListView.listWidget.addItem("Item " + str(i))
@@ -513,14 +489,10 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
         widget.bottomListView.listWidget.addItem(QListWidgetItem("Item " + str(i)))
         widget.bottomListView.listWidget.scrollToBottom()
         widget.rightListView.listWidget.scrollToBottom()
-        import time
-        time.sleep(1)
-    
-    widget.completion_signal.emit()
 
-    widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
-    widget.progressRing.stop()
-    widget.timerWidget.stop()
+        time.sleep(1)
+
+    widget.completion_signal.emit()
 
 
 def threading_function(widget: ExecutionInterface, data: dict):
