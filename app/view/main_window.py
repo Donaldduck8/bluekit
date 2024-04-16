@@ -8,7 +8,6 @@ from qfluentwidgets import (FluentWindow, NavigationItemPosition, SplashScreen)
 from data import data
 
 from .. import utils
-# DO NOT REMOVE THIS LINE
 from ..common import resource
 from ..common.icon import Icon
 from ..common.config import cfg
@@ -17,6 +16,9 @@ from .execution_interface import ExecutionInterface
 from .file_type_association_interface import FTAInterface
 from .home_interface import HomeInterface
 from .scoop_interface import ScoopInterface
+
+if not resource:
+    raise ImportError("Resource not found")
 
 
 class MainWindow(FluentWindow):
