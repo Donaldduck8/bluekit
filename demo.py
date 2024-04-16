@@ -15,7 +15,10 @@ from app.view.main_window import MainWindow
 
 from data import required_paths
 
-import pyi_splash
+try:
+    import pyi_splash
+except:
+    pass
 
 
 def main():
@@ -48,7 +51,10 @@ def main():
     app = QApplication(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
-    pyi_splash.close()
+    try:
+        pyi_splash.close()
+    except:
+        pass
 
     # create main window
     w = MainWindow()
