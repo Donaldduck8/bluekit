@@ -1,25 +1,22 @@
 # coding: utf-8
-from PyQt5.QtCore import QUrl, QSize
-from PyQt5.QtGui import QIcon, QDesktopServices, QColor
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
-
-from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, MessageBox, FluentWindow,
-                            SplashScreen)
 from qfluentwidgets import FluentIcon as FIF
-
-from .home_interface import HomeInterface
-from .scoop_interface import ScoopInterface
-from .file_type_association_interface import FTAInterface
-from .execution_interface import ExecutionInterface
-from ..common.config import ZH_SUPPORT_URL, EN_SUPPORT_URL, cfg
-from ..common.icon import Icon
-from ..common.signal_bus import signalBus
-
-# DO NOT REMOVE THIS LINE
-from ..common import resource
-from .. import utils
+from qfluentwidgets import (FluentWindow, NavigationItemPosition, SplashScreen)
 
 from data import data
+
+from .. import utils
+# DO NOT REMOVE THIS LINE
+from ..common import resource
+from ..common.config import cfg
+from ..common.signal_bus import signalBus
+from .execution_interface import ExecutionInterface
+from .file_type_association_interface import FTAInterface
+from .home_interface import HomeInterface
+from .scoop_interface import ScoopInterface
+
 
 class MainWindow(FluentWindow):
 

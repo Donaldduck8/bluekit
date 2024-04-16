@@ -1,26 +1,22 @@
 # coding:utf-8
+import ctypes
+import json5
 import os
 import sys
-import ctypes
 import traceback
-
-from app import utils
-from app import installation_steps
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
+from app import installation_steps, utils
 from app.common.config import cfg
 from app.view.main_window import MainWindow
-
-import json5
-
 from data import required_paths
 
 try:
     import pyi_splash
-except:
-    pass
+except ImportError:
+    pyi_splash = None
 
 
 def main():
@@ -53,10 +49,8 @@ def main():
     app = QApplication(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
-    try:
+    if pyi_splash:
         pyi_splash.close()
-    except:
-        pass
 
     # create main window
     w = MainWindow()
@@ -69,6 +63,6 @@ if __name__ == "__main__":
     try:
         main()
     except Exception:
-        exception_traceback = traceback.format_exc()
         # Show the error message box using windows message box API
+        exception_traceback = traceback.format_exc()
         ctypes.windll.user32.MessageBoxW(0, exception_traceback, "Error", 0x10)

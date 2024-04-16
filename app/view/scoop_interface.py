@@ -1,16 +1,12 @@
 # coding:utf-8
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
-
-import json5.host
-from ..common.style_sheet import StyleSheet
-from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QHBoxLayout, QFrame
-
-from qfluentwidgets import TreeWidget
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox, QLabel)
-from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
-
-import PyQt5
 import json5
+import json5.host
+import PyQt5
+from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QMessageBox, QStackedWidget,
+                             QTreeWidgetItem, QVBoxLayout, QWidget)
+from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel, TreeWidget
+
+from ..common.style_sheet import StyleSheet
 
 
 class Frame(QFrame):

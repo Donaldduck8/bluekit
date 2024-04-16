@@ -153,6 +153,7 @@ class FTAInterface(QWidget):
     def onCurrentIndexChanged(self, index):
         widget = self.stackedWidget.widget(index)
         self.pivot.setCurrentItem(widget.objectName())
+        
         # Call update_data_from_json only if switching back to the tree view
         if widget == self.tree_view:
             self.update_data_from_json()

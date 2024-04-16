@@ -490,7 +490,7 @@ class ExecutionInterface(QWidget):
 
     def show_completion_dialog(self):
         title = 'Installation is complete!'
-        content = """Some changes (like taskbar pins) will only apply after restarting your computer. Would you like to restart now?"""
+        content = """Some changes (like taskbar pins) will only be applied after restarting your computer. Would you like to restart now?"""
         w = Dialog(title, content, self)
         w.show()
         w.setTitleBarVisible(False)
