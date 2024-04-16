@@ -26,6 +26,7 @@
         <file>qss/dark/setting_interface.qss</file>
         <file>qss/dark/view_interface.qss</file>
         <file>qss/dark/navigation_view_interface.qss</file>
+        <file>qss/dark/custom_list_view.qss</file>
 
         <file>qss/light/gallery_interface.qss</file>
         <file>qss/light/home_interface.qss</file>
@@ -35,6 +36,7 @@
         <file>qss/light/setting_interface.qss</file>
         <file>qss/light/view_interface.qss</file>
         <file>qss/light/navigation_view_interface.qss</file>
+        <file>qss/light/custom_list_view.qss</file>
 
     </qresource>
 </RCC>

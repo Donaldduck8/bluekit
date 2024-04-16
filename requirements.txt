@@ -1,0 +1,6 @@
+PyQT5
+PyQt-Fluent-Widgets
+pywin32
+pyinstaller
+pillow
+json5

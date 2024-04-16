@@ -150,7 +150,7 @@ def install_build_tools():
     run_shell_command(command=install_command)
 
 
-def scoop_install_tool(tool_name: str) -> bool:
+def scoop_install_tool(tool_name: str, tool_name_pretty: str = None) -> bool:
     """
     Installs a tool using Scoop package manager.
 
@@ -160,7 +160,9 @@ def scoop_install_tool(tool_name: str) -> bool:
     Returns:
         bool: If the tool installed successfully or not.
     """
-    logger.info(f"Scoop: Install '{tool_name}'")
+    if tool_name_pretty is None:
+        tool_name_pretty = tool_name
+    logger.info(f"Scoop: Install '{tool_name_pretty}'")
 
     try:
         if tool_name.endswith(".json"):
@@ -212,7 +214,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
 
             elif isinstance(tool, list) or isinstance(tool, tuple):
                 tool_name = tool[0]
-                scoop_install_tool(tool_name)
+                scoop_install_tool(tool_name, tool[1])
 
             elif isinstance(tool, dict):
                 if not tool.get("type") == "one_of":
@@ -220,9 +222,11 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
                     continue
 
                 tool_name = tool.get("main")[0]
-                if not scoop_install_tool(tool_name):
+                tool_name_pretty = tool.get("main")[1]
+                if not scoop_install_tool(tool_name, tool_name_pretty):
                     tool_name = tool.get("alternative")[0]
-                    scoop_install_tool(tool_name)
+                    tool_name_pretty = tool.get("alternative")[1]
+                    scoop_install_tool(tool_name, tool_name_pretty)
             else:
                 logger.warning("Tool is not string, list, tuple, or dict, skipping...")
                 continue

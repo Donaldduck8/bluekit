@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import QApplication
 from app.common.config import cfg
 from app.view.main_window import MainWindow
 
+import json5
+
 from data import required_paths
 
 try:

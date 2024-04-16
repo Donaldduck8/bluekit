@@ -185,7 +185,7 @@ class InfoBar(QFrame):
         self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
         self.textLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
         self.textLayout.setAlignment(Qt.AlignTop)
-        self.textLayout.setContentsMargins(1, 8, 0, 8)
+        self.textLayout.setContentsMargins(0, 8, 0, 8)
 
         self.hBoxLayout.setSpacing(0)
         # self.textLayout.setSpacing(5)
@@ -198,8 +198,8 @@ class InfoBar(QFrame):
         self.titleLabel.setVisible(bool(self.title))
 
         # add content label to layout
-        if self.orient == Qt.Horizontal:
-            self.textLayout.addSpacing(7)
+        # if self.orient == Qt.Horizontal:
+        #     self.textLayout.addSpacing(7)
 
         self.textLayout.addWidget(self.contentLabel, 1, Qt.AlignLeft | Qt.AlignTop)
         self.contentLabel.setVisible(bool(self.content))
@@ -213,8 +213,9 @@ class InfoBar(QFrame):
             self.textLayout.addLayout(self.widgetLayout)
 
         # add close button to layout
-        self.hBoxLayout.addSpacing(4)
-        self.hBoxLayout.addWidget(self.closeButton, 0, Qt.AlignTop | Qt.AlignLeft)
+        if self.isClosable:
+            self.hBoxLayout.addSpacing(4)
+            self.hBoxLayout.addWidget(self.closeButton, 0, Qt.AlignTop | Qt.AlignLeft)
 
         self._adjustText()
 
@@ -311,29 +312,32 @@ class CustomListWidget(ListWidget):
 
         FluentStyleSheet.LIST_VIEW.apply(self)
 
-        self.setContentsMargins(0, 400, 0, 4)
+        self.setContentsMargins(0, 400, 8, 4)
         self.setViewportMargins(0, 4, 0, 4)
 
     def add_infobar(self, title, content):
         item = QListWidgetItem()
 
         infoBar = InfoBar(
-            icon=InfoBarIcon.ERROR,
+            icon=InfoBarIcon.SUCCESS,
             title=title,
             content=content,
             orient=Qt.Vertical,
-            isClosable=True,
+            isClosable=False,
             duration=-1,
             position=InfoBarPosition.NONE,
             parent=self
         )
 
-        infoBar.setFixedWidth(self.width() - 2)
         infoBar.titleLabel.setText(infoBar.title)
+
+        infoBar.setMaximumWidth(self.width() - 2)
+        infoBar.setFixedWidth(self.width() - 2)
 
         item.setSizeHint(infoBar.sizeHint())
         self.addItem(item)
         self.setItemWidget(item, infoBar)
+        self.setSpacing(4)
         self.scrollToBottom()
 
 
@@ -358,14 +362,14 @@ class ExecutionInterface(QWidget):
 
         # New ListWidget to the right of the ProgressRing
         self.rightListView = ListFrame(self)
-        self.rightListView.setMaximumHeight(160)
+        self.rightListView.setMaximumHeight(250)
+
         self.hBoxLayout.addWidget(self.rightListView)
 
         self.hBoxLayout.setStretch(0, 0)
 
         # Add the horizontal layout to the main vertical layout
         self.vBoxLayout.addLayout(self.hBoxLayout)
-
         self.vBoxLayout.addSpacing(60)
 
         self.bottomLabel = TitleLabel("Log")
@@ -380,13 +384,23 @@ class ExecutionInterface(QWidget):
         # Add word wrap instead of cutting off the entry
         self.bottomListView.listWidget.setWordWrap(True)
 
+        # Remove the spacing between element in the bottomListView
+        self.bottomListView.listWidget.setSpacing(0)
+        StyleSheet.CUSTOM_LIST_VIEW.apply(self.bottomListView.listWidget)
+
         self.vBoxLayout.addWidget(self.bottomListView)
         self.vBoxLayout.addSpacing(30)
 
     def execute(self, data):
         print("Executing")
         installation_steps.logger.addHandler(ListWidgetLogHandler(self))
-        thread = threading.Thread(target=threading_function_test, args=(self, data))
+
+        # check if we are frozen
+        import sys
+        if getattr(sys, "frozen", False):
+            thread = threading.Thread(target=threading_function, args=(self, data))
+        else:
+            thread = threading.Thread(target=threading_function_test, args=(self, data))
         thread.start()
 
 
