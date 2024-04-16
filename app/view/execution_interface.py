@@ -1,28 +1,27 @@
 # coding:utf-8
-from enum import Enum
+import logging
 import threading
+from enum import Enum
 from typing import Union
 
-from ..common.style_sheet import StyleSheet
-
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPainter, QIcon, QColor
-from PyQt5.QtCore import (Qt, QEvent, QSize, QRectF, QObject, QPropertyAnimation,
-                          QEasingCurve, QTimer, pyqtSignal, QParallelAnimationGroup, QPoint)
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem, QSizePolicy, QLabel, QGraphicsOpacityEffect, QSizePolicy
-
-from qfluentwidgets.components.widgets.list_view import ListWidget
-from qfluentwidgets.components.widgets.button import TransparentToolButton
-from qfluentwidgets.common.icon import isDarkTheme, drawIcon, Theme
-from qfluentwidgets.common.icon import FluentIcon as FIF
+from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, QSize, Qt,
+                          pyqtSignal, QTime, QTimer, QRect)
+from PyQt5.QtGui import QColor, QIcon, QPainter, QResizeEvent
+from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
+                             QLabel, QListWidgetItem, QVBoxLayout, QWidget, QStackedWidget, QSizePolicy)
+from qfluentwidgets import (FluentIconBase, FluentStyleSheet,
+                            IndeterminateProgressRing, InfoBarIcon,
+                            InfoBarPosition, ListWidget, TitleLabel)
 from qfluentwidgets.common.auto_wrap import TextWrap
+from qfluentwidgets.common.icon import FluentIcon as FIF
+from qfluentwidgets.common.icon import Theme, drawIcon, isDarkTheme
 from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor
-from qfluentwidgets import (ListWidget, TitleLabel, IndeterminateProgressRing, InfoBarIcon, InfoBarPosition, FluentStyleSheet, FluentIconBase)
+from qfluentwidgets.components.widgets.button import TransparentToolButton
+from qfluentwidgets.components.widgets.list_view import ListWidget
+from qfluentwidgets import SubtitleLabel
 
-from .. import installation_steps
-from .. import utils
-
-import logging
+from .. import installation_steps, utils
+from ..common.style_sheet import StyleSheet
 
 
 class ListWidgetLogHandler(logging.Handler):
@@ -96,8 +95,7 @@ class InfoIconWidget(QWidget):
 
     def paintEvent(self, e):
         painter = QPainter(self)
-        painter.setRenderHints(QPainter.Antialiasing |
-                               QPainter.SmoothPixmapTransform)
+        painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
 
         rect = QRectF(10, 10, 15, 15)
         if self.icon != InfoBarIcon.INFORMATION:
@@ -301,6 +299,10 @@ class InfoBar(QFrame):
         rect = self.rect().adjusted(1, 1, -1, -1)
         painter.drawRoundedRect(rect, 6, 6)
 
+    def resizeEvent(self, a0) -> None:
+        super().resizeEvent(a0)
+        FluentStyleSheet.INFO_BAR.apply(self)
+
 
 class CustomListWidget(ListWidget):
     add_infobar_signal = pyqtSignal(str, str, str)  # Signal to update the list widget safely
@@ -340,6 +342,68 @@ class CustomListWidget(ListWidget):
         self.setSpacing(4)
         self.scrollToBottom()
 
+    def resizeEvent(self, e: QResizeEvent) -> None:
+        super().resizeEvent(e)
+        for i in range(self.count()):
+            widget = self.itemWidget(self.item(i))
+            if not widget:
+                continue
+
+            widget.setMaximumWidth(self.width() - 2)
+            widget.setFixedWidth(self.width() - 2)
+
+
+class Timer(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.startTime = QTime(0, 0, 0)
+
+        self.initUI()
+        
+    def initUI(self):
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.showTime)
+        
+        self.label = QLabel("00:00:00", self)
+        self.label.setAlignment(Qt.AlignCenter)
+        
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.label)
+        
+        self.timer.start(1000)  # Timer updates every second
+        
+    def showTime(self):
+        self.startTime = self.startTime.addSecs(1)
+        self.label.setText(self.startTime.toString("hh:mm:ss"))
+
+
+class FluentTimer(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.showTime)
+
+        self.label = SubtitleLabel("00:00", self)
+
+        self.setLayout(QVBoxLayout())
+        self.layout().addWidget(self.label)
+
+        self.startTime = QTime(0, 0, 0)
+
+    def start(self):
+        self.timer.start(1000)
+
+    def showTime(self):
+        self.startTime = self.startTime.addSecs(1)
+        self.label.setText(self.startTime.toString("mm:ss"))
+
+    def stop(self):
+        self.timer.stop()
+
 
 class ExecutionInterface(QWidget):
     def __init__(self, parent=None, title=None):
@@ -353,11 +417,21 @@ class ExecutionInterface(QWidget):
         # Horizontal layout for the ProgressRing and the new ListWidget
         self.hBoxLayout = QHBoxLayout()
 
-        # ProgressRing configuration
+        self.topLeftLayout = QVBoxLayout()
+        self.topLeftLayout.setContentsMargins(40, 20, 20, 40)
+
         self.progressRing = IndeterminateProgressRing(self)
         self.progressRing.setFixedSize(150, 150)
-        self.hBoxLayout.setContentsMargins(70, 30, 70, 0)
-        self.hBoxLayout.addWidget(self.progressRing, alignment=Qt.AlignLeft)
+
+        self.topLeftLayout.addWidget(self.progressRing, alignment=Qt.AlignCenter | Qt.AlignVCenter)
+
+        self.topLeftLayout.addSpacing(30)
+
+        self.timerWidget = FluentTimer()
+        self.topLeftLayout.addWidget(self.timerWidget, alignment=Qt.AlignCenter | Qt.AlignVCenter)
+
+        self.hBoxLayout.addLayout(self.topLeftLayout)
+
         self.hBoxLayout.addSpacing(60)
 
         # New ListWidget to the right of the ProgressRing
@@ -393,6 +467,10 @@ class ExecutionInterface(QWidget):
 
     def execute(self, data):
         print("Executing")
+
+        self.timerWidget.startTime = QTime(0, 0, 0)
+        self.timerWidget.start()
+
         log_handler = ListWidgetLogHandler(self)
         log_handler.setFormatter(logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%H:%M:%S',))
         installation_steps.logger.addHandler(log_handler)
@@ -407,8 +485,9 @@ class ExecutionInterface(QWidget):
 
 
 def threading_function_test(widget: ExecutionInterface, data: dict):
-    for i in range(100):
+    for i in range(5):
         import random
+
         # widget.rightListView.listWidget.addItem("Item " + str(i))
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", "")
 
@@ -417,7 +496,11 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
         widget.bottomListView.listWidget.scrollToBottom()
         widget.rightListView.listWidget.scrollToBottom()
         import time
-        time.sleep(3)
+        time.sleep(1)
+
+    widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
+    widget.progressRing.stop()
+    widget.timerWidget.stop()
 
 
 def threading_function(widget: ExecutionInterface, data: dict):
@@ -504,8 +587,8 @@ def threading_function(widget: ExecutionInterface, data: dict):
 
     # Install .NET 3.5, which is required by some older malware samples
     # installation_steps.install_net_3_5()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", "")
+    # widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.obtain_and_place_malware_analysis_configurations()
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", "")
@@ -523,4 +606,8 @@ def threading_function(widget: ExecutionInterface, data: dict):
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", "")
     widget.rightListView.listWidget.scrollToBottom()
 
-    installation_steps.restart()
+    widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
+    widget.progressRing.stop()
+    widget.timerWidget.stop()
+
+    # installation_steps.restart()

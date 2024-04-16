@@ -14,6 +14,8 @@ import win32com.client
 
 import app.utils as utils
 
+from concurrent.futures import ThreadPoolExecutor
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 if "_MEI" in HERE and getattr(sys, "frozen", False):
@@ -107,11 +109,18 @@ def scoop_add_buckets(buckets: List[str]):
     """
     logger.info("Scoop: Add buckets")
 
-    for bucket in buckets:
-        if isinstance(bucket, str):
-            run_shell_command(command=f"scoop.cmd bucket add {bucket}")
-        elif isinstance(bucket, tuple) or isinstance(bucket, list):
-            run_shell_command(command=f"scoop.cmd bucket add {bucket[0]}")
+    # Use ThreadPool to accelerate this part
+    with ThreadPoolExecutor() as executor:
+        futures = []
+
+        for bucket in buckets:
+            if isinstance(bucket, str):
+                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket}")
+            elif isinstance(bucket, tuple) or isinstance(bucket, list):
+                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket[0]}")
+
+        for future in futures:
+            future.result()
 
 
 def pip_install_packages(packages: List[str]):
