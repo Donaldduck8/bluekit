@@ -12,7 +12,7 @@ import PyQt5
 import json5
 
 
-class TreeFrame(BaseTreeFrame):
+class FileTypeAssocTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
         headers = ["Name", "Arguments"]
         super().__init__(parent, headers, data)
@@ -57,7 +57,7 @@ class TreeFrame(BaseTreeFrame):
         self.tree.expandAll()
 
 
-class FTAInterface(QWidget):
+class FileTypeAssocWidget(QWidget):
     """ Home interface with a pivot to switch between tree view and a JSON editor. """
 
     def __init__(self, parent=None, title: str = '', data: dict = None):
@@ -83,7 +83,7 @@ class FTAInterface(QWidget):
         self.vBoxLayout.addSpacing(10)
 
         # Tree view interface
-        self.tree_view = TreeFrame(parent=self, data=self.data)
+        self.tree_view = FileTypeAssocTreeFrame(parent=self, data=self.data)
         self.addSubInterface(self.tree_view, 'tree_view', 'Tree View')
 
         # JSON edit interface

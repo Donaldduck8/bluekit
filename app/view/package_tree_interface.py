@@ -8,7 +8,7 @@ from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 from .base_tree_frame import BaseTreeFrame
 
-class TreeFrame(BaseTreeFrame):
+class PackageTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
         headers = ["Name", "Description"]
         super().__init__(parent, headers, data)
@@ -56,7 +56,7 @@ class TreeFrame(BaseTreeFrame):
 
 
 
-class ScoopInterface(QWidget):
+class PackageTreeWidget(QWidget):
     """ Home interface with a pivot to switch between tree view and a JSON editor. """
 
     def __init__(self, parent=None, title: str = '', data: dict = None):
@@ -83,7 +83,7 @@ class ScoopInterface(QWidget):
         self.vBoxLayout.addSpacing(10)
 
         # Tree view interface
-        self.tree_view = TreeFrame(parent=self, data=self.data)
+        self.tree_view = PackageTreeFrame(parent=self, data=self.data)
         self.addSubInterface(self.tree_view, 'tree_view', 'Tree View')
 
         # JSON edit interface

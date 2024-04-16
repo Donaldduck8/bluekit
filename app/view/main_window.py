@@ -13,9 +13,9 @@ from ..common.icon import Icon
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
 from .execution_interface import ExecutionInterface
-from .file_type_association_interface import FTAInterface
+from .file_type_association_interface import FileTypeAssocWidget
 from .home_interface import HomeInterface
-from .scoop_interface import ScoopInterface
+from .package_tree_interface import PackageTreeWidget
 
 if not resource:
     raise ImportError("Resource not found")
@@ -31,14 +31,14 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.scoopInterface = ScoopInterface(self, "Scoop Packages", data["scoop"])
-        self.pipInterface = ScoopInterface(self, "PIP Packages", data["pip"])
-        self.npmInterface = ScoopInterface(self, "NodeJS Packages", data["npm"])
-        self.idaPluginInterface = ScoopInterface(self, "IDA Plugins", data["ida_plugins"])
-        self.vsCodeExtensionInterface = ScoopInterface(self, "VSCode Extensions", data["vscode_extensions"])
-        self.taskbarPinsInterface = ScoopInterface(self, "Taskbar Pins", data["taskbar_pins"])
-        self.fileTypeAssociationsInterface = FTAInterface(self, "File Type Associations", data["file_type_associations"])
-        self.gitRepositoryInterface = ScoopInterface(self, "Git Repositories", data["git_repositories"])
+        self.scoopInterface = PackageTreeWidget(self, "Scoop Packages", data["scoop"])
+        self.pipInterface = PackageTreeWidget(self, "PIP Packages", data["pip"])
+        self.npmInterface = PackageTreeWidget(self, "NodeJS Packages", data["npm"])
+        self.idaPluginInterface = PackageTreeWidget(self, "IDA Plugins", data["ida_plugins"])
+        self.vsCodeExtensionInterface = PackageTreeWidget(self, "VSCode Extensions", data["vscode_extensions"])
+        self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", data["taskbar_pins"])
+        self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", data["file_type_associations"])
+        self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", data["git_repositories"])
         self.executionInterface = ExecutionInterface(self, "Execution")
 
         # enable acrylic effect
