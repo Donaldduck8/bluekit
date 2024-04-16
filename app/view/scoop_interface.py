@@ -134,7 +134,7 @@ class ScoopInterface(QWidget):
         self.json_edit.setText(json5.dumps(self.data, indent=8, sort_keys=True))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
         # self.json_edit.setPlainText()
-        self.addSubInterface(self.json_edit, 'json_edit', 'JSON Edit')
+        self.addSubInterface(self.json_edit, 'json_edit', 'Editor')
 
         self.vBoxLayout.addWidget(self.pivot)
         self.vBoxLayout.addWidget(self.stackedWidget)

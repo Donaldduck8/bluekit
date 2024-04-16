@@ -130,8 +130,9 @@ class FTAInterface(QWidget):
         self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
         self.json_edit.setText(json5.dumps(self.data, indent=8, sort_keys=True))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
+
         # self.json_edit.setPlainText()
-        self.addSubInterface(self.json_edit, 'json_edit', 'JSON Edit')
+        self.addSubInterface(self.json_edit, 'json_edit', 'Editor')
 
         self.vBoxLayout.addWidget(self.pivot)
         self.vBoxLayout.addWidget(self.stackedWidget)
@@ -153,7 +154,7 @@ class FTAInterface(QWidget):
     def onCurrentIndexChanged(self, index):
         widget = self.stackedWidget.widget(index)
         self.pivot.setCurrentItem(widget.objectName())
-        
+
         # Call update_data_from_json only if switching back to the tree view
         if widget == self.tree_view:
             self.update_data_from_json()
