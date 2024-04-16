@@ -14,13 +14,13 @@ ListView::item,
 ListWidget::item {
     background: transparent;
     border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 15);
+    /* border: 1px solid rgba(0, 0, 0, 15); */
     padding-left: 11px;
     padding-right: 11px;
-    height: 35px;
+    /* height: 35px; */
     margin-right: 8px;
+    padding-bottom: 4px;
 }
-
 
 ListView::indicator,
 ListWidget::indicator {

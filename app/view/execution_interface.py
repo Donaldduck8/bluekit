@@ -393,7 +393,9 @@ class ExecutionInterface(QWidget):
 
     def execute(self, data):
         print("Executing")
-        installation_steps.logger.addHandler(ListWidgetLogHandler(self))
+        log_handler = ListWidgetLogHandler(self)
+        log_handler.setFormatter(logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%H:%M:%S',))
+        installation_steps.logger.addHandler(log_handler)
 
         # check if we are frozen
         import sys
@@ -520,3 +522,5 @@ def threading_function(widget: ExecutionInterface, data: dict):
     installation_steps.clean_up_disk()
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", "")
     widget.rightListView.listWidget.scrollToBottom()
+
+    installation_steps.restart()
