@@ -10,6 +10,7 @@ from data import data
 from .. import utils
 # DO NOT REMOVE THIS LINE
 from ..common import resource
+from ..common.icon import Icon
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
 from .execution_interface import ExecutionInterface
@@ -56,13 +57,13 @@ class MainWindow(FluentWindow):
         # add navigation items
         self.addSubInterface(self.homeInterface, FIF.HOME, 'Home')
         self.navigationInterface.addSeparator()
-        self.addSubInterface(self.scoopInterface, QIcon(':/gallery/images/icons/package.svg'), 'Scoop')
-        self.addSubInterface(self.pipInterface, QIcon(':/gallery/images/icons/python.svg'), 'Python')
-        self.addSubInterface(self.npmInterface, QIcon(':/gallery/images/icons/nodejs.svg'), 'NodeJS')
-        self.addSubInterface(self.idaPluginInterface, FIF.TILES, 'IDA Plugins')
-        self.addSubInterface(self.vsCodeExtensionInterface, QIcon(':/gallery/images/icons/code_test.svg'), 'VSCode Extensions')
+        self.addSubInterface(self.scoopInterface, Icon.PACKAGE, 'Scoop')
+        self.addSubInterface(self.pipInterface, Icon.PYTHON, 'Python')
+        self.addSubInterface(self.npmInterface, Icon.JS, 'NodeJS')
+        self.addSubInterface(self.idaPluginInterface, Icon.PLUG_DISCONNECTED, 'IDA Plugins')
+        self.addSubInterface(self.vsCodeExtensionInterface, Icon.CODE, 'VSCode Extensions')
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
-        self.addSubInterface(self.fileTypeAssociationsInterface, FIF.RIGHT_ARROW, 'File Type Associations')
+        self.addSubInterface(self.fileTypeAssociationsInterface, Icon.OPEN_WITH, 'File Type Associations')
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, 'Git Repositories')
 
         # add custom widget to bottom

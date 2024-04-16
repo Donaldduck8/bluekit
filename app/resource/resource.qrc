@@ -10,10 +10,18 @@
         <file>images/icons/Text_white.svg</file>
         <file>images/icons/Price_black.svg</file>
         <file>images/icons/Price_white.svg</file>
-        <file>images/icons/code_test.svg</file>
-        <file>images/icons/package.svg</file>
-        <file>images/icons/python.svg</file>
-        <file>images/icons/nodejs.svg</file>
+        <file>images/icons/OpenWith_black.svg</file>
+        <file>images/icons/OpenWith_white.svg</file>
+        <file>images/icons/Code_black.svg</file>
+        <file>images/icons/Code_white.svg</file>
+        <file>images/icons/JS_black.svg</file>
+        <file>images/icons/JS_white.svg</file>
+        <file>images/icons/Package_black.svg</file>
+        <file>images/icons/Package_white.svg</file>
+        <file>images/icons/PlugDisconnected_black.svg</file>
+        <file>images/icons/PlugDisconnected_white.svg</file>
+        <file>images/icons/Python_black.svg</file>
+        <file>images/icons/Python_white.svg</file>
         <file>images/splash.png</file>
         <file>images/avatar.png</file>
         <file>images/jellyfish_logo_small.png</file>
