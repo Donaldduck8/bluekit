@@ -81,9 +81,12 @@ def create_start_layout_xml(apps: List[str]):
     """
     lines = []
     for app in apps:
+
         if app.startswith("Microsoft"):
             lines.append(f'\t\t<taskbar:DesktopApp DesktopApplicationID="{app}" />')
         else:
+            app = resolve_path(app)
+
             lines.append(f'\t\t<taskbar:DesktopApp DesktopApplicationLinkPath="{app}" />')
 
     content = "\n".join(lines)
