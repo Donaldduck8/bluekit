@@ -184,7 +184,7 @@ def pip_install_packages(packages: List[str]):
         run_shell_command(command=f"pip.exe install {package_name}")
 
         if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed PIP package {package_name_pretty}", "", InfoBarIcon.SUCCESS)
+            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {package_name_pretty} (PIP)", "", InfoBarIcon.SUCCESS)
 
 
 def install_build_tools():
@@ -1070,7 +1070,7 @@ def npm_install_libraries(libs: List[str]):
             continue
 
         if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed NodeJS package {lib_name_pretty}", "", InfoBarIcon.SUCCESS)
+            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {lib_name_pretty} (NPM)", "", InfoBarIcon.SUCCESS)
 
 
 def extract_bundled_zip():
