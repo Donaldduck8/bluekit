@@ -1,0 +1,1 @@
+start pyrcc5 -compress 1 -o "app\common\resource.py" "app\resource\resource.qrc"

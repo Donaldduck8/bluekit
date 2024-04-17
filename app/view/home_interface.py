@@ -35,7 +35,7 @@ class BannerWidget(QWidget):
 
         self.linkCardView.addCard(
             ':/gallery/images/jellyfish_logo_small.png',
-            self.tr('Irukandji'),
+            self.tr('Bluekit'),
             self.tr('An all-in-one setup script for cybersecurity workstations.'),
             HELP_URL
         )
@@ -59,7 +59,7 @@ class BannerWidget(QWidget):
         self.linkCardView.addCard(
             FluentIcon.FEEDBACK,
             self.tr('Send feedback'),
-            self.tr('Help us improve PyQt-Fluent-Widgets by providing feedback.'),
+            self.tr('Help us improve Bluekit by providing feedback.'),
             FEEDBACK_URL
         )
 
