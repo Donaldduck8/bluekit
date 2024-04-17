@@ -17,6 +17,7 @@ class Icon(FluentIconBase, Enum):
     PACKAGE = "Package"
     PYTHON = "Python"
     PLUG_DISCONNECTED = "PlugDisconnected"
+    REGISTRY_EDITOR = "RegistryEditor"
 
     def path(self, theme=Theme.AUTO):
         return f":/gallery/images/icons/{self.value}_{getIconColor(theme)}.svg"

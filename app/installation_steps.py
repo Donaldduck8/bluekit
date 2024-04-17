@@ -52,29 +52,14 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
     try:
         if command:
             logger.info(f"Shell: '{command}'")
-            subprocess.run(command.split(" "), 
-                            check=True,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            text=True,)
+            subprocess.run(command.split(" "), check=True)
         elif powershell_command:
             logger.info(f"PowerShell: '{powershell_command}'")
-            subprocess.run(["powershell", "-Command", powershell_command],
-                            check=True,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            text=True,)
+            subprocess.run(["powershell", "-Command", powershell_command], check=True)
             
         elif command_parts:
             logger.info(f"Shell: '{json.dumps(command_parts)}'")
-            subprocess.run(command_parts,
-                            check=True,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            text=True,)
+            subprocess.run(command_parts, check=True)
             
     except Exception as e:
         if failure_okay:
@@ -447,21 +432,6 @@ def remove_taskbar_pin(app_name):
     run_shell_command(powershell_command=command, failure_okay=True)
 
 
-def remove_task_view():
-    """
-    Removes the Task View button from the taskbar.
-    """
-    logger.info("Remove the Task View button")
-
-    path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
-    value = 0
-    name = "ShowTaskViewButton"
-
-    winreg.CreateKey(winreg.HKEY_CURRENT_USER, path)
-    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_WRITE) as key:
-        winreg.SetValueEx(key, name, 0, winreg.REG_DWORD, value)
-
-
 def pin_to_taskbar(program_path, shortcut_path):
     """
     Pins an application to the taskbar.
@@ -610,21 +580,6 @@ def make_vm_stay_awake():
     run_shell_command(powershell_command=ps_script, failure_okay=True)
 
 
-def hide_desktop_icons():
-    """
-    Hides desktop icons by modifying the registry.
-    """
-    logger.info("Hide Desktop icons")
-
-    path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
-    value = 1
-    name = "HideIcons"
-
-    winreg.CreateKey(winreg.HKEY_CURRENT_USER, path)
-    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_WRITE) as key:
-        winreg.SetValueEx(key, name, 0, winreg.REG_DWORD, value)
-
-
 def hide_onedrive_pin():
     """
     Hides the OneDrive icon from the File Explorer navigation pane.
@@ -683,8 +638,6 @@ def common_post_install():
         prepare_quick_access,
         remove_taskbar_pin("Microsoft Store"),
         remove_taskbar_pin("Microsoft Edge"),
-        remove_task_view,
-        hide_desktop_icons,
         make_scoop_buckets_safe,
     ]
 
@@ -847,7 +800,7 @@ def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
     Args:
         cache_name (str): The name of the cache ZIP file to extract. Defaults to "scoop_cache".
     """
-    logger.info(f"Extract bundled Scoop cache, if available")
+    logger.info("Extract bundled Scoop cache, if available")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
     cache_zip_p = os.path.join(appdata_temp_p, f"{cache_name}.zip")
@@ -888,7 +841,6 @@ def install_zsh_over_git():
         # Get all items in the source directory, including subdirectories
         Get-ChildItem -Path $sourceDir -Recurse | ForEach-Object {
             $sourceItem = $_
-            $sourceItem.Name | Out-Host;
             $targetItemPath = $sourceItem.FullName.Replace($sourceDir, $targetDir)
 
             # Check if the source item is a directory
@@ -897,7 +849,7 @@ def install_zsh_over_git():
                 if (-not (Test-Path -Path $targetItemPath)) {
                     New-Item -ItemType Directory -Path $targetItemPath | Out-Null
                 }
-            } else {
+            } elseif ($sourceItem.Name -ne "install.json" -and $sourceItem.Name -ne "manifest.json") {
                 # Ensure target directory exists for the file
                 $targetItemDir = [System.IO.Path]::GetDirectoryName($targetItemPath)
                 if (-not (Test-Path -Path $targetItemDir)) {
@@ -1126,36 +1078,6 @@ def extract_bundled_zip():
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Extracted bundled .zip file", "", InfoBarIcon.SUCCESS)
 
 
-def add_npcap_installer_to_runonce():
-    """
-    Adds the Npcap installer to the RunOnce registry key to run at the next login.
-    """
-    logger.info("Add Npcap installer to RunOnce")
-
-    npcap_installer_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\wireshark\current\npcap-installer.exe")
-
-    if not os.path.isfile(npcap_installer_p):
-        logger.warning("Npcap installer not found, skipping...")
-
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Npcap installer not found, skipping RunOnce entry!", "", InfoBarIcon.WARNING)
-
-        return
-
-    command = " ".join([
-        "Set-ItemProperty",
-        "-Path HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
-        "-Name 'NpcapInstaller'",
-        "-Type 'String'",
-        f"-Value '{npcap_installer_p}'"
-    ])
-
-    run_shell_command(powershell_command=command)
-
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Added Npcap installer to RunOnce", "", InfoBarIcon.SUCCESS)
-
-
 def remove_worthless_python_exes():
     """
     Removes the worthless python.exe and python3.exe files from the WindowsApps directory, if they exist.
@@ -1244,21 +1166,6 @@ def install_net_3_5():
     logger.info("Install .NET Framework 3.5")
 
     run_shell_command(powershell_command="Dism /online /Enable-Feature /FeatureName:NetFx3", failure_okay=True)
-
-
-def enable_dark_mode():
-    """
-    Enables dark mode using the registry.
-    """
-    logger.info("Enable Dark Mode")
-
-    path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
-    value = 0
-    name = "AppsUseLightTheme"
-
-    winreg.CreateKey(winreg.HKEY_CURRENT_USER, path)
-    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_WRITE) as key:
-        winreg.SetValueEx(key, name, 0, winreg.REG_DWORD, value)
 
 
 def ida_py_switch(python_dll_path: str):
@@ -1394,3 +1301,93 @@ def install_ida_plugins(plugins: List[str]):
 
             if widget:
                 widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed IDA plugin {plugin_name}", "", InfoBarIcon.SUCCESS)
+
+
+def make_registry_changes(registry_changes_data: dict):
+    """
+    Makes a list of registry changes.
+
+    Args:
+        registry_changes_data (dict): A dictionary of registry changes to make.
+    """
+    logger.info("Make registry changes")
+
+    for _category, registry_changes in registry_changes_data.items():
+        if not isinstance(registry_changes, list):
+            logger.warning("Registry changes are not a list, skipping...")
+            continue
+
+        for registry_change in registry_changes:
+            if not isinstance(registry_change, dict):
+                logger.warning("Registry change is not a dictionary, skipping...")
+                continue
+
+            description = registry_change.get("description")
+            key = registry_change.get("key")
+            value = registry_change.get("value")
+            data = registry_change.get("data")
+
+            data_type_s = registry_change.get("type")
+
+            # Pattern match the data type
+            if data_type_s == "REG_SZ":
+                data_type = winreg.REG_SZ
+            elif data_type_s == "REG_DWORD":
+                data_type = winreg.REG_DWORD
+            elif data_type_s == "REG_BINARY":
+                data_type = winreg.REG_BINARY
+            elif data_type_s == "REG_EXPAND_SZ":
+                data_type = winreg.REG_EXPAND_SZ
+            elif data_type_s == "REG_MULTI_SZ":
+                data_type = winreg.REG_MULTI_SZ
+            elif data_type_s == "REG_QWORD":
+                data_type = winreg.REG_QWORD
+            else:
+                logger.warning(f"Invalid data type {data_type_s}, skipping...")
+                continue
+
+            # Resolve the data if it's a path
+            if data_type == winreg.REG_SZ:
+                data_resolved = utils.resolve_path(data)
+
+                if data_resolved:
+                    data = data_resolved
+
+            if data_type == winreg.REG_DWORD:
+                data = int(data)
+
+            hive_s = registry_change.get("hive")
+
+            # Pattern match the hive
+            if hive_s == "HKEY_CLASSES_ROOT":
+                hive = winreg.HKEY_CLASSES_ROOT
+            elif hive_s == "HKEY_CURRENT_USER":
+                hive = winreg.HKEY_CURRENT_USER
+            elif hive_s == "HKEY_LOCAL_MACHINE":
+                hive = winreg.HKEY_LOCAL_MACHINE
+            elif hive_s == "HKEY_USERS":
+                hive = winreg.HKEY_USERS
+            elif hive_s == "HKEY_CURRENT_CONFIG":
+                hive = winreg.HKEY_CURRENT_CONFIG
+            else:
+                logger.warning("Invalid hive, skipping...")
+                continue
+
+            if key is None or value is None or data is None:
+                logger.warning("Key, value, or data not found, skipping...")
+                continue
+
+            if not data_type:
+                data_type = winreg.REG_SZ
+
+            try:
+                winreg.CreateKey(hive, key)
+                with winreg.OpenKey(hive, key, 0, winreg.KEY_WRITE) as reg_key:
+                    winreg.SetValueEx(reg_key, value, 0, data_type, data)
+
+            except Exception as e:
+                print(f"Failed to update the registry: {e}")
+                traceback.print_exc()
+
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: {description}", "", InfoBarIcon.SUCCESS)

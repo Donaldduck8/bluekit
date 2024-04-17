@@ -249,18 +249,13 @@ def threading_function(widget: ExecutionInterface, data: dict):
 
     installation_steps.scoop_add_buckets(data["scoop"]["Buckets"])
     installation_steps.scoop_install_tooling(data["scoop"])
-
     installation_steps.pip_install_packages(data["pip"])
-
     installation_steps.npm_install_libraries(data["npm"])
-
     installation_steps.install_ida_plugins(data["ida_plugins"])
-
     installation_steps.set_file_type_associations(data["file_type_associations"])
-
     installation_steps.pin_apps_to_taskbar(data["taskbar_pins"])
-
     installation_steps.clone_git_repositories(data["git_repositories"])
+    installation_steps.make_registry_changes(data["registry_changes"])
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
     installation_steps.ida_py_switch(data["ida_py_switch"])
@@ -276,10 +271,6 @@ def threading_function(widget: ExecutionInterface, data: dict):
     installation_steps.extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
 
-    # Add Npcap's annoying non-silent installer to the RunOnce registry key
-    installation_steps.add_npcap_installer_to_runonce()
-
-
     # Install .NET 3.5, which is required by some older malware samples
     # installation_steps.install_net_3_5()
     # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
@@ -287,9 +278,6 @@ def threading_function(widget: ExecutionInterface, data: dict):
 
     installation_steps.obtain_and_place_malware_analysis_configurations()
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
-
-    installation_steps.enable_dark_mode()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Enabled dark mode", "", InfoBarIcon.SUCCESS)
 
     installation_steps.common_post_install()
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)

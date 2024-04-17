@@ -75,9 +75,10 @@ data = {
             {
                 "type": "one_of",
                 "main": ("binary_ninja.json", "Binary Ninja", "A reverse engineering platform."),
-                "alternative": ("binary_ninja_free", "Binary Ninja Free", "A free version of Binary Ninja."),  
+                "alternative": ("binary_ninja_free", "Binary Ninja Free", "A free version of Binary Ninja."),
             },
             ("ghidra", "Ghidra", "A software reverse engineering (SRE) framework."),
+            ("cutter", "Cutter", "A reverse engineering platform powered by rizin/radare2 and Ghidra's decompiler."),
             ("malware-analysis-bucket/floss", "FLOSS", "A tool designed to automatically deobfuscate strings from malware samples."),
             ("malware-analysis-bucket/cffexplorer", "CFF Explorer", "A PE editor."),
             ("innoextract", "Inno Setup Extractor", "A tool for extracting Inno Setup installers."),
@@ -406,6 +407,115 @@ data = {
                 "ear",
             ]
         },
+    },
+
+    "registry_changes": {
+        "Basics": [
+            {
+                "description": "Add NpCapInstaller to RunOnce to install Npcap after a reboot.",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+                "value": "NpCapInstaller",
+                "data": "%USERPROFILE%\\scoop\\apps\\wireshark\\current\\npcap-installer.exe",
+                "type": "REG_SZ"
+            },
+            {
+                "description": "Enable dark mode for applications.",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                "value": "AppsUseLightTheme",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Remove the task view button from the taskbar.",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                "value": "ShowTaskViewButton",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Hide desktop icons.",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                "value": "HideIcons",
+                "data": "1",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Show full directory path in Explorer title bar",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState",
+                "value": "FullPath",
+                "data": "1",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Show known file extensions",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                "value": "HideFileExt",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Show hidden files",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                "value": "Hidden",
+                "data": "1",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Disable SmartScreen",
+                "hive": "HKEY_LOCAL_MACHINE",
+                "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+                "value": "EnableSmartScreen",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Disable Microsoft Edge Phishing Filter",
+                "hive": "HKEY_LOCAL_MACHINE",
+                "key": "SOFTWARE\\Policies\\Microsoft\\MicrosoftEdge\\PhishingFilter",
+                "value": "EnabledV9",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Disable Windows Firewall (Standard Profile)",
+                "hive": "HKEY_LOCAL_MACHINE",
+                "key": "SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\StandardProfile",
+                "value": "EnableFirewall",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Fix rare error (0xd000003a) when opening Windows Terminal",
+                "hive": "HKEY_LOCAL_MACHINE",
+                "key": "SYSTEM\\CurrentControlSet\\Services\\condrv",
+                "value": "Start",
+                "data": "2",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Disable search bar suggestions",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Policies\\Microsoft\\Windows",
+                "value": "DisableSearchBoxSuggestions",
+                "data": "1",
+                "type": "REG_DWORD"
+            },
+            {
+                "description": "Disable search bar widget",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Search",
+                "value": "SearchboxTaskbarMode",
+                "data": "0",
+                "type": "REG_DWORD"
+            }
+        ]
     }
 }
 

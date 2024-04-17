@@ -16,6 +16,7 @@ from .execution_interface import ExecutionInterface
 from .file_type_association_interface import FileTypeAssocWidget
 from .home_interface import HomeInterface
 from .package_tree_interface import PackageTreeWidget
+from .registry_changes_interface import RegistryChangesWidget
 
 if not resource:
     raise ImportError("Resource not found")
@@ -39,6 +40,7 @@ class MainWindow(FluentWindow):
         self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", data["taskbar_pins"])
         self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", data["file_type_associations"])
         self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", data["git_repositories"])
+        self.registryChangesInterface = RegistryChangesWidget(self, "Registry", data["registry_changes"])
         self.executionInterface = ExecutionInterface(self, "Execution")
 
         # enable acrylic effect
@@ -64,9 +66,11 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.npmInterface, Icon.JS, 'NodeJS')
         self.addSubInterface(self.idaPluginInterface, Icon.PLUG_DISCONNECTED, 'IDA Plugins')
         self.addSubInterface(self.vsCodeExtensionInterface, Icon.CODE, 'VSCode Extensions')
-        self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
         self.addSubInterface(self.fileTypeAssociationsInterface, Icon.OPEN_WITH, 'File Type Associations')
         self.addSubInterface(self.gitRepositoryInterface, FIF.GITHUB, 'Git Repositories')
+        self.navigationInterface.addSeparator()
+        self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
+        self.addSubInterface(self.registryChangesInterface, Icon.REGISTRY_EDITOR, 'Registry Changes')
 
         # add custom widget to bottom
         self.navigationInterface.addItem(
@@ -108,6 +112,7 @@ class MainWindow(FluentWindow):
             taskbar_pins_data = self.taskbarPinsInterface.data
             file_type_associations_data = self.fileTypeAssociationsInterface.data
             git_repositories_data = self.gitRepositoryInterface.data
+            registry_changes_data = self.registryChangesInterface.data
 
             execution_data = {
                 'scoop': scoop_data,
@@ -119,6 +124,7 @@ class MainWindow(FluentWindow):
                 'file_type_associations': file_type_associations_data,
                 'git_repositories': git_repositories_data,
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
+                "registry_changes": registry_changes_data,
             }
 
             self.executionInterface.execute(
