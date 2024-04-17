@@ -6,3 +6,5 @@ app/common/resource.py
 *.spec
 *.exe
 /build
+log.txt
+.vscode/launch.json
