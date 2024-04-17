@@ -51,7 +51,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
     """
     try:
         if command:
-            logger.info(f"Running Shell command: '{command}'")
+            logger.info(f"Shell: '{command}'")
             subprocess.run(command.split(" "), 
                             check=True,
                             stdin=subprocess.PIPE,
@@ -59,7 +59,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                             stderr=subprocess.PIPE,
                             text=True,)
         elif powershell_command:
-            logger.info(f"Running PowerShell command: '{powershell_command}'")
+            logger.info(f"PowerShell: '{powershell_command}'")
             subprocess.run(["powershell", "-Command", powershell_command],
                             check=True,
                             stdin=subprocess.PIPE,
@@ -68,7 +68,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                             text=True,)
             
         elif command_parts:
-            logger.info(f"Running Shell command: '{json.dumps(command_parts)}'")
+            logger.info(f"Shell: '{json.dumps(command_parts)}'")
             subprocess.run(command_parts,
                             check=True,
                             stdin=subprocess.PIPE,
@@ -655,6 +655,24 @@ if (Get-ItemProperty -Path $regPath -Name $propertyName -ErrorAction SilentlyCon
     run_shell_command(powershell_command=ps_script, failure_okay=True)
 
 
+def common_pre_install():
+    """
+    Executes common pre-installation tasks.
+    """
+    logger.info("Common pre-installation steps")
+
+    functions = [
+        make_vm_stay_awake,
+    ]
+
+    for function in functions:
+        try:
+            function()
+        except Exception:
+            traceback.print_exc()
+            pass
+
+
 def common_post_install():
     """
     Executes common post-installation tasks.
@@ -667,7 +685,6 @@ def common_post_install():
         remove_taskbar_pin("Microsoft Edge"),
         remove_task_view,
         hide_desktop_icons,
-        make_vm_stay_awake,
         make_scoop_buckets_safe,
     ]
 

@@ -237,6 +237,7 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
 
 def threading_function(widget: ExecutionInterface, data: dict):
     installation_steps.widget = widget
+    installation_steps.common_pre_install()
     installation_steps.remove_worthless_python_exes()
     installation_steps.extract_bundled_zip()
     installation_steps.extract_scoop_cache()
