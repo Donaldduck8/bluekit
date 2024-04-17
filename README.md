@@ -11,7 +11,7 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 ## Requirements
 **Bluekit should not be installed on a physical machine. It's designed to be run on a clean virtual machine.**
 
-* Windows >= 10
+* Windows 10 / 11
 * PowerShell (64-bit and 32-bit)
 * Disk capacity > 40 GB
 * Memory > 2GB
