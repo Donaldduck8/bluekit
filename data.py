@@ -39,7 +39,7 @@ data = {
             ("malware-analysis-bucket/glazewm_extra", "Glaze Window Manager", "A tiling window manager for Windows."),
             ("setuserfta", "SetUserFTA", "A tool to change the default program associated with a file type."),
             ("upx", "UPX", "A free, portable, extendable, high-performance executable packer for several executable formats."),
-            ("openssl", "OpenSSL", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
+            ("openssl-light", "OpenSSL (Light)", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
             ("total-registry", "Total Registry", "A registry editor with a focus on usability and performance."),
             ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
         ],
