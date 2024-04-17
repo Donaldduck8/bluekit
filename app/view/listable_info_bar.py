@@ -1,12 +1,14 @@
 # coding:utf-8
+import time
+
 from enum import Enum
 from typing import Union
 
 from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, QSize, Qt,
-                          pyqtSignal)
+                          pyqtSignal, )
 from PyQt5.QtGui import QColor, QIcon, QPainter
 from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
-                             QLabel, QVBoxLayout, QWidget)
+                             QLabel, QVBoxLayout, QWidget, QSizePolicy)
 from qfluentwidgets import (FluentIconBase, FluentStyleSheet,
                             InfoBarIcon,
                             InfoBarPosition)
@@ -22,14 +24,14 @@ class InfoIconWidget(QWidget):
 
     def __init__(self, icon: InfoBarIcon, parent=None):
         super().__init__(parent=parent)
-        self.setFixedSize(36, 36)
+        self.setFixedSize(18, 18)
         self.icon = icon
 
     def paintEvent(self, e):
         painter = QPainter(self)
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
 
-        rect = QRectF(10, 10, 15, 15)
+        rect = QRectF(2, 2, 15, 15)
         if self.icon != InfoBarIcon.INFORMATION:
             drawIcon(self.icon, painter, rect)
         else:
@@ -94,14 +96,15 @@ class InfoBar(QFrame):
         self.lightBackgroundColor = None
         self.darkBackgroundColor = None
 
+        # LOL WTF
+        self.setMaximumWidth(self.parent().width() - 500)
+
         self.__initWidget()
 
     def __initWidget(self):
         self.opacityEffect.setOpacity(1)
         self.setGraphicsEffect(self.opacityEffect)
 
-        self.closeButton.setFixedSize(36, 36)
-        self.closeButton.setIconSize(QSize(12, 12))
         self.closeButton.setCursor(Qt.PointingHandCursor)
         self.closeButton.setVisible(self.isClosable)
 
@@ -111,21 +114,31 @@ class InfoBar(QFrame):
         self.closeButton.clicked.connect(self.close)
 
     def __initLayout(self):
-        # self.hBoxLayout.setContentsMargins(6, 6, 6, 6)
         self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
         self.textLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
         self.textLayout.setAlignment(Qt.AlignTop)
-        self.textLayout.setContentsMargins(0, 8, 0, 8)
 
         self.hBoxLayout.setSpacing(0)
         # self.textLayout.setSpacing(5)
 
         # add icon to layout
         self.hBoxLayout.addWidget(self.iconWidget, 0, Qt.AlignTop | Qt.AlignLeft)
+        self.hBoxLayout.addSpacing(6)
 
         # add title to layout
-        self.textLayout.addWidget(self.titleLabel, 1, Qt.AlignTop)
+        self.textLayout.addWidget(self.titleLabel, 1, Qt.AlignTop | Qt.AlignLeft)
         self.titleLabel.setVisible(bool(self.title))
+
+        self.timestampLabel = QLabel(self)
+        self.timestampLabel.setObjectName('timestampLabel')
+        timestampText = time.strftime('%H:%M:%S', time.localtime())
+        self.timestampLabel.setText(timestampText)
+        self.textLayout.addWidget(self.timestampLabel, 0, Qt.AlignRight)
+
+        # Set textLayout to resize itself or whatever
+        self.textLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
+
+        self.titleLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         # add content label to layout
         # if self.orient == Qt.Horizontal:
@@ -166,15 +179,31 @@ class InfoBar(QFrame):
         self.opacityAni.start()
 
     def _adjustText(self):
-        w = 900 if not self.parent() else (self.parent().width() - 50)
+        from PyQt5.QtGui import QFontMetrics
 
-        # adjust title
-        # chars = max(min(w / 10, 120), 30)
-        self.titleLabel.setText(TextWrap.wrap(self.title, 50, False)[0])
+        def calculate_average_char_width(font):
+            # Create a QFontMetrics object for the given font
+            metrics = QFontMetrics(font)
+            # Get the average width of characters using QFontMetrics
+            average_width = metrics.averageCharWidth()
+            return average_width
+
+        parent = self.parent()
+
+        if parent:
+            w = parent.width() - 50
+        else:
+            w = 900
+
+        numChars = int(w / calculate_average_char_width(self.titleLabel.font()))
+
+        # Convert from pixel width to character width
+        self.titleLabel.setText(TextWrap.wrap(self.title, numChars * 0.9, False)[0])
 
         # adjust content
         # chars = max(min(w / 9, 120), 30)
         # self.contentLabel.setText(TextWrap.wrap(self.content, chars, False)[0])
+
         self.adjustSize()
 
     def addWidget(self, widget: QWidget, stretch=0):
