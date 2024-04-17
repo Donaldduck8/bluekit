@@ -23,12 +23,14 @@ from .listable_info_bar import InfoBar as ListableInfoBar
 class ListWidgetLogHandler(logging.Handler):
     def __init__(self, widget):
         super().__init__()
-        self.widget = widget
+        self.widget: ExecutionInterface = widget
 
     def emit(self, record):
         msg = self.format(record)
         self.widget.bottomListView.listWidget.addItem(msg)
         self.widget.bottomListView.listWidget.scrollToBottom()
+        self.widget.bottomListView.listWidget.scrollToBottom()
+        self.widget.bottomListView.listWidget.setAutoScroll(True)
 
 
 class ListFrame(BaseFrame):
@@ -151,6 +153,7 @@ class ExecutionInterface(QWidget):
         # New ListWidget to the right of the ProgressRing
         self.rightListView = ListFrame(self)
         self.rightListView.setMaximumHeight(250)
+        self.rightListView.listWidget.setAutoScroll(True)
 
         self.hBoxLayout.addWidget(self.rightListView)
 
@@ -171,6 +174,7 @@ class ExecutionInterface(QWidget):
 
         # Add word wrap instead of cutting off the entry
         self.bottomListView.listWidget.setWordWrap(True)
+        self.bottomListView.listWidget.setAutoScroll(True)
 
         # Remove the spacing between element in the bottomListView
         self.bottomListView.listWidget.setSpacing(0)

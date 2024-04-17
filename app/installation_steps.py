@@ -1099,7 +1099,7 @@ def extract_bundled_zip():
         logger.warning("Bundled ZIP file not found, skipping...")
 
         if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Warning: No bundled .zip file found", "", InfoBarIcon.INFORMATION)
+            widget.rightListView.listWidget.add_infobar_signal.emit("Info: No bundled .zip file found", "", InfoBarIcon.INFORMATION)
         
         return
 
