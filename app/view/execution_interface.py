@@ -5,7 +5,7 @@ import threading
 from PyQt5.QtCore import (Qt,
                           pyqtSignal, QTime, QTimer)
 from PyQt5.QtGui import QResizeEvent
-from PyQt5.QtWidgets import (QFrame, QHBoxLayout,
+from PyQt5.QtWidgets import (QHBoxLayout,
                              QListWidgetItem, QVBoxLayout, QWidget)
 from qfluentwidgets import (FluentStyleSheet,
                             IndeterminateProgressRing, InfoBarIcon,
@@ -40,7 +40,7 @@ class ListFrame(BaseFrame):
 
 
 class CustomListWidget(ListWidget):
-    add_infobar_signal = pyqtSignal(str, str, str)  # Signal to update the list widget safely
+    add_infobar_signal = pyqtSignal(str, str, InfoBarIcon)  # Signal to update the list widget safely
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -52,11 +52,11 @@ class CustomListWidget(ListWidget):
         self.setContentsMargins(0, 400, 8, 4)
         self.setViewportMargins(0, 4, 0, 4)
 
-    def add_infobar(self, title, content):
+    def add_infobar(self, title, content, icon):
         item = QListWidgetItem()
 
         infoBar = ListableInfoBar(
-            icon=InfoBarIcon.SUCCESS,
+            icon=icon,
             title=title,
             content=content,
             orient=Qt.Vertical,
@@ -75,6 +75,7 @@ class CustomListWidget(ListWidget):
         self.addItem(item)
         self.setItemWidget(item, infoBar)
         self.setSpacing(4)
+        self.scrollToBottom()
         self.scrollToBottom()
 
     def resizeEvent(self, e: QResizeEvent) -> None:
@@ -218,7 +219,7 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
         import random
 
         # widget.rightListView.listWidget.addItem("Item " + str(i))
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", "")
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", InfoBarIcon.SUCCESS)
 
         # Add a standard list item to the bottom list view
         widget.bottomListView.listWidget.addItem(QListWidgetItem("Item " + str(i)))
@@ -231,107 +232,65 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
 
 
 def threading_function(widget: ExecutionInterface, data: dict):
+    installation_steps.widget = widget
     installation_steps.remove_worthless_python_exes()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Removed AppAlias Python executables", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
-
     installation_steps.extract_bundled_zip()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Extracted bundled .zip file, if present", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
-
     installation_steps.extract_scoop_cache()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Extracted Scoop cache", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.install_scoop()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Scoop", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
-
     installation_steps.scoop_install_git()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Git", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.scoop_install_pwsh()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed PowerShell", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.scoop_add_buckets(data["scoop"]["Buckets"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Added Scoop buckets", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
-
     installation_steps.scoop_install_tooling(data["scoop"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Scoop tooling", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.pip_install_packages(data["pip"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed pip packages", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.npm_install_libraries(data["npm"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed npm libraries", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.install_ida_plugins(data["ida_plugins"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed IDA Pro plugins", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.set_file_type_associations(data["file_type_associations"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Set file type associations", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.pin_apps_to_taskbar(data["taskbar_pins"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Pinned apps to taskbar", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.clone_git_repositories(data["git_repositories"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cloned Git repositories", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
     installation_steps.ida_py_switch(data["ida_py_switch"])
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Ran IDAPySwitch", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     # Make Bindiff available to other programs
     installation_steps.make_bindiff_available_to_programs()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Made BinDiff available to other programs", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
 
     # Install Zsh on top of git
     installation_steps.install_zsh_over_git()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Zsh over Git", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Zsh over Git", "", InfoBarIcon.SUCCESS)
 
     # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
     installation_steps.extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Recaf3's JavaFX dependencies", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
 
     # Add Npcap's annoying non-silent installer to the RunOnce registry key
     installation_steps.add_npcap_installer_to_runonce()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Added Npcap installer to RunOnce", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+
 
     # Install .NET 3.5, which is required by some older malware samples
     # installation_steps.install_net_3_5()
-    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", "")
+    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
     # widget.rightListView.listWidget.scrollToBottom()
 
     installation_steps.obtain_and_place_malware_analysis_configurations()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
 
     installation_steps.enable_dark_mode()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Enabled dark mode", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Enabled dark mode", "", InfoBarIcon.SUCCESS)
 
     installation_steps.common_post_install()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
 
     installation_steps.clean_up_disk()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", "")
-    widget.rightListView.listWidget.scrollToBottom()
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", InfoBarIcon.SUCCESS)
 
     widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
     widget.progressRing.stop()

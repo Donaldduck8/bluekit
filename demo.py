@@ -1,6 +1,7 @@
 # coding:utf-8
 import ctypes
 import json5
+import logging
 import os
 import sys
 import traceback
@@ -61,7 +62,13 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        with open('log.txt', 'w', encoding="utf-8") as log_f:
+            sys.stdout = log_f
+            installation_steps.logger.addHandler(logging.StreamHandler(sys.stdout))
+            main()
+
+            sys.stdout = sys.__stdout__
+        
     except Exception:
         # Show the error message box using windows message box API
         exception_traceback = traceback.format_exc()
