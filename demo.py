@@ -64,7 +64,10 @@ if __name__ == "__main__":
     try:
         with open('log.txt', 'w', encoding="utf-8") as log_f:
             sys.stdout = log_f
+            sys.stderr = log_f
             installation_steps.logger.addHandler(logging.StreamHandler(sys.stdout))
+            installation_steps.logger.addHandler(logging.StreamHandler(sys.stderr))
+            installation_steps.logger.setLevel(logging.DEBUG)
             main()
 
             sys.stdout = sys.__stdout__
