@@ -451,39 +451,6 @@ def remove_taskbar_pin(app_name):
     run_shell_command(powershell_command=command, failure_okay=True)
 
 
-def pin_to_taskbar(program_path, shortcut_path):
-    """
-    Pins an application to the taskbar.
-    """
-    logger.info(f"Pin to Taskbar: '{program_path}'")
-
-    # PowerShell script to create a shortcut and pin it to the taskbar
-    ps_script = rf'''
-    function Create-Shortcut {{
-        param (
-            [string]$TargetPath,
-            [string]$ShortcutPath
-        )
-
-        $WshShell = New-Object -ComObject WScript.Shell
-        $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
-        $Shortcut.TargetPath = $TargetPath
-        $Shortcut.Save()
-    }}
-
-    # Create shortcut
-    Create-Shortcut -TargetPath "{program_path}" -ShortcutPath "{shortcut_path}"
-
-    # Pin shortcut to the taskbar
-    $shell = New-Object -ComObject Shell.Application
-    $taskbarPath = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar')
-    $shell.Namespace($taskbarPath).Self.InvokeVerb('pindirectory', "{shortcut_path}")
-    '''
-
-    # Execute the PowerShell script
-    run_shell_command(powershell_command=ps_script, failure_okay=True)
-
-
 def pin_apps_to_taskbar(apps: List[str]):
     """
     Pins applications to the taskbar using a startLayout.xml file.
