@@ -35,7 +35,7 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 widget = None
 
 
-def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False) -> None:
+def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3) -> None:
     """
     Executes a shell command or a PowerShell command.
 
@@ -44,31 +44,36 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         powershell_command (str, optional): The PowerShell command to execute. Defaults to None.
         command_parts (List[str], optional): The command parts to execute. Defaults to None.
         failure_okay (bool, optional): Whether failure is allowed. Defaults to False.
+        total_attempts (int, optional): The total number of attempts to make. Defaults to 3.
     Returns:
         None
     Raises:
         Exception: If the command execution fails and failure_okay is False.
     """
-    try:
-        if command:
-            logger.info(f"Shell: '{command}'")
-            p = subprocess.run(command.split(" "), check=True)
-        elif powershell_command:
-            logger.info(f"PowerShell: '{powershell_command}'")
-            p = subprocess.run(["powershell", "-Command", powershell_command], check=True)
-            
-        elif command_parts:
-            logger.info(f"Shell: '{json.dumps(command_parts)}'")
-            p = subprocess.run(command_parts, check=True)
+    for _ in range(total_attempts):
+        try:
+            if command:
+                logger.info(f"Shell: '{command}'")
+                p = subprocess.run(command.split(" "), check=True)
+            elif powershell_command:
+                logger.info(f"PowerShell: '{powershell_command}'")
+                p = subprocess.run(["powershell", "-Command", powershell_command], check=True)
+                
+            elif command_parts:
+                logger.info(f"Shell: '{json.dumps(command_parts)}'")
+                p = subprocess.run(command_parts, check=True)
 
-        print(p.returncode)
-            
-    except Exception as e:
-        if failure_okay:
-            logger.warning(f"Failed to run command: {e}")
-        else:
-            logger.error(f"Failed to run command: {e}")
-            raise e
+            if p.returncode != 0 and not failure_okay:
+                raise Exception(f"Command failed with return code {p.returncode}")
+            else:
+                return
+                
+        except Exception as e:
+            if failure_okay:
+                logger.warning(f"Failed to run command: {e}")
+            else:
+                logger.error(f"Failed to run command: {e}")
+                raise e
 
 
 def install_scoop() -> None:
@@ -132,9 +137,9 @@ def scoop_add_buckets(buckets: List[str]):
 
         for bucket in buckets:
             if isinstance(bucket, str):
-                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket}")
+                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket}", failure_okay=False)
             elif isinstance(bucket, tuple) or isinstance(bucket, list):
-                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket[0]}")
+                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket[0]}", failure_okay=False)
 
         for future in futures:
             future.result()
@@ -428,16 +433,19 @@ def remove_taskbar_pin(app_name):
     """
     logger.info(f"Remove from Taskbar: '{app_name}'")
 
-    command = "".join([
-        # Get all currently pinned items
-        """((New-Object -Com Shell.Application).NameSpace("shell:::{4234d49b-0245-4df3-b780-3893943456e1}").Items() | """,
+    command = "\n".join([
+        f'$appName = "{app_name}"',
 
-        # Filter out the item with the specified name and get its verbs
-        "?{$_.Name -eq '" + app_name + "'}).Verbs() | ",
+        '$taskbarNamespace = (New-Object -Com Shell.Application).NameSpace("shell:::{4234d49b-0245-4df3-b780-3893943456e1}")',
 
-        # Filter out the verb that unpins the item and execute it
-        "?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | ",
-        "%{$_.DoIt(); $exec = $true}"
+        '$pinnedItem = $taskbarNamespace.Items() | Where-Object { $_.Name -eq $appName }',
+
+        'if ($pinnedItem) {',
+        '   $pinnedItem.Verbs() | Where-Object { $_.Name.replace(\'&\', \'\') -match \'Unpin from taskbar\' } | ForEach-Object { $_.DoIt() }',
+        '   Write-Host "Successfully unpinned \'$appName\' from the taskbar."',
+        '} else {',
+        '   Write-Host "The application \'$appName\' is not currently pinned to the taskbar."',
+        '}',
     ])
 
     run_shell_command(powershell_command=command, failure_okay=True)
@@ -1425,14 +1433,15 @@ def make_registry_changes(registry_changes_data: dict):
 
 
 def install_bluekit(data: dict):
+    # 
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()
     extract_scoop_cache()
 
+    # Tooling for the rest of the installation
     install_scoop()
     scoop_install_git()
-
     scoop_install_pwsh()
 
     scoop_add_buckets(data["scoop"]["Buckets"])
@@ -1456,7 +1465,7 @@ def install_bluekit(data: dict):
     install_zsh_over_git()
 
     # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
-    extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
+    # extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
 
     # Install .NET 3.5, which is required by some older malware samples
     # install_net_3_5()
