@@ -235,52 +235,6 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
 
 def threading_function(widget: ExecutionInterface, data: dict):
     installation_steps.widget = widget
-    installation_steps.common_pre_install()
-    installation_steps.remove_worthless_python_exes()
-    installation_steps.extract_bundled_zip()
-    installation_steps.extract_scoop_cache()
-
-    installation_steps.install_scoop()
-    installation_steps.scoop_install_git()
-
-    installation_steps.scoop_install_pwsh()
-
-    installation_steps.scoop_add_buckets(data["scoop"]["Buckets"])
-    installation_steps.scoop_install_tooling(data["scoop"])
-    installation_steps.pip_install_packages(data["pip"])
-    installation_steps.npm_install_libraries(data["npm"])
-    installation_steps.install_ida_plugins(data["ida_plugins"])
-    installation_steps.set_file_type_associations(data["file_type_associations"])
-    installation_steps.pin_apps_to_taskbar(data["taskbar_pins"])
-    installation_steps.clone_git_repositories(data["git_repositories"])
-    installation_steps.make_registry_changes(data["registry_changes"])
-
-    # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
-    installation_steps.ida_py_switch(data["ida_py_switch"])
-
-    # Make Bindiff available to other programs
-    installation_steps.make_bindiff_available_to_programs()
-
-    # Install Zsh on top of git
-    installation_steps.install_zsh_over_git()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Zsh over Git", "", InfoBarIcon.SUCCESS)
-
-    # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
-    installation_steps.extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
-
-    # Install .NET 3.5, which is required by some older malware samples
-    # installation_steps.install_net_3_5()
-    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
-    # widget.rightListView.listWidget.scrollToBottom()
-
-    installation_steps.obtain_and_place_malware_analysis_configurations()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
-
-    installation_steps.common_post_install()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
-
-    installation_steps.clean_up_disk()
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", InfoBarIcon.SUCCESS)
+    installation_steps.install_bluekit(data)
 
     widget.completion_signal.emit()

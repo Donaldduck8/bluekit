@@ -21,14 +21,41 @@ except ImportError:
     pyi_splash = None
 
 parser = argparse.ArgumentParser(
-                    prog='Bluekit',
-                    description='A cybersecurity-focused workstation setup script',
-                    epilog='Have fun!')
+    prog='Bluekit',
+    description='A cybersecurity-focused workstation setup script',
+    epilog='Have fun!'
+)
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
 
 
-def main():
+def run_gui():
+    # enable dpi scale
+    if cfg.get(cfg.dpiScale) == "Auto":
+        QApplication.setHighDpiScaleFactorRoundingPolicy(
+            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    else:
+        os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
+        os.environ["QT_SCALE_FACTOR"] = str(cfg.get(cfg.dpiScale))
+
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+
+    # create application
+    app = QApplication(sys.argv)
+    app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
+
+    if pyi_splash:
+        pyi_splash.close()
+
+    # create main window
+    w = MainWindow()
+    w.show()
+
+    app.exec_()
+
+
+def ensure_suitable_environment():
     # If we are frozen
     if getattr(sys, "frozen", False):
         # If Windows Defender is enabled, show an error message
@@ -54,77 +81,20 @@ def main():
             )
             sys.exit()
 
+
+def main():
+    ensure_suitable_environment()
+
     args = parser.parse_args()
 
     if args.silent:
         if pyi_splash:
             pyi_splash.close()
 
-        installation_steps.common_pre_install()
-        installation_steps.remove_worthless_python_exes()
-        installation_steps.extract_bundled_zip()
-        installation_steps.extract_scoop_cache()
-
-        installation_steps.install_scoop()
-        installation_steps.scoop_install_git()
-
-        installation_steps.scoop_install_pwsh()
-
-        installation_steps.scoop_add_buckets(data["scoop"]["Buckets"])
-        installation_steps.scoop_install_tooling(data["scoop"])
-        installation_steps.pip_install_packages(data["pip"])
-        installation_steps.npm_install_libraries(data["npm"])
-        installation_steps.install_ida_plugins(data["ida_plugins"])
-        installation_steps.set_file_type_associations(data["file_type_associations"])
-        installation_steps.pin_apps_to_taskbar(data["taskbar_pins"])
-        installation_steps.clone_git_repositories(data["git_repositories"])
-        installation_steps.make_registry_changes(data["registry_changes"])
-
-        # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
-        installation_steps.ida_py_switch(data["ida_py_switch"])
-
-        # Make Bindiff available to other programs
-        installation_steps.make_bindiff_available_to_programs()
-
-        # Install Zsh on top of git
-        installation_steps.install_zsh_over_git()
-
-        # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
-        installation_steps.extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
-
-        # Install .NET 3.5, which is required by some older malware samples
-        # installation_steps.install_net_3_5()
-        # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
-        # widget.rightListView.listWidget.scrollToBottom()
-
-        installation_steps.obtain_and_place_malware_analysis_configurations()
-        installation_steps.common_post_install()
-        installation_steps.clean_up_disk()
+        installation_steps.install_bluekit(data)
 
     else:
-        # enable dpi scale
-        if cfg.get(cfg.dpiScale) == "Auto":
-            QApplication.setHighDpiScaleFactorRoundingPolicy(
-                Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-            QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-        else:
-            os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
-            os.environ["QT_SCALE_FACTOR"] = str(cfg.get(cfg.dpiScale))
-
-        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
-
-        # create application
-        app = QApplication(sys.argv)
-        app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
-
-        if pyi_splash:
-            pyi_splash.close()
-
-        # create main window
-        w = MainWindow()
-        w.show()
-
-        app.exec_()
+        run_gui()
 
 
 if __name__ == "__main__":

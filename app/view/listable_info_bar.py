@@ -4,7 +4,7 @@ import time
 from enum import Enum
 from typing import Union
 
-from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, QSize, Qt,
+from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, Qt,
                           pyqtSignal, )
 from PyQt5.QtGui import QColor, QIcon, QPainter
 from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
@@ -14,7 +14,7 @@ from qfluentwidgets import (FluentIconBase, FluentStyleSheet,
                             InfoBarPosition)
 from qfluentwidgets.common.auto_wrap import TextWrap
 from qfluentwidgets.common.icon import FluentIcon as FIF
-from qfluentwidgets.common.icon import Theme, drawIcon, isDarkTheme
+from qfluentwidgets.common.icon import drawIcon, isDarkTheme
 from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor
 from qfluentwidgets.components.widgets.button import TransparentToolButton
 
@@ -27,7 +27,7 @@ class InfoIconWidget(QWidget):
         self.setFixedSize(18, 18)
         self.icon = icon
 
-    def paintEvent(self, e):
+    def paintEvent(self, _e):
         painter = QPainter(self)
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
 

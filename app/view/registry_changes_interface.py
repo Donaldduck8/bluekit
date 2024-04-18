@@ -39,7 +39,6 @@ class RegistryChangesTreeFrame(BaseTreeFrame):
             parent_item.addChild(child_item)
 
 
-
 class RegistryChangesWidget(QWidget):
     """ Home interface with a pivot to switch between tree view and a JSON editor. """
 

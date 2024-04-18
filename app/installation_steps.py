@@ -404,6 +404,9 @@ def obtain_and_place_malware_analysis_configurations():
                 if os.path.isfile(vscodium_cmd_p):
                     run_shell_command(command=f"{vscodium_cmd_p} --install-extension {extension_id}", failure_okay=True)
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
+
 
 def remove_taskbar_pin(app_name):
     """
@@ -579,6 +582,9 @@ def make_vm_stay_awake():
     # Execute the PowerShell script
     run_shell_command(powershell_command=ps_script, failure_okay=True)
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Disabled standby mode", "", InfoBarIcon.SUCCESS)
+
 
 def hide_onedrive_pin():
     """
@@ -647,6 +653,8 @@ def common_post_install():
         except Exception:
             traceback.print_exc()
             pass
+
+    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
 
 
 def restart():
@@ -792,6 +800,9 @@ def clean_up_disk():
 
     # subprocess.run("Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase".split(" "), check=True)
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", InfoBarIcon.SUCCESS)
+
 
 def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
     """
@@ -867,6 +878,9 @@ def install_zsh_over_git():
     else:
         logger.info("Zsh is already installed.")
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Zsh over Git", "", InfoBarIcon.SUCCESS)
+
     oh_my_zsh_p = utils.resolve_path(r"%USERPROFILE%\.oh-my-zsh")
 
     if os.path.isdir(oh_my_zsh_p):
@@ -875,6 +889,9 @@ def install_zsh_over_git():
         oh_my_zsh_cmd = rf"git clone https://github.com/ohmyzsh/ohmyzsh/ {oh_my_zsh_p}"
         run_shell_command(command=oh_my_zsh_cmd)
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Oh My Zsh", "", InfoBarIcon.SUCCESS)
+
     powerlevel10k_p = utils.resolve_path(r"%USERPROFILE%\.oh-my-zsh\custom\themes\powerlevel10k")
 
     if os.path.isdir(powerlevel10k_p):
@@ -882,6 +899,9 @@ def install_zsh_over_git():
     else:
         powerlevel10k_cmd = rf"git clone --depth=1 https://github.com/romkatv/powerlevel10k.git {powerlevel10k_p}"
         run_shell_command(command=powerlevel10k_cmd)
+
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Powerlevel10k", "", InfoBarIcon.SUCCESS)
 
 
 def set_fta(extension, program_p, arguments: list[str] = None):
@@ -1167,6 +1187,9 @@ def install_net_3_5():
 
     run_shell_command(powershell_command="Dism /online /Enable-Feature /FeatureName:NetFx3", failure_okay=True)
 
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
+
 
 def ida_py_switch(python_dll_path: str):
     """
@@ -1391,3 +1414,47 @@ def make_registry_changes(registry_changes_data: dict):
 
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: {description}", "", InfoBarIcon.SUCCESS)
+
+
+def install_bluekit(data: dict):
+    common_pre_install()
+    remove_worthless_python_exes()
+    extract_bundled_zip()
+    extract_scoop_cache()
+
+    install_scoop()
+    scoop_install_git()
+
+    scoop_install_pwsh()
+
+    scoop_add_buckets(data["scoop"]["Buckets"])
+    scoop_install_tooling(data["scoop"])
+    pip_install_packages(data["pip"])
+    npm_install_libraries(data["npm"])
+    install_ida_plugins(data["ida_plugins"])
+    set_file_type_associations(data["file_type_associations"])
+    pin_apps_to_taskbar(data["taskbar_pins"])
+    clone_git_repositories(data["git_repositories"])
+    make_registry_changes(data["registry_changes"])
+
+    # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
+    ida_py_switch(data["ida_py_switch"])
+
+    # Make Bindiff available to other programs
+    make_bindiff_available_to_programs()
+
+    # Install Zsh on top of git
+    install_zsh_over_git()
+
+    # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
+    extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
+
+    # Install .NET 3.5, which is required by some older malware samples
+    # install_net_3_5()
+    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
+    # widget.rightListView.listWidget.scrollToBottom()
+
+    obtain_and_place_malware_analysis_configurations()
+    common_post_install()
+    clean_up_disk()
+    restart()
