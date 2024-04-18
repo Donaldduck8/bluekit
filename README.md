@@ -5,7 +5,7 @@ Bluekit is a cybersecurity-focused workstation setup script that aims to provide
 Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is complemented by the [Malware Analysis bucket](https://github.com/Donaldduck8/malware-analysis-bucket).
 
 <p align="center">
-  <img src="img/hero_2.png" alt="Bluekit Hero">
+  <img src="img/hero_2.webp" alt="Bluekit Hero">
 </p>
 
 ## Requirements
@@ -23,14 +23,14 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 ## Installer
 
 <p align="center">
-  <img src="img/installer_1.png" alt="Bluekit Installer 1">
+  <img src="img/installer_1.webp" alt="Bluekit Installer 1">
 </p>
 
 > [!TIP]
 > Bluekit provides a GUI-based installer that allows for rudimentary edits of the configuration, as well as visually responsive progress updates.
 
 <p align="center">
-  <img src="img/installer_2.png" alt="Bluekit Installer 2">
+  <img src="img/installer_2.webp" alt="Bluekit Installer 2">
 </p>
 
 ## Contributing
