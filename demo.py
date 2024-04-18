@@ -21,21 +21,21 @@ except ImportError:
 
 
 def main():
-    # If Windows Defender is enabled, show an error message
-    if utils.is_defender_enabled():
-        if pyi_splash:
-            pyi_splash.close()
-
-        ctypes.windll.user32.MessageBoxW(
-            0,
-            "Windows Defender is enabled. Please disable it before running BlueKit.\n\nThe author strongly recommends building a custom Windows image with Windows Defender removed using tools like NtLite or tiny11builder.",
-            "Error",
-            0x10,
-        )
-        sys.exit()
-
     # If we are frozen
     if getattr(sys, "frozen", False):
+        # If Windows Defender is enabled, show an error message
+        if utils.is_defender_enabled():
+            if pyi_splash:
+                pyi_splash.close()
+
+            ctypes.windll.user32.MessageBoxW(
+                0,
+                "Windows Defender is enabled. Please disable it before running BlueKit.\n\nThe author strongly recommends building a custom Windows image with Windows Defender removed using tools like NtLite or tiny11builder.",
+                "Error",
+                0x10,
+            )
+            sys.exit()
+
         # Add the paths to the PATH environment variable
         installation_steps.add_paths_to_path(required_paths)
 
