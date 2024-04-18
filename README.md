@@ -20,7 +20,7 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 * Internet connection
 
 > [!IMPORTANT]
-> It's strongly recommended to create a Windows ISO with Defender removed, rather than disabling Defender through intended means.
+> It is strongly recommended to create a Windows ISO with Defender removed, rather than attempting to disable Defender on a running Windows installation.
 
 ## Installer
 
