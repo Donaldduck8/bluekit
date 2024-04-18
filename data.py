@@ -40,7 +40,6 @@ data = {
             ("setuserfta", "SetUserFTA", "A tool to change the default program associated with a file type."),
             ("upx", "UPX", "A free, portable, extendable, high-performance executable packer for several executable formats."),
             ("openssl-light", "OpenSSL (Light)", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
-            ("total-registry", "Total Registry", "A registry editor with a focus on usability and performance."),
             ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
         ],
 
@@ -62,6 +61,7 @@ data = {
             ("malware-analysis-bucket/capa", "Capa", "An open-source tool to identify capabilities in executable files."),
             ("malware-analysis-bucket/cyberchef", "Cyberchef", "A web app for analyzing and decoding data."),
             ("malware-analysis-bucket/malcat", "MalCat", "A tool centered around static malware and binary analysis."),
+            ("010editor", "010 Editor", "A professional text/hex editor designed to edit any file."),
         ],
 
         # PE (Static)
@@ -167,7 +167,7 @@ data = {
             ("malware-analysis-bucket/extreme_dumper", "Extreme Dumper", "A tool to dump .NET assemblies from running .NET applications by hooking Assembly-related functions."),
             ("malware-analysis-bucket/dotdumper", "DotDumper", "An automatic unpacker and logger for DotNet Framework targeting files."),
             ("malware-analysis-bucket/rundotnetdll", "RunDotNetDll", "A bootstrap program to execute non-executable .NET assemblies within a debugger."),
-            ("malware-analysis-bucket/psnotify-np", "PSNotify-NP", "A hooking engine required for GarbageMan."),
+            ("malware-analysis-bucket/psnotify-np", "PSNotify (non-portable) ", "A hooking engine required for GarbageMan."),
             ("malware-analysis-bucket/garbageman", "GarbageMan", "A set of tools for analyzing .NET binaries through heap analysis."),
             ("malware-analysis-bucket/sharpdllloader", "SharpDllLoader", "A bootstrap program to execute non-executable .NET assemblies within a debugger."),
         ],
@@ -348,7 +348,7 @@ data = {
 
     "file_type_associations": {
         "Text": {
-            "path": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\subl.exe",
+            "path": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\sublime_text.exe",
             "program_name": "Sublime Text",
             "arguments": [],
             "file_types": [

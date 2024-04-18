@@ -29,8 +29,6 @@ class ListWidgetLogHandler(logging.Handler):
         msg = self.format(record)
         self.widget.bottomListView.listWidget.addItem(msg)
         self.widget.bottomListView.listWidget.scrollToBottom()
-        self.widget.bottomListView.listWidget.scrollToBottom()
-        self.widget.bottomListView.listWidget.setAutoScroll(True)
 
 
 class ListFrame(BaseFrame):
@@ -226,7 +224,7 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", InfoBarIcon.SUCCESS)
 
         # Add a standard list item to the bottom list view
-        widget.bottomListView.listWidget.addItem(QListWidgetItem("Item " + str(i)))
+        widget.bottomListView.listWidget.addItem(QListWidgetItem("A " * 10000))
         widget.bottomListView.listWidget.scrollToBottom()
         widget.rightListView.listWidget.scrollToBottom()
 
@@ -284,9 +282,5 @@ def threading_function(widget: ExecutionInterface, data: dict):
 
     installation_steps.clean_up_disk()
     widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", InfoBarIcon.SUCCESS)
-
-    widget.progressRing.setCustomBackgroundColor(themeColor(), themeColor())
-    widget.progressRing.stop()
-    widget.timerWidget.stop()
 
     widget.completion_signal.emit()
