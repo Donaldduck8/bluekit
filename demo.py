@@ -65,7 +65,7 @@ def ensure_suitable_environment():
 
             ctypes.windll.user32.MessageBoxW(
                 0,
-                "Windows Defender is enabled. Please disable it before running BlueKit.\n\nThe author strongly recommends building a custom Windows image with Windows Defender removed using tools like NtLite or tiny11builder.",
+                "Windows Defender is enabled. Please disable it before running Bluekit.\n\nThe author strongly recommends building a custom Windows image with Windows Defender removed using tools like NtLite or tiny11builder.",
                 "Error",
                 0x10,
             )
