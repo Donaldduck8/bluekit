@@ -52,14 +52,16 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
     try:
         if command:
             logger.info(f"Shell: '{command}'")
-            subprocess.run(command.split(" "), check=True)
+            p = subprocess.run(command.split(" "), check=True)
         elif powershell_command:
             logger.info(f"PowerShell: '{powershell_command}'")
-            subprocess.run(["powershell", "-Command", powershell_command], check=True)
+            p = subprocess.run(["powershell", "-Command", powershell_command], check=True)
             
         elif command_parts:
             logger.info(f"Shell: '{json.dumps(command_parts)}'")
-            subprocess.run(command_parts, check=True)
+            p = subprocess.run(command_parts, check=True)
+
+        print(p.returncode)
             
     except Exception as e:
         if failure_okay:
@@ -382,30 +384,36 @@ def obtain_and_place_malware_analysis_configurations():
 
             utils.link_files_and_folders(entry_dir, resolved_path)
 
-        # Extra operations, like installing VS Code extensions
-        if entry == "__vscode_extensions":
-            vscode_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscode\current\bin\code.cmd")
-            vscodium_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscodium\current\bin\codium.cmd")
-
-            extensions_file_p = os.path.join(entry_dir, "extensions.json")
-
-            if not os.path.isfile(extensions_file_p):
-                logger.warning("Could not find extensions.json, skipping...")
-                continue
-
-            extensions_data = json.loads(open(extensions_file_p, "r").read())
-
-            for extension in extensions_data:
-                extension_id = extension["identifier"]["id"]
-
-                if os.path.isfile(vscode_cmd_p):
-                    run_shell_command(command=f"{vscode_cmd_p} --install-extension {extension_id}", failure_okay=True)
-
-                if os.path.isfile(vscodium_cmd_p):
-                    run_shell_command(command=f"{vscodium_cmd_p} --install-extension {extension_id}", failure_okay=True)
-
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
+
+
+def install_vscode_extensions(extensions: List):
+    vscode_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscode\current\bin\code.cmd")
+    vscodium_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscodium\current\bin\codium.cmd")
+
+    for extension in extensions:
+        if isinstance(extension, str):
+            extension_id = extension
+            extension_name = extension_id
+
+        elif isinstance(extension, list) or isinstance(extension, tuple):
+            extension_id = extension[0]
+            extension_name = extension[1]
+
+        else:
+            logger.warning("Extension data is of unknown format, skipping...")
+            continue
+
+        if os.path.isfile(vscode_cmd_p):
+            run_shell_command(command=f"{vscode_cmd_p} --install-extension {extension_id}", failure_okay=True)
+            if widget:
+                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {extension_name} (VS Code)", "", InfoBarIcon.SUCCESS)
+
+        if os.path.isfile(vscodium_cmd_p):
+            run_shell_command(command=f"{vscodium_cmd_p} --install-extension {extension_id}", failure_okay=True)
+            if widget:
+                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {extension_name} (VSCodium)", "", InfoBarIcon.SUCCESS)
 
 
 def remove_taskbar_pin(app_name):
@@ -1436,6 +1444,7 @@ def install_bluekit(data: dict):
     pin_apps_to_taskbar(data["taskbar_pins"])
     clone_git_repositories(data["git_repositories"])
     make_registry_changes(data["registry_changes"])
+    install_vscode_extensions(data["vscode_extensions"])
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
     ida_py_switch(data["ida_py_switch"])
