@@ -131,18 +131,52 @@ def scoop_add_buckets(buckets: List[str]):
     """
     logger.info("Scoop: Add buckets")
 
-    # Use ThreadPool to accelerate this part
-    with ThreadPoolExecutor() as executor:
-        futures = []
+    for bucket in buckets:
+        if isinstance(bucket, str):
+            bucket_name = bucket
+        elif isinstance(bucket, tuple) or isinstance(bucket, list):
+            bucket_name = bucket[0]
+        else:
+            logger.warning("Bucket data is of unknown format, skipping...")
 
-        for bucket in buckets:
-            if isinstance(bucket, str):
-                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket}", failure_okay=False)
-            elif isinstance(bucket, tuple) or isinstance(bucket, list):
-                executor.submit(run_shell_command, command=f"scoop.cmd bucket add {bucket[0]}", failure_okay=False)
+            if widget:
+                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Scoop bucket data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
 
-        for future in futures:
-            future.result()
+            continue
+
+        bucket_command = bucket_name
+
+        if " " in bucket_name:
+            bucket_name = bucket_name.split(" ")[0]
+
+        run_shell_command(command=f"scoop.cmd bucket add {bucket_command}")
+
+        # Double-check if the bucket was added successfully, since this shit likes to fucking fail
+        bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_name}")
+        bucket_bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_name}\\bucket")
+
+        retry = 0
+
+        while not os.path.isdir(bucket_bucket_p):
+            logger.warning("This bitch did not download correctly " + bucket_p)
+
+            if retry >= 5:
+                # Show error message box
+                import ctypes
+                ctypes.windll.user32.MessageBoxW(
+                    0,
+                    f"Could not add Scoop bucket {bucket_name} despite repeated attempts.",
+                    "Error",
+                    0x10,
+                )
+                raise RuntimeError(f"Could not add Scoop bucket {bucket_name}.")
+
+            if os.path.isdir(bucket_p):
+                run_shell_command(command=f"scoop.cmd bucket rm {bucket_name}")
+
+            run_shell_command(command=f"scoop.cmd bucket add {bucket_command}")
+
+            retry += 1
 
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Added Scoop buckets", "", InfoBarIcon.SUCCESS)
@@ -465,8 +499,6 @@ def pin_apps_to_taskbar(apps: List[str]):
         elif isinstance(app, list) or isinstance(app, tuple):
             app_paths.append(app[0])
 
-    logger.info(f"Pin Apps to Taskbar: '{app_paths}'")
-
     xml_content = utils.create_start_layout_xml(apps=app_paths)
 
     # Write layout .XML file
@@ -475,64 +507,8 @@ def pin_apps_to_taskbar(apps: List[str]):
     with open(xml_p, "w+", encoding="UTF-8") as xml_f:
         xml_f.write(xml_content)
 
-    ps_script = r'''Write-Host "Installing NuGet"
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-
-Write-host "Trusting PS Gallery"
-Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-
-Write-Host "Installing PolicyFileEditor V3"
-Install-Module -Name PolicyFileEditor -RequiredVersion 3.0.0 -Scope CurrentUser
-
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-
-Import-Module PolicyFileEditor
-
-$UserDir = "$env:windir\system32\GroupPolicy\User\registry.pol"
-
-Set-PolicyFileEntry -Path $UserDir -Key "Software\Policies\Microsoft\Windows\Explorer" -ValueName "StartLayoutFile" -Type String -Data "$env:userprofile\Documents\startLayout.xml"
-
-# Set the path to the registry key
-$registryPath = "HKCU:\Software\Policies\Microsoft\Windows\Explorer"
-
-# The name of the DWORD value to modify/create
-$valueName = "LockedStartLayout"
-
-# The value to set the DWORD to
-$valueData = 1
-
-# Check if the registry path exists, create it if it doesn't
-if (-not (Test-Path $registryPath)) {
-    New-Item -Path $registryPath -Force
-}
-
-# Set the value of the DWORD key, creating it if it doesn't exist
-Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWORD
-
-# Set the path to the registry key
-$registryPath = "HKCU:Software\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7810E935-4876-4362-BF9C-D1EA60BCBB24}User\Software\Policies\Microsoft\Windows\Explorer"
-
-# The name of the DWORD value to modify/create
-$valueName = "LockedStartLayout"
-
-# The value to set the DWORD to
-$valueData = 1
-
-# Check if the registry path exists, create it if it doesn't
-if (-not (Test-Path $registryPath)) {
-    New-Item -Path $registryPath -Force
-}
-
-# Set the value of the DWORD key, creating it if it doesn't exist
-Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWORD
-
-gpupdate.exe /force'''
-
-    # Execute the PowerShell script
-    run_shell_command(powershell_command=ps_script, failure_okay=True)
-
     if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Pinned apps to taskbar", "", InfoBarIcon.SUCCESS)
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Wrote taskbar configuration", "", InfoBarIcon.SUCCESS)
 
 
 def make_vm_stay_awake():
