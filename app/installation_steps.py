@@ -1,4 +1,6 @@
 
+import base64
+import ctypes
 import json
 import logging
 import os
@@ -11,11 +13,9 @@ from typing import List
 
 import pythoncom
 import win32com.client
+from qfluentwidgets import InfoBarIcon
 
 import app.utils as utils
-
-from concurrent.futures import ThreadPoolExecutor
-from qfluentwidgets import InfoBarIcon
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -23,12 +23,16 @@ if "_MEI" in HERE and getattr(sys, "frozen", False):
     # We are in a PyInstaller bundle, but I want the location of the PyInstaller executable
     HERE = os.path.dirname(sys.executable)
 
-log_p = utils.resolve_path(r"%USERPROFILE%\install.log")
+log_p = os.path.join(HERE, "install.log")
+
+with open(log_p, "w+") as f:
+    pass
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
-                    filename=log_p)
+                    filename=log_p,
+                    filemode="a")
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -54,25 +58,33 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         try:
             if command:
                 logger.info(f"Shell: '{command}'")
-                p = subprocess.run(command.split(" "), check=True)
+                p = subprocess.run(command.split(" "), stdout=subprocess.PIPE, check=True)
+
             elif powershell_command:
                 logger.info(f"PowerShell: '{powershell_command}'")
-                p = subprocess.run(["powershell", "-Command", powershell_command], check=True)
-                
+                p = subprocess.run(["powershell", "-Command", "$(" + powershell_command + ")"], check=True, stdout=subprocess.PIPE)
+
             elif command_parts:
                 logger.info(f"Shell: '{json.dumps(command_parts)}'")
-                p = subprocess.run(command_parts, check=True)
+                p = subprocess.run(command_parts, check=True, stdout=subprocess.PIPE)
 
-            if p.returncode != 0 and not failure_okay:
-                raise Exception(f"Command failed with return code {p.returncode}")
-            else:
-                return
-                
-        except Exception as e:
+            stdout = p.stdout.decode("utf-8").strip()
+            stdout = stdout.replace("\r\n\r\n", "\r\n")
+            stdout = stdout.replace("\n\n", "\n")
+
+            if len(stdout) > 0:
+                logger.info(stdout)
+            
+            break
+
+        except subprocess.CalledProcessError as e:
             if failure_okay:
-                logger.warning(f"Failed to run command: {e}")
+                logger.warning(f"Failed to run command: {e.cmd}")
+                print(e)
+                logger.warning(f"Output: {e.stderr}")
             else:
-                logger.error(f"Failed to run command: {e}")
+                logger.error(f"Failed to run command: {e.cmd}")
+                logger.error(f"Output: {e.stderr.decode('utf-8')}")
                 raise e
 
 
@@ -162,7 +174,7 @@ def scoop_add_buckets(buckets: List[str]):
 
             if retry >= 5:
                 # Show error message box
-                import ctypes
+
                 ctypes.windll.user32.MessageBoxW(
                     0,
                     f"Could not add Scoop bucket {bucket_name} despite repeated attempts.",
@@ -207,7 +219,7 @@ def pip_install_packages(packages: List[str]):
             if widget:
                 widget.rightListView.listWidget.add_infobar_signal.emit("Warning: PIP data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
 
-        run_shell_command(command=f"pip.exe install {package_name}")
+        run_shell_command(command=f"python.exe -m pip install {package_name}")
 
         if widget:
             widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {package_name_pretty} (PIP)", "", InfoBarIcon.SUCCESS)
@@ -259,7 +271,7 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cach
         return False
     
     if delete_cache_afterwards:
-        run_shell_command(command="scoop.cmd cache rm -a")
+        run_shell_command(command=f"scoop.cmd cache rm {tool_name}")
 
     return True
 
@@ -1075,10 +1087,10 @@ def remove_worthless_python_exes():
     python3_exe_p = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\WindowsApps\python3.exe")
 
     if os.path.isfile(python_exe_p):
-        run_shell_command(powershell_command=f"Remove-Item {python_exe_p}")
+        run_shell_command(powershell_command=f"Remove-Item {python_exe_p}", failure_okay=True)
 
     if os.path.isfile(python3_exe_p):
-        run_shell_command(powershell_command=f"Remove-Item {python3_exe_p}")
+        run_shell_command(powershell_command=f"Remove-Item {python3_exe_p}", failure_okay=True)
 
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Removed AppAlias Python executables", "", InfoBarIcon.SUCCESS)

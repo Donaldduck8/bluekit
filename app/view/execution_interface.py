@@ -27,6 +27,14 @@ class ListWidgetLogHandler(logging.Handler):
 
     def emit(self, record):
         msg = self.format(record)
+
+        # Maximum log length:
+        self.widget.bottomListView.listWidget.remove_excess_items()
+
+        # Maximum message length:
+        if len(msg) > 1000:
+            msg = msg[:1000] + '...'
+
         self.widget.bottomListView.listWidget.addItem(msg)
         self.widget.bottomListView.listWidget.scrollToBottom()
 
@@ -87,6 +95,10 @@ class CustomListWidget(ListWidget):
 
             widget.setMaximumWidth(self.width() - 2)
             widget.setFixedWidth(self.width() - 2)
+
+    def remove_excess_items(self, max_items = 30):
+        while self.count() > max_items:
+            self.takeItem(0)
 
 
 class FluentTimer(QWidget):

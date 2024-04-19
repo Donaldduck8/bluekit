@@ -1,7 +1,6 @@
 # coding:utf-8
 import ctypes
 import json5
-import logging
 import os
 import sys
 import traceback
@@ -99,17 +98,13 @@ def main():
 
 if __name__ == "__main__":
     try:
-        with open('log.txt', 'w', encoding="utf-8") as log_f:
-            sys.stdout = log_f
-            sys.stderr = log_f
-            installation_steps.logger.addHandler(logging.StreamHandler(sys.stdout))
-            installation_steps.logger.addHandler(logging.StreamHandler(sys.stderr))
-            installation_steps.logger.setLevel(logging.DEBUG)
-            main()
-
-            sys.stdout = sys.__stdout__
+        main()
         
     except Exception:
         # Show the error message box using windows message box API
+
+        if pyi_splash:
+            pyi_splash.close()
+
         exception_traceback = traceback.format_exc()
         ctypes.windll.user32.MessageBoxW(0, exception_traceback, "Error", 0x10)

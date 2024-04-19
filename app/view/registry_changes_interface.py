@@ -52,6 +52,7 @@ class RegistryChangesWidget(QWidget):
                 margin-top: 8px;
             }
         """)
+        
         self.data = json5.loads(json5.dumps(data, sort_keys=True))
         self.resize(800, 600)
         self.setObjectName('scoopInterface' + str(id(self)))
