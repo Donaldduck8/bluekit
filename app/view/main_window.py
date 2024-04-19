@@ -88,17 +88,6 @@ class MainWindow(FluentWindow):
         # Incredible hack to make the icons actually spaced properly !! :SMILE:
         self.navigationInterface.resize(48, self.height() + 1000)
 
-        # add custom widget to bottom
-        '''self.navigationInterface.addItem(
-            routeKey='price',
-            icon=Icon.PRICE,
-            text="Price",
-            onClick=self.onSupport,
-            selectable=False,
-            tooltip="Price",
-            position=NavigationItemPosition.BOTTOM
-        )'''
-
     def onExecute(self, _):
         if not self._executing:
             self._executing = True
@@ -142,11 +131,12 @@ class MainWindow(FluentWindow):
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 
-        # create splash screen
+        # Create a temporary splash screen
         self.splashScreen = SplashScreen(self.windowIcon(), self)
         self.splashScreen.setIconSize(QSize(106, 106))
         self.splashScreen.raise_()
 
+        # Open the window in the center of the screen
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
         self.move(w//2 - self.width()//2, h//2 - self.height()//2)

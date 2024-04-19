@@ -82,7 +82,6 @@ def ensure_suitable_environment():
 
 def main():
     ensure_suitable_environment()
-
     args = parser.parse_args()
 
     if args.silent:
@@ -100,7 +99,6 @@ if __name__ == "__main__":
         main()
 
     except Exception as e:
-        # Show the error message box using windows message box API
         if pyi_splash:
             pyi_splash.close()
 

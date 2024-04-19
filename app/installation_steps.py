@@ -1405,10 +1405,8 @@ def install_bluekit(data: dict):
     # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
     # extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
 
-    # Install .NET 3.5, which is required by some older malware samples
-    # install_net_3_5()
-    # widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
-    # widget.rightListView.listWidget.scrollToBottom()
+    # Install .NET 3.5, which is required by some older malware samples as well as AutoIt Debugger
+    install_net_3_5()
 
     obtain_and_place_malware_analysis_configurations()
     common_post_install()
