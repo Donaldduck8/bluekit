@@ -15,7 +15,7 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 
 * Windows 10 / 11
 * PowerShell (64-bit and 32-bit)
-* Disk capacity > 40 GB
+* Disk capacity > 30 GB
 * Memory > 2GB
 * Internet connection
 
