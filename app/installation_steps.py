@@ -629,7 +629,8 @@ def common_post_install():
             traceback.print_exc()
             pass
 
-    widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
 
 
 def restart():
