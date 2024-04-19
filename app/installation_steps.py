@@ -83,8 +83,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 print(e)
                 logger.warning(f"Output: {e.stderr}")
             else:
-                logger.error(f"Failed to run command: {e.cmd}")
-                logger.error(f"Output: {e.stderr.decode('utf-8')}")
+                logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stderr.decode('utf-8')}")
                 raise e
 
 
@@ -219,7 +218,7 @@ def pip_install_packages(packages: List[str]):
             if widget:
                 widget.rightListView.listWidget.add_infobar_signal.emit("Warning: PIP data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
 
-        run_shell_command(command=f"python.exe -m pip install {package_name}")
+        run_shell_command(command=f"pip.exe install {package_name}")
 
         if widget:
             widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {package_name_pretty} (PIP)", "", InfoBarIcon.SUCCESS)
@@ -559,36 +558,6 @@ def make_vm_stay_awake():
 
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Disabled standby mode", "", InfoBarIcon.SUCCESS)
-
-
-def hide_onedrive_pin():
-    """
-    Hides the OneDrive icon from the File Explorer navigation pane.
-    """
-    logger.info("Hide OneDrive pin")
-
-    ps_script = r'''New-PSDrive -Name "HKCR" -PSProvider Registry -Root "HKEY_CLASSES_ROOT"
-
-# Registry path without root
-$regPath = "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
-
-# propertyName of the value to change
-$propertyName = "System.IsPinnedToNameSpaceTree"
-
-# Setting the property value to 1 to hide desktop icons
-$propertyValue = 0
-
-# Checking if the property already exists
-if (Get-ItemProperty -Path $regPath -Name $propertyName -ErrorAction SilentlyContinue) {
-    # Property exists, updating its value
-    Set-ItemProperty -Path $regPath -Name $propertyName -Value $propertyValue
-} else {
-    # Property doesn't exist, creating and setting its value
-    New-ItemProperty -Path $regPath -Name $propertyName -Value $propertyValue -PropertyType DWORD
-}'''
-
-    # Execute the PowerShell script
-    run_shell_command(powershell_command=ps_script, failure_okay=True)
 
 
 def common_pre_install():

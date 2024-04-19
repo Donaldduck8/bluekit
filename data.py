@@ -539,6 +539,14 @@ data = {
                 "data": "%USERPROFILE%\\Documents\\startLayout.xml",
                 "type": "REG_SZ"
             },
+            {
+                "descrption": "Remove OneDrive pin from the Explorer window",
+                "hive": "HKEY_CLASSES_ROOT",
+                "key": "CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}",
+                "value": "System.IsPinnedToNameSpaceTree",
+                "data": "0",
+                "type": "REG_DWORD"
+            }
         ]
     }
 }
