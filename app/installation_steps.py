@@ -997,7 +997,7 @@ def npm_install_libraries(libs: List[str]):
 
         if widget:
             widget.rightListView.listWidget.add_infobar_signal.emit("Warning: No NodeJS package manager found!", "", InfoBarIcon.WARNING)
-        
+
         return
 
     for lib in libs:
@@ -1014,7 +1014,7 @@ def npm_install_libraries(libs: List[str]):
 
             if widget:
                 widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Library is of unknown format, skipping!", "", InfoBarIcon.WARNING)
-        
+
             continue
 
         if widget:
@@ -1376,7 +1376,6 @@ def make_registry_changes(registry_changes_data: dict):
 
 
 def install_bluekit(data: dict):
-    # 
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()

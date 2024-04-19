@@ -75,7 +75,6 @@ class RegistryChangesWidget(QWidget):
         self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
         self.json_edit.setText(json5.dumps(self.data, indent=8, sort_keys=True))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
-        # self.json_edit.setPlainText()
         self.addSubInterface(self.json_edit, 'json_edit', 'Editor')
 
         self.vBoxLayout.addWidget(self.pivot)
