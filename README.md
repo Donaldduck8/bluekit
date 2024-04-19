@@ -35,6 +35,32 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
   <img src="img/installer_2.webp" alt="Bluekit Installer 2">
 </p>
 
+## Bundled Files
+
+Bluekit supports bundling files alongside the installer in a file named `bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
+
+```
+┌──────────────────────────────────┐
+│ ┌────────────────                │
+│ ├─ Bluekit.exe                   │
+│ └─ bundled.zip                   │
+│     ├─ ida_pro.zip               │
+│     ├─ ida_pro.json              │
+│     ├─ binary_ninja.zip          │
+│     ├─ binary_ninja.json         │
+│     ├─ linqpad.zip               │
+│     ├─ linqpad.json              │
+│     └─ scoop_cache.zip           │
+│         ├─ nodejs#21.7.3[...].7z │
+│         └─ floss#3.1.0[...].zip  │
+└──────────────────────────────────┘
+```
+
+Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
+
+It's recommended to pair them with an alternative, free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/malware-analysis-setup-gui/blob/961456f40d03351d38e3b25f80b9d7f110149d51/data.py#L76) for an example.
+
+
 ## Contributing
 
 You can improve Bluekit by suggesting or adding new manifests to the Malware Analysis bucket! 💙
