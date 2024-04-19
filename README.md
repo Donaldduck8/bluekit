@@ -35,6 +35,9 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
   <img src="img/installer_2.webp" alt="Bluekit Installer 2">
 </p>
 
+> [!TIP]
+> Use the `--silent` argument to bypass the GUI and install without any additional input.
+
 ## Bundled Files
 
 Bluekit supports bundling files alongside the installer in a file named `bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
