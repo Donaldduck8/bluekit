@@ -64,11 +64,10 @@ def ensure_suitable_environment():
 
             ctypes.windll.user32.MessageBoxW(
                 0,
-                "Windows Defender is enabled. Please disable it before running Bluekit.\n\nThe author strongly recommends building a custom Windows image with Windows Defender removed using tools like NtLite or tiny11builder.",
-                "Error",
-                0x10,
+                "Windows Defender is or was enabled. Proceeding with the installation may cause Windows Defender to delete some files, or the installation to fail outright.",
+                "Windows Defender",
+                0x1,
             )
-            sys.exit()
 
         # Add the paths to the PATH environment variable
         installation_steps.add_paths_to_path(required_paths)
@@ -99,12 +98,11 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-        
-    except Exception:
-        # Show the error message box using windows message box API
 
+    except Exception as e:
+        # Show the error message box using windows message box API
         if pyi_splash:
             pyi_splash.close()
 
-        exception_traceback = traceback.format_exc()
+        exception_traceback = traceback.format_exc(e)
         ctypes.windll.user32.MessageBoxW(0, exception_traceback, "Error", 0x10)

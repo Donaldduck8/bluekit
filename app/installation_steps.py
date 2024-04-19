@@ -68,6 +68,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 logger.info(f"Shell: '{json.dumps(command_parts)}'")
                 p = subprocess.run(command_parts, check=True, stdout=subprocess.PIPE)
 
+            if p.returncode != 0:
+                raise subprocess.CalledProcessError(p.returncode, p.args, p.stdout, p.stderr)
+
             stdout = p.stdout.decode("utf-8").strip()
             stdout = stdout.replace("\r\n\r\n", "\r\n")
             stdout = stdout.replace("\n\n", "\n")
@@ -84,6 +87,13 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 logger.warning(f"Output: {e.stderr}")
             else:
                 logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stderr.decode('utf-8')}")
+                raise e
+        except Exception as e:
+            trace = traceback.format_exc(e)
+            if failure_okay:
+                logger.warning(f"Failed to run command: {trace}")
+            else:
+                logger.error(f"Failed to run command: {trace}")
                 raise e
 
 
@@ -218,7 +228,7 @@ def pip_install_packages(packages: List[str]):
             if widget:
                 widget.rightListView.listWidget.add_infobar_signal.emit("Warning: PIP data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
 
-        run_shell_command(command=f"pip.exe install {package_name}")
+        run_shell_command(command=f"pip.exe install {package_name}", failure_okay=True)
 
         if widget:
             widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {package_name_pretty} (PIP)", "", InfoBarIcon.SUCCESS)
