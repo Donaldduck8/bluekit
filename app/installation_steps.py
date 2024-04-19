@@ -230,7 +230,7 @@ def install_build_tools():
     run_shell_command(command=install_command)
 
 
-def scoop_install_tool(tool_name: str, tool_name_pretty: str = None):
+def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cache_afterwards: bool = True):
     """
     Installs a tool using Scoop package manager.
 
@@ -253,11 +253,15 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None):
         else:
             run_shell_command(command=f"scoop.cmd install {tool_name}")
 
-        return True
     except Exception:
         traceback.print_exc()
         logger.warning(f"Failed to install {tool_name}, skipping...")
-        return
+        return False
+    
+    if delete_cache_afterwards:
+        run_shell_command(command="scoop.cmd cache rm -a")
+
+    return True
 
 
 def scoop_install_tooling(tools: dict, install_context=True, install_associations=True):
