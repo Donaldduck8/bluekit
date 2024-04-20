@@ -25,7 +25,7 @@ class RegistryChangesTreeFrame(BaseTreeFrame):
             category_item = QTreeWidgetItem([category])
             self.tree.addTopLevelItem(category_item)
             self.populate_tree_item(category_item, items)
-        
+
         self.tree.expandAll()
 
     def populate_tree_item(self, parent_item, items):
