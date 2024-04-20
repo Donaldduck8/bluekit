@@ -1031,14 +1031,16 @@ def extract_bundled_zip():
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
 
+    zip_name = "bluekit_bundled.zip"
+
     # If frozen
     if getattr(sys, "frozen", False):
-        bundled_zip_p = os.path.join(sys._MEIPASS, "files", "bundled.zip")
+        bundled_zip_p = os.path.join(sys._MEIPASS, "files", zip_name)
 
         if not os.path.isfile(bundled_zip_p):
-            bundled_zip_p = os.path.join(HERE, "bundled.zip")
+            bundled_zip_p = os.path.join(HERE, zip_name)
     else:
-        bundled_zip_p = os.path.join(HERE, "bundled.zip")
+        bundled_zip_p = os.path.join(HERE, zip_name)
 
     print("Looking", bundled_zip_p)
 
@@ -1062,10 +1064,6 @@ def remove_worthless_python_exes():
     Removes the worthless python.exe and python3.exe files from the WindowsApps directory, if they exist.
     """
     logger.info("Remove AppAlias Python executables")
-
-    # Check if the worthless files exist
-
-    # Just delete the entire fucking folder wtf
 
     python_exe_p = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\WindowsApps\python.exe")
     python3_exe_p = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\WindowsApps\python3.exe")
@@ -1142,7 +1140,7 @@ def install_net_3_5():
     """
     Installs .NET Framework 3.5 using DISM.
     """
-    logger.info("Install .NET Framework 3.5")
+    logger.info("Install .NET Framework 3.5 (this usually takes several minutes)")
 
     run_shell_command(powershell_command="Dism /online /Enable-Feature /FeatureName:NetFx3", failure_okay=True)
 
