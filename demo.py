@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
 parser.add_argument('-c', '--config', action='store_true', help='Provide a custom configuration file')
+args = parser.parse_args()
 
 
 def run_gui():
@@ -118,7 +119,6 @@ def main():
 
 if __name__ == "__main__":
     try:
-        args = parser.parse_args()
         main()
 
     except Exception as e:

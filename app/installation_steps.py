@@ -24,7 +24,7 @@ if "_MEI" in HERE and getattr(sys, "frozen", False):
 
 log_p = os.path.join(HERE, "install.log")
 
-with open(log_p, "w+") as f:
+with open(log_p, "w+", encoding="utf-8") as f:
     pass
 
 logging.basicConfig(level=logging.INFO,
@@ -541,7 +541,6 @@ def common_pre_install():
             function()
         except Exception:
             traceback.print_exc()
-            pass
 
 
 def common_post_install():
@@ -562,7 +561,6 @@ def common_post_install():
             function()
         except Exception:
             traceback.print_exc()
-            pass
 
     if widget:
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
@@ -617,14 +615,14 @@ def extract_and_install_application(application_name: str):
         return False
 
     # Load the JSON file
-    with open(application_json_p, "r") as application_json_f:
+    with open(application_json_p, "r", encoding="utf-8") as application_json_f:
         scoop_data = json.loads(application_json_f.read())
 
     # Point the scoop URL at the extracted ZIP file
     scoop_data["url"] = "file://" + application_zip_p.replace("\\", "/")
 
     # Write the JSON file back
-    with open(application_json_p, "w") as application_json_f:
+    with open(application_json_p, "w", encoding="utf-8") as application_json_f:
         application_json_f.write(json.dumps(scoop_data, indent=4))
 
     # Disable aria2 for the installation to allow file:// URLs
@@ -1053,13 +1051,13 @@ def make_bindiff_available_to_programs():
         logger.warning("BinDiff JSON not found, skipping...")
         return
 
-    bindiff_data = json.loads(open(bindiff_json_p, "r").read())
+    bindiff_data = json.loads(open(bindiff_json_p, "r", encoding="utf-8").read())
 
     bindiff_data["directory"] = os.path.join(bindiff_dir, ".")
     bindiff_data["ui"]["java_binary"] = os.path.join(bindiff_dir, "ProgramFiles", "BinDiff", "jre", "bin", "javaw.exe")
     bindiff_data["ida"]["directory"] = utils.resolve_path(r"%USERPROFILE%\scoop\apps\ida_pro\current")
 
-    with open(bindiff_json_p, "w") as bindiff_json_f:
+    with open(bindiff_json_p, "w", encoding="utf-8") as bindiff_json_f:
         bindiff_json_f.write(json.dumps(bindiff_data, indent=4))
 
     # Copy the following folders:
@@ -1366,7 +1364,7 @@ def install_miscellaneous_files(data: dict):
                 widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {description} (Miscellaneous)", "", InfoBarIcon.SUCCESS)
 
 
-def install_bluekit(data: dict, restart: bool = True):
+def install_bluekit(data: dict, should_restart: bool = True):
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()
@@ -1406,5 +1404,5 @@ def install_bluekit(data: dict, restart: bool = True):
     common_post_install()
     clean_up_disk()
 
-    if restart:
+    if should_restart:
         restart()

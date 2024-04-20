@@ -151,6 +151,3 @@ class MainWindow(FluentWindow):
         super().resizeEvent(e)
         if hasattr(self, 'splashScreen'):
             self.splashScreen.resize(self.size())
-
-    def onSupport(self, _):
-        pass
