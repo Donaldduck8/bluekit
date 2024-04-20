@@ -32,15 +32,9 @@ args = parser.parse_args()
 
 
 def run_gui():
-    # enable dpi scale
-    if cfg.get(cfg.dpiScale) == "Auto":
-        QApplication.setHighDpiScaleFactorRoundingPolicy(
-            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    else:
-        os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
-        os.environ["QT_SCALE_FACTOR"] = str(cfg.get(cfg.dpiScale))
-
+    QApplication.setHighDpiScaleFactorRoundingPolicy(
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
     # create application
@@ -125,5 +119,5 @@ if __name__ == "__main__":
         if pyi_splash and pyi_splash.is_alive():
             pyi_splash.close()
 
-        exception_traceback = traceback.format_exc(e)
+        exception_traceback = traceback.format_exc()
         ctypes.windll.user32.MessageBoxW(0, exception_traceback, "Error", 0x10)

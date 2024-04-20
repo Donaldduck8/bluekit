@@ -43,7 +43,7 @@ class MainWindow(FluentWindow):
         self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", default_configuration["git_repositories"])
         self.registryChangesInterface = RegistryChangesWidget(self, "Registry", default_configuration["registry_changes"])
         self.miscFilesInterface = MiscFilesTreeWidget(self, "Miscellaneous Files", default_configuration["misc_files"])
-        self.executionInterface = ExecutionInterface(self, "Execution")
+        self.executionInterface = ExecutionInterface(self)
 
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)

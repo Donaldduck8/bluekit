@@ -249,7 +249,7 @@ def threading_function_test(widget: ExecutionInterface, _data: dict):
 def threading_function(widget: ExecutionInterface, data: dict):
     try:
         installation_steps.widget = widget
-        installation_steps.install_bluekit(data, restart=False)
+        installation_steps.install_bluekit(data, should_restart=False)
 
         widget.completion_signal.emit()
     except Exception as e:
@@ -264,3 +264,5 @@ def threading_function(widget: ExecutionInterface, data: dict):
             "Installation failed!",
             0x10,
         )
+
+        raise e
