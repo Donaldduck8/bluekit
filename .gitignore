@@ -9,3 +9,4 @@ app/common/resource.py
 log.txt
 .vscode/launch.json
 app/install.log
+/.vscode

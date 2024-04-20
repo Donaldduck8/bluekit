@@ -1,15 +1,12 @@
 # coding:utf-8
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
-
+import json5
 import json5.host
-from .base_tree_frame import BaseTreeFrame
-from PyQt5.QtWidgets import QWidget, QTreeWidgetItem
-
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QStackedWidget, QMessageBox)
+import PyQt5
+from PyQt5.QtWidgets import (QMessageBox, QStackedWidget, QTreeWidgetItem,
+                             QVBoxLayout, QWidget)
 from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
-import PyQt5
-import json5
+from .base_tree_frame import BaseTreeFrame
 
 
 class FileTypeAssocTreeFrame(BaseTreeFrame):

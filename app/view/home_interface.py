@@ -14,22 +14,13 @@ class BannerWidget(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        # self.setFixedHeight(336)
 
         self.vBoxLayout = QVBoxLayout(self)
-
-        # Make sure this label is white
-        # self.galleryLabel = QLabel('Malware Analysis VM', self)
-        # self.galleryLabel.setStyleSheet('color: black; font-size: 55px; font-weight: light; text-align: center;')
-
         self.banner = QPixmap(':/gallery/images/splash.png')
         self.linkCardView = LinkCardView(self)
 
-        # self.galleryLabel.setObjectName('galleryLabel')
-
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(0, 0, 32, 20)
-        # self.vBoxLayout.addWidget(self.galleryLabel, 1, Qt.AlignCenter | Qt.AlignTop)
         self.vBoxLayout.addWidget(self.linkCardView, 1, Qt.AlignBottom)
         self.vBoxLayout.setAlignment(Qt.AlignCenter)
 

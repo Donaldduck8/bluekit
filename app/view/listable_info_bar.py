@@ -1,17 +1,13 @@
 # coding:utf-8
 import time
-
 from enum import Enum
 from typing import Union
 
-from PyQt5.QtCore import (QEvent, QPropertyAnimation, QRectF, Qt,
-                          pyqtSignal, )
+from PyQt5.QtCore import QEvent, QPropertyAnimation, QRectF, Qt, pyqtSignal
 from PyQt5.QtGui import QColor, QIcon, QPainter
 from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
-                             QLabel, QVBoxLayout, QWidget, QSizePolicy)
-from qfluentwidgets import (FluentIconBase, FluentStyleSheet,
-                            InfoBarIcon,
-                            InfoBarPosition)
+                             QLabel, QSizePolicy, QVBoxLayout, QWidget)
+from qfluentwidgets import FluentIconBase, InfoBarIcon, InfoBarPosition
 from qfluentwidgets.common.auto_wrap import TextWrap
 from qfluentwidgets.common.icon import FluentIcon as FIF
 from qfluentwidgets.common.icon import drawIcon, isDarkTheme
@@ -244,7 +240,7 @@ class InfoBar(QFrame):
 
     def paintEvent(self, e):
         super().paintEvent(e)
-        
+
         if self.lightBackgroundColor is None:
             return
 

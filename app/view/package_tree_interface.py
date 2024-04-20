@@ -8,6 +8,7 @@ from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 from .base_tree_frame import BaseTreeFrame
 
+
 class PackageTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
         headers = ["Name", "Description"]
@@ -53,7 +54,6 @@ class PackageTreeFrame(BaseTreeFrame):
                 parent_item.addChild(main_item)
                 main_item.addChild(alt_item)
         self.tree.expandAll()
-
 
 
 class PackageTreeWidget(QWidget):

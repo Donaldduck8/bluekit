@@ -2,6 +2,7 @@ from .base_frame import BaseFrame
 from qfluentwidgets import TreeWidget
 import PyQt5.QtWidgets
 
+
 class BaseTreeFrame(BaseFrame):
     def __init__(self, parent=None, headers=[], data=None):
         super().__init__(parent)
@@ -15,7 +16,7 @@ class BaseTreeFrame(BaseFrame):
         self.tree.setBorderVisible(True)
         self.tree.setBorderRadius(8)
         self.setMinimumWidth(800)
-        
+
         # Set background color
         tree_style_sheet = self.tree.styleSheet()
         tree_style_sheet = tree_style_sheet.replace("background-color: transparent;", "background-color: rgb(251, 251, 252);")
