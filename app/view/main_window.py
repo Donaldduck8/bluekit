@@ -17,6 +17,7 @@ from .file_type_association_interface import FileTypeAssocWidget
 from .home_interface import HomeInterface
 from .package_tree_interface import PackageTreeWidget
 from .registry_changes_interface import RegistryChangesWidget
+from .miscellaneous_files_interface import MiscFilesTreeWidget
 
 if not resource:
     raise ImportError("Resource not found")
@@ -41,6 +42,7 @@ class MainWindow(FluentWindow):
         self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", default_configuration["file_type_associations"])
         self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", default_configuration["git_repositories"])
         self.registryChangesInterface = RegistryChangesWidget(self, "Registry", default_configuration["registry_changes"])
+        self.miscFilesInterface = MiscFilesTreeWidget(self, "Miscellaneous Files", default_configuration["misc_files"])
         self.executionInterface = ExecutionInterface(self, "Execution")
 
         # enable acrylic effect
@@ -71,6 +73,7 @@ class MainWindow(FluentWindow):
         self.navigationInterface.addSeparator()
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
         self.addSubInterface(self.registryChangesInterface, Icon.REGISTRY_EDITOR, 'Registry Changes')
+        self.addSubInterface(self.miscFilesInterface, FIF.FOLDER, 'Miscellaneous Files')
 
         # add custom widget to bottom
         self.navigationInterface.addItem(
@@ -102,6 +105,7 @@ class MainWindow(FluentWindow):
             file_type_associations_data = self.fileTypeAssociationsInterface.data
             git_repositories_data = self.gitRepositoryInterface.data
             registry_changes_data = self.registryChangesInterface.data
+            misc_files_data = self.miscFilesInterface.data
 
             execution_data = {
                 'scoop': scoop_data,
@@ -114,6 +118,7 @@ class MainWindow(FluentWindow):
                 'git_repositories': git_repositories_data,
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
                 "registry_changes": registry_changes_data,
+                "misc_files": misc_files_data
             }
 
             self.executionInterface.execute(

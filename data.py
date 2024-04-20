@@ -571,7 +571,100 @@ default_configuration = {
                 "type": "REG_SZ"
             },
         ]
-    }
+    },
+    "misc_files": {
+        "Yazi": [
+            {
+                "description": "Yazi configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/init.lua",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/keymap.toml",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/theme.toml",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/yazi.toml"
+                ],
+                "target": "%APPDATA%\\yazi\\config"
+            },
+            {
+                "description": "Donald's Yazi previewer",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/plugins/donald.yazi/init.lua",
+                ],
+                "target": "%APPDATA%\\yazi\\config\\plugins\\donald.yazi"
+            },
+            {
+                "description": "Zsh configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.bash_profile",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.bashrc",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.p10k.zsh",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.zshrc",
+                ],
+                "target": "%USERPROFILE%"
+            },
+        ],
+        "VSCode": [
+            {
+                "description": "VSCode configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/vscode_settings/settings.json",
+                ],
+                "target": "%USERPROFILE%\\scoop\\apps\\vscode\\current\\data\\user-data\\User"
+            },
+        ],
+        "Terminal": [
+            {
+                "description": "Windows Terminal configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/terminal/settings.json",
+                ],
+                "target": "%USERPROFILE%\\scoop\\apps\\windows-terminal\\current\\settings"
+            },
+        ],
+        "Sublime Text": [
+            {
+                "description": "Sublime Text theme",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/sublime_packages/Packages/tokyonight_night.tmTheme",
+                ],
+                "target": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\Data\\Packages"
+            },
+            {
+                "description": "Sublime Text configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/sublime_packages/Packages/User/Preferences.sublime-settings",
+                ],
+                "target": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\Data\\Packages\\User"
+            },
+        ],
+        "GlazeWM": [
+            {
+                "description": "GlazeWM configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/glazewm_configuration/config.yaml",
+                ],
+                "target": "%USERPROFILE%\\.glaze-wm"
+            },
+        ],
+        "Scripts": [
+            {
+                "description": "Donald's scripts",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/scripts/malware_intake.py",
+                ],
+                "target": "%USERPROFILE%\\scripts"
+            },
+        ],
+        "Chromium": [
+            {
+                "description": "Chromium configuration files",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/chromium_bookmarks/Bookmarks",
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/chromium_bookmarks/Preferences",
+                ],
+                "target": "%LOCALAPPDATA%\\Chromium\\User Data\\Default"
+            },
+        ]
+    },
 }
 
 

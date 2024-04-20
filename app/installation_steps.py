@@ -1375,6 +1375,47 @@ def make_registry_changes(registry_changes_data: dict):
         widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: {description}", "", InfoBarIcon.SUCCESS)
 
 
+def install_miscellaneous_files(data: dict):
+    if not isinstance(data, dict):
+        logger.warning("Data is not dictionary, skipping...")
+        return
+
+    for category, entries in data.items():
+        if not isinstance(entries, list):
+            logger.warning("Entries are not a list, skipping...")
+            continue
+
+        for entry in entries:
+            if not isinstance(entry, dict):
+                logger.warning("Entry is not a dictionary, skipping...")
+                continue
+
+            description = entry.get("description")
+            source = entry.get("sources")
+            target = entry.get("target")
+
+            if not source or not target:
+                logger.warning("Source or target not found, skipping...")
+                continue
+
+            target_folder = utils.resolve_path(target)
+
+            if os.path.isfile(target_folder):
+                # The target is supposed to be a folder, so this is a problem
+                logger.warning("Target is a file, skipping...")
+
+            os.makedirs(target_folder, exist_ok=True)
+
+            if isinstance(source, str):
+                source = [source]
+
+            for url in source:
+                run_shell_command(command=f"curl.exe -L -o {os.path.join(target_folder, os.path.basename(url))} {url}", failure_okay=True)
+
+            if widget:
+                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {description} (Miscellaneous)", "", InfoBarIcon.SUCCESS)
+
+
 def install_bluekit(data: dict, restart: bool = True):
     common_pre_install()
     remove_worthless_python_exes()
@@ -1396,6 +1437,7 @@ def install_bluekit(data: dict, restart: bool = True):
     clone_git_repositories(data["git_repositories"])
     make_registry_changes(data["registry_changes"])
     install_vscode_extensions(data["vscode_extensions"])
+    install_miscellaneous_files(data["misc_files"])
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
     ida_py_switch(data["ida_py_switch"])
@@ -1411,8 +1453,6 @@ def install_bluekit(data: dict, restart: bool = True):
 
     # Install .NET 3.5, which is required by some older malware samples as well as AutoIt Debugger
     install_net_3_5()
-
-    obtain_and_place_malware_analysis_configurations()
     common_post_install()
     clean_up_disk()
 
