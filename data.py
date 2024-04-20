@@ -56,6 +56,7 @@ default_configuration = {
             ("zoxide", "Zoxide", "A smarter cd command."),
             ("sudo", "Sudo", "A program for providing privileged access to commands."),
             ("malware-analysis-bucket/zsh", "Zsh", "A shell designed for interactive use."),
+            ("ouch", "Ouch", "A library for painless compression and decompression for your terminal."),
         ],
 
         # Triage
