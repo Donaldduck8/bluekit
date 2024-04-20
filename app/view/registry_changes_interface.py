@@ -8,6 +8,7 @@ from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 from .base_tree_frame import BaseTreeFrame
 
+
 class RegistryChangesTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
         headers = ["Name", "Value", "Type", "Data"]
@@ -52,7 +53,7 @@ class RegistryChangesWidget(QWidget):
                 margin-top: 8px;
             }
         """)
-        
+
         self.data = json5.loads(json5.dumps(data, sort_keys=True))
         self.resize(800, 600)
         self.setObjectName('scoopInterface' + str(id(self)))

@@ -57,7 +57,6 @@ class MainWindow(FluentWindow):
 
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
-        signalBus.supportSignal.connect(self.onSupport)
 
     def initNavigation(self):
         # add navigation items
@@ -144,7 +143,7 @@ class MainWindow(FluentWindow):
         # Open the window in the center of the screen
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
-        self.move(w//2 - self.width()//2, h//2 - self.height()//2)
+        self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
         self.show()
         QApplication.processEvents()
 

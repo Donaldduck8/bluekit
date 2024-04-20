@@ -1,5 +1,4 @@
 
-import base64
 import ctypes
 import json
 import logging
@@ -77,7 +76,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
 
             if len(stdout) > 0:
                 logger.info(stdout)
-            
+
             break
 
         except subprocess.CalledProcessError as e:
@@ -219,7 +218,7 @@ def pip_install_packages(packages: List[str]):
         if isinstance(package, str):
             package_name = package
             package_name_pretty = package_name
-            
+
         elif isinstance(package, tuple) or isinstance(package, list):
             package_name = package[0]
             package_name_pretty = package[1]
@@ -407,53 +406,6 @@ def prepare_quick_access():
 
     # Unpin all other items from Quick Access except the user folder
     unpin_all_except(user_folder_path)
-
-
-def obtain_and_place_malware_analysis_configurations():
-    """
-    Obtains and places malware analysis configurations from a GitHub repository.
-
-    The configurations include color schemes, extensions, and settings for various tools used in malware analysis.
-    """
-    logger.info("Obtain and place malware analysis configurations")
-
-    config_path = utils.resolve_path(r"%USERPROFILE%\.config\malware-analysis-configurations")
-
-    if os.path.isdir(config_path):
-        logger.info("Configurations already exist, skipping...")
-        return
-
-    run_shell_command(command=f"git.exe clone https://github.com/Donaldduck8/malware-analysis-configurations {config_path}")
-
-    # Basic symlinking operations
-    for entry in os.listdir(config_path):
-        logger.info(entry)
-
-        entry_dir = os.path.join(config_path, entry)
-        path_file_p = os.path.join(entry_dir, "__path")
-
-        if not os.path.isfile(path_file_p):
-            logger.info("No __path file found, skipping...")
-            continue
-
-        path_file_content = open(path_file_p, "r").read().strip()
-        target_paths = path_file_content.split("\n")
-
-        for target_path in target_paths:
-            resolved_path = utils.resolve_path(target_path)
-
-            if resolved_path is None:
-                logger.warning("Could not resolve path, skipping...")
-                continue
-            else:
-                logger.info("Writing to %s", resolved_path)
-
-            os.makedirs(resolved_path, exist_ok=True)
-
-            utils.link_files_and_folders(entry_dir, resolved_path)
-
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Obtained and placed malware analysis configurations", "", InfoBarIcon.SUCCESS)
 
 
 def install_vscode_extensions(extensions: List):
@@ -890,7 +842,7 @@ def set_fta(extension, program_p, arguments: list[str] = None):
     if not os.path.isfile(setuserfta_p):
         logger.warning("setuserfta not found, skipping...")
         return
-    
+
     setuserfta_cmd = " ".join([setuserfta_p, f".{extension}", rf"Applications\{program_name}"])
 
     run_shell_command(command=setuserfta_cmd)
@@ -1050,7 +1002,7 @@ def extract_bundled_zip():
 
         if widget:
             widget.rightListView.listWidget.add_infobar_signal.emit("Info: No bundled .zip file found", "", InfoBarIcon.INFORMATION)
-        
+
         return
 
     extract_and_place_file(bundled_zip_p, appdata_temp_p, extract=True)
@@ -1247,7 +1199,7 @@ def install_ida_plugins(plugins: List[str]):
     logger.info("Install IDA Pro plugins")
 
     possible_ida_names = ["ida_pro", "ida-free"]
-    possible_plugin_paths = [fr"%USERPROFILE%\scoop\apps\{name}\current\plugins" for name in possible_ida_names]
+    possible_plugin_paths = [f"%USERPROFILE%\\scoop\\apps\\{name}\\current\\plugins" for name in possible_ida_names]
     possible_plugin_paths = [utils.resolve_path(path) for path in possible_plugin_paths]
     possible_plugin_paths = [path for path in possible_plugin_paths if os.path.isdir(path)]
 
@@ -1378,7 +1330,7 @@ def install_miscellaneous_files(data: dict):
         logger.warning("Data is not dictionary, skipping...")
         return
 
-    for category, entries in data.items():
+    for _category, entries in data.items():
         if not isinstance(entries, list):
             logger.warning("Entries are not a list, skipping...")
             continue

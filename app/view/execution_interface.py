@@ -1,21 +1,19 @@
 # coding:utf-8
 import ctypes
 import logging
+import random
 import threading
+import time
 
-from PyQt5.QtCore import (Qt,
-                          pyqtSignal, QTime, QTimer)
+from PyQt5.QtCore import Qt, QTime, QTimer, pyqtSignal
 from PyQt5.QtGui import QResizeEvent
-from PyQt5.QtWidgets import (QHBoxLayout,
-                             QListWidgetItem, QVBoxLayout, QWidget)
-from qfluentwidgets import (FluentStyleSheet,
-                            IndeterminateProgressRing, InfoBarIcon,
-                            InfoBarPosition, ListWidget, TitleLabel)
+from PyQt5.QtWidgets import QHBoxLayout, QListWidgetItem, QVBoxLayout, QWidget
+from qfluentwidgets import (Dialog, IndeterminateProgressRing, InfoBarIcon,
+                            InfoBarPosition, SubtitleLabel, TitleLabel)
 from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor
 from qfluentwidgets.components.widgets.list_view import ListWidget
-from qfluentwidgets import SubtitleLabel, Dialog
 
-from .. import installation_steps, utils
+from .. import installation_steps
 from ..common.style_sheet import StyleSheet
 from .base_frame import BaseFrame
 from .listable_info_bar import InfoBar as ListableInfoBar
@@ -97,7 +95,7 @@ class CustomListWidget(ListWidget):
             widget.setMaximumWidth(self.width() - 2)
             widget.setFixedWidth(self.width() - 2)
 
-    def remove_excess_items(self, max_items = 30):
+    def remove_excess_items(self, max_items=30):
         while self.count() > max_items:
             self.takeItem(0)
 
@@ -134,7 +132,7 @@ class FluentTimer(QWidget):
 class ExecutionInterface(QWidget):
     completion_signal = pyqtSignal()
 
-    def __init__(self, parent=None, title=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
 
         self.completion_signal.connect(self.show_completion_dialog)
@@ -232,12 +230,9 @@ class ExecutionInterface(QWidget):
             w.close()
 
 
-def threading_function_test(widget: ExecutionInterface, data: dict):
+def threading_function_test(widget: ExecutionInterface, _data: dict):
     widget.timerWidget.startTime = QTime(1, 0, 0, 0)
-    for i in range(5):
-        import time
-        import random
-
+    for _ in range(5):
         # widget.rightListView.listWidget.addItem("Item " + str(i))
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", InfoBarIcon.SUCCESS)
 
@@ -261,7 +256,7 @@ def threading_function(widget: ExecutionInterface, data: dict):
         widget.rightListView.listWidget.add_infobar_signal.emit("Error", str(e), InfoBarIcon.ERROR)
         widget.bottomListView.listWidget.addItem(str(e))
         widget.completion_signal.emit()
-        
+
         # Show message box
         ctypes.windll.user32.MessageBoxW(
             0,

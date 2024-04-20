@@ -8,6 +8,7 @@ from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
 
 from .base_tree_frame import BaseTreeFrame
 
+
 class MiscFilesTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
         headers = ["Name", "Description"]
