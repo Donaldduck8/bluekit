@@ -49,8 +49,8 @@ Bluekit supports bundling files alongside the installer in a file named `bundled
 ```
 ╭──────────────────────────────────╮
 │ ╭────────────────                │
-│ ├─ Bluekit.exe                   │
-│ ╰─ bundled.zip                   │
+│ ├─ bluekit.exe                   │
+│ ╰─ bluekit_bundled.zip           │
 │     ├─ ida_pro.zip               │
 │     ├─ ida_pro.json              │
 │     ├─ binary_ninja.zip          │
