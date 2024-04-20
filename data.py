@@ -561,6 +561,14 @@ default_configuration = {
                 "data": "0",
                 "type": "REG_DWORD"
             },
+            {
+                "description": "Disable stupid ass path expansion in git Bash",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Environment",
+                "value": "MSYS_NO_PATHCONV",
+                "data": "1",
+                "type": "REG_SZ"
+            },
         ]
     }
 }
