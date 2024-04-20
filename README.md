@@ -35,14 +35,18 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
   <img src="img/installer_2.webp" alt="Bluekit Installer 2">
 </p>
 
-> [!TIP]
-> Use the `--silent` argument to bypass the GUI and install without any additional input.
+## Usage
+
+Bluekit supports the following command-line arguments:
+
+- `--silent`: Execute the installer without a GUI.
+- `--configuration <path>`: Provide the installer with a custom configuration.
 
 ## Bundled Files
 
 Bluekit supports bundling files alongside the installer in a file named `bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
 
-```╭╮╯╰
+```
 ╭──────────────────────────────────╮
 │ ╭────────────────                │
 │ ├─ Bluekit.exe                   │
@@ -61,7 +65,7 @@ Bluekit supports bundling files alongside the installer in a file named `bundled
 
 Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
 
-It's recommended to pair them with an alternative, free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/malware-analysis-setup-gui/blob/961456f40d03351d38e3b25f80b9d7f110149d51/data.py#L76) for an example.
+It's recommended to pair them with an alternative free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/malware-analysis-setup-gui/blob/961456f40d03351d38e3b25f80b9d7f110149d51/data.py#L76) for an example.
 
 
 ## Contributing
