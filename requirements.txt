@@ -4,3 +4,4 @@ pywin32
 pyinstaller
 pillow
 json5
+natsort

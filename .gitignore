@@ -8,3 +8,4 @@ app/common/resource.py
 /build
 log.txt
 .vscode/launch.json
+app/install.log

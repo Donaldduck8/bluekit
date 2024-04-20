@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (FluentWindow, NavigationItemPosition, SplashScreen)
 
-from data import data
+from data import default_configuration
 
 from .. import utils
 from ..common import resource
@@ -32,15 +32,15 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.scoopInterface = PackageTreeWidget(self, "Scoop Packages", data["scoop"])
-        self.pipInterface = PackageTreeWidget(self, "PIP Packages", data["pip"])
-        self.npmInterface = PackageTreeWidget(self, "NodeJS Packages", data["npm"])
-        self.idaPluginInterface = PackageTreeWidget(self, "IDA Plugins", data["ida_plugins"])
-        self.vsCodeExtensionInterface = PackageTreeWidget(self, "VSCode Extensions", data["vscode_extensions"])
-        self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", data["taskbar_pins"])
-        self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", data["file_type_associations"])
-        self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", data["git_repositories"])
-        self.registryChangesInterface = RegistryChangesWidget(self, "Registry", data["registry_changes"])
+        self.scoopInterface = PackageTreeWidget(self, "Scoop Packages", default_configuration["scoop"])
+        self.pipInterface = PackageTreeWidget(self, "PIP Packages", default_configuration["pip"])
+        self.npmInterface = PackageTreeWidget(self, "NodeJS Packages", default_configuration["npm"])
+        self.idaPluginInterface = PackageTreeWidget(self, "IDA Plugins", default_configuration["ida_plugins"])
+        self.vsCodeExtensionInterface = PackageTreeWidget(self, "VSCode Extensions", default_configuration["vscode_extensions"])
+        self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", default_configuration["taskbar_pins"])
+        self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", default_configuration["file_type_associations"])
+        self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", default_configuration["git_repositories"])
+        self.registryChangesInterface = RegistryChangesWidget(self, "Registry", default_configuration["registry_changes"])
         self.executionInterface = ExecutionInterface(self, "Execution")
 
         # enable acrylic effect

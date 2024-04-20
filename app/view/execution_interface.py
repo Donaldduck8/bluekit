@@ -1,4 +1,5 @@
 # coding:utf-8
+import ctypes
 import logging
 import threading
 
@@ -120,7 +121,11 @@ class FluentTimer(QWidget):
 
     def showTime(self):
         self.startTime = self.startTime.addSecs(1)
-        self.label.setText(self.startTime.toString("mm:ss"))
+
+        if self.startTime.hour() > 0:
+            self.label.setText(self.startTime.toString("hh:mm:ss"))
+        else:
+            self.label.setText(self.startTime.toString("mm:ss"))
 
     def stop(self):
         self.timer.stop()
@@ -215,11 +220,11 @@ class ExecutionInterface(QWidget):
         self.timerWidget.stop()
 
         title = 'Installation is complete!'
-        content = """Some changes (like taskbar pins) will only be applied after restarting your computer. Would you like to restart now?"""
+        content = """Some changes will only be applied after restarting your computer. Would you like to restart now?"""
         w = Dialog(title, content, self)
         w.show()
         w.setTitleBarVisible(False)
-        # w.setContentCopyable(True)
+
         if w.exec():
             w.close()
             installation_steps.restart()
@@ -228,6 +233,7 @@ class ExecutionInterface(QWidget):
 
 
 def threading_function_test(widget: ExecutionInterface, data: dict):
+    widget.timerWidget.startTime = QTime(1, 0, 0, 0)
     for i in range(5):
         import time
         import random
@@ -246,7 +252,20 @@ def threading_function_test(widget: ExecutionInterface, data: dict):
 
 
 def threading_function(widget: ExecutionInterface, data: dict):
-    installation_steps.widget = widget
-    installation_steps.install_bluekit(data)
+    try:
+        installation_steps.widget = widget
+        installation_steps.install_bluekit(data, restart=False)
 
-    widget.completion_signal.emit()
+        widget.completion_signal.emit()
+    except Exception as e:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Error", str(e), InfoBarIcon.ERROR)
+        widget.bottomListView.listWidget.addItem(str(e))
+        widget.completion_signal.emit()
+        
+        # Show message box
+        ctypes.windll.user32.MessageBoxW(
+            0,
+            "A fatal exception occurred during installation. Please check the log for more information.",
+            "Installation failed!",
+            0x10,
+        )

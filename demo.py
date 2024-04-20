@@ -9,10 +9,12 @@ import argparse
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
+import data
+
 from app import installation_steps, utils
 from app.common.config import cfg
 from app.view.main_window import MainWindow
-from data import required_paths, data
+from data import required_paths, default_configuration
 
 try:
     import pyi_splash
@@ -26,6 +28,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
+parser.add_argument('-c', '--config', action='store_true', help='Provide a custom configuration file')
 
 
 def run_gui():
@@ -44,7 +47,22 @@ def run_gui():
     app = QApplication(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
-    if pyi_splash:
+    # If Windows Defender is enabled, show an error message
+    # If we are frozen
+    if getattr(sys, "frozen", False):
+        if utils.is_defender_enabled():
+            if pyi_splash and pyi_splash.is_alive():
+                pyi_splash.close()
+
+            ctypes.windll.user32.MessageBoxW(
+                0,
+                "Windows Defender is currently enabled. Please disable it before running this script.",
+                "Windows Defender",
+                0x10,
+            )
+            sys.exit()
+
+    if pyi_splash and pyi_splash.is_alive():
         pyi_splash.close()
 
     # create main window
@@ -57,18 +75,6 @@ def run_gui():
 def ensure_suitable_environment():
     # If we are frozen
     if getattr(sys, "frozen", False):
-        # If Windows Defender is enabled, show an error message
-        if utils.is_defender_enabled():
-            if pyi_splash:
-                pyi_splash.close()
-
-            ctypes.windll.user32.MessageBoxW(
-                0,
-                "Windows Defender is or was enabled. Proceeding with the installation may cause Windows Defender to delete some files, or the installation to fail outright.",
-                "Windows Defender",
-                0x1,
-            )
-
         # Add the paths to the PATH environment variable
         installation_steps.add_paths_to_path(required_paths)
 
@@ -80,15 +86,32 @@ def ensure_suitable_environment():
             sys.exit()
 
 
+def load_config(config_p: str):
+    if not os.path.isfile(config_p):
+        raise FileNotFoundError(f"Config file not found: {config_p}")
+
+    with open(config_p, 'r', encoding="utf-8") as f:
+        custom_data = json5.load(f.read())
+
+    # Perform validation on the custom data
+    for top_level_keys in custom_data.keys():
+        if top_level_keys not in default_configuration.keys():
+            raise KeyError(f"Unrecognized key in custom configuration: {top_level_keys}")
+
+    data.default_configuration = custom_data
+
+
 def main():
     ensure_suitable_environment()
-    args = parser.parse_args()
+
+    if args.config:
+        load_config(args.config)
 
     if args.silent:
         if pyi_splash:
             pyi_splash.close()
 
-        installation_steps.install_bluekit(data)
+        installation_steps.install_bluekit(default_configuration)
 
     else:
         run_gui()
@@ -96,10 +119,11 @@ def main():
 
 if __name__ == "__main__":
     try:
+        args = parser.parse_args()
         main()
 
     except Exception as e:
-        if pyi_splash:
+        if pyi_splash and pyi_splash.is_alive():
             pyi_splash.close()
 
         exception_traceback = traceback.format_exc(e)

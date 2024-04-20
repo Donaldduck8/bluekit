@@ -1371,7 +1371,7 @@ def make_registry_changes(registry_changes_data: dict):
         widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: {description}", "", InfoBarIcon.SUCCESS)
 
 
-def install_bluekit(data: dict):
+def install_bluekit(data: dict, restart: bool = True):
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()
@@ -1411,4 +1411,6 @@ def install_bluekit(data: dict):
     obtain_and_place_malware_analysis_configurations()
     common_post_install()
     clean_up_disk()
-    restart()
+
+    if restart:
+        restart()

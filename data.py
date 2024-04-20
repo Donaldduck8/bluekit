@@ -1,6 +1,9 @@
 import json5
 
+from natsort import natsorted, ns
+
 from app import utils
+
 
 required_paths = [
     utils.resolve_path("%USERPROFILE%\\scoop\\shims"),
@@ -10,7 +13,7 @@ required_paths = [
     utils.resolve_path("%USERPROFILE%\\scoop\\apps\\nodejs\\current")
 ]
 
-data = {
+default_configuration = {
     "scoop": {
         "Buckets": [
             ("extras", "Extras", "Extra software that doesn't fit in the main bucket."),
@@ -249,6 +252,9 @@ data = {
     "pip": [
         # Binref
         ("binary-refinery", "Binary Refinery", "A collection of tools for reverse engineering and binary analysis."),
+
+        # Dumpulator
+        ("dumpulator", "Dumpulator", "An easy-to-use library for emulating code in minidump files"),
 
         # IDA Pro
         ("envi", "Envi", "A minimal environment variables reader, required for IDAPython."),
@@ -540,7 +546,7 @@ data = {
                 "type": "REG_SZ"
             },
             {
-                "descrption": "Remove OneDrive pin from the Explorer window",
+                "description": "Remove OneDrive pin from the Explorer window",
                 "hive": "HKEY_CLASSES_ROOT",
                 "key": "CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}",
                 "value": "System.IsPinnedToNameSpaceTree",
@@ -551,4 +557,31 @@ data = {
     }
 }
 
-data = json5.loads(json5.dumps(data))
+
+def key_lambda(x):
+    if isinstance(x, str):
+        return x
+    elif isinstance(x, tuple) or isinstance(x, list):
+        return x[1]
+    elif isinstance(x, dict) and x["type"] == "one_of":
+        return x["main"][1]
+    else:
+        raise ValueError(f"Unknown type: {type(x)}")
+
+
+# Sort everything alphabetically
+for key in default_configuration["scoop"]:
+    if isinstance(default_configuration["scoop"][key], list):
+        default_configuration["scoop"][key] = natsorted(default_configuration["scoop"][key], key=key_lambda, alg=ns.IGNORECASE)
+
+for key in default_configuration["registry_changes"]:
+    if isinstance(default_configuration["registry_changes"][key], list):
+        default_configuration["registry_changes"][key] = natsorted(default_configuration["registry_changes"][key], key=lambda x: x["description"], alg=ns.IGNORECASE)
+
+default_configuration["pip"] = natsorted(default_configuration["pip"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["npm"] = natsorted(default_configuration["npm"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["ida_plugins"] = natsorted(default_configuration["ida_plugins"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["vscode_extensions"] = natsorted(default_configuration["vscode_extensions"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
+
+default_configuration = json5.loads(json5.dumps(default_configuration))

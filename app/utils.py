@@ -174,27 +174,7 @@ def is_defender_enabled():
     # Check if Tamper Protection is off, which is less secure
     if settings["TamperProtection"] == 1:
         defender_enabled = True
-
-    # Check Windows Defender services status
-    services = [
-        "WinDefend",      # Windows Defender Service
-        "WdNisSvc"        # Windows Defender Network Inspection Service
-    ]
-
-    services_status = any(is_service_running(service) for service in services)
-
-    if services_status:
-        defender_enabled = True
-
-    processes = [
-        "MsMpEng.exe",    # Windows Defender Antivirus Service
-        "NisSrv.exe"      # Windows Defender Network Inspection Service
-    ]
-
-    if any(is_process_running(process) for process in processes):
-        defender_enabled = True
-
-    # Return True only if all checks pass
+    
     return defender_enabled
 
 
