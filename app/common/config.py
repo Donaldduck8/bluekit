@@ -3,9 +3,8 @@ import sys
 from enum import Enum
 
 from PyQt5.QtCore import QLocale
-from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, BoolValidator,
-                            OptionsValidator, RangeConfigItem, RangeValidator,
-                            FolderListValidator, Theme, FolderValidator, ConfigSerializer, __version__)
+from qfluentwidgets import (qconfig, QConfig, ConfigItem, BoolValidator,
+                            Theme, ConfigSerializer, __version__)
 
 
 class Language(Enum):
@@ -36,30 +35,12 @@ class Config(QConfig):
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
-    dpiScale = OptionsConfigItem(
-        "MainWindow", "DpiScale", "Auto", OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]), restart=True)
-    language = OptionsConfigItem(
-        "MainWindow", "Language", Language.AUTO, OptionsValidator(Language), LanguageSerializer(), restart=True)
-
-    # Material
-    blurRadius = RangeConfigItem("Material", "AcrylicBlurRadius", 15, RangeValidator(0, 40))
-
-    # software update
-    checkUpdateAtStartUp = ConfigItem("Update", "CheckUpdateAtStartUp", True, BoolValidator())
 
 
-YEAR = 2023
-AUTHOR = "zhiyiYo"
-VERSION = __version__
-HELP_URL = "https://qfluentwidgets.com"
-REPO_URL = "https://github.com/Donaldduck8/malware-analysis-bucket"
+HELP_URL = "https://github.com/Donaldduck8/bluekit"
+BUCKET_URL = "https://github.com/Donaldduck8/malware-analysis-bucket"
 BLOG_URL = "https://sinkhole.dev"
-EXAMPLE_URL = "ASDGBASGDGASD"
-FEEDBACK_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/issues"
-RELEASE_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/releases/latest"
-ZH_SUPPORT_URL = "https://qfluentwidgets.com/zh/price/"
-EN_SUPPORT_URL = "https://qfluentwidgets.com/price/"
-
+FEEDBACK_URL = "https://github.com/Donaldduck8/bluekit/issues"
 
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO

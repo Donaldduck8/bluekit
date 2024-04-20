@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 from qfluentwidgets import ScrollArea, FluentIcon
-from ..common.config import HELP_URL, REPO_URL, BLOG_URL, FEEDBACK_URL
+from ..common.config import HELP_URL, BUCKET_URL, BLOG_URL, FEEDBACK_URL
 from ..components.link_card import LinkCardView
 from ..common.style_sheet import StyleSheet
 
@@ -36,7 +36,7 @@ class BannerWidget(QWidget):
             self.tr('Scoop Bucket'),
             self.tr(
                 'Contribute applications to the Malware Analysis Scoop bucket.'),
-            REPO_URL
+            BUCKET_URL
         )
 
         self.linkCardView.addCard(
