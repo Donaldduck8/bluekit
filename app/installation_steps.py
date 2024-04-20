@@ -1364,6 +1364,29 @@ def install_miscellaneous_files(data: dict):
                 widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {description} (Miscellaneous)", "", InfoBarIcon.SUCCESS)
 
 
+def download_recaf3_javafx_dependencies():
+    """
+    Downloads Recaf3's JavaFX dependencies to the %APPDATA%\\Recaf\\dependencies directory.
+    """
+    logger.info("Download Recaf3's JavaFX dependencies")
+
+    appdata_recaf_dependencies_p = utils.resolve_path(r"%APPDATA%\Recaf\dependencies")
+    os.makedirs(appdata_recaf_dependencies_p, exist_ok=True)
+
+    urls = [
+        "https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/19.0.2/javafx-graphics-19.0.2-win.jar",
+        "https://repo1.maven.org/maven2/org/openjfx/javafx-base/19.0.2/javafx-base-19.0.2-win.jar",
+        "https://repo1.maven.org/maven2/org/openjfx/javafx-controls/19.0.2/javafx-controls-19.0.2-win.jar",
+        "https://repo1.maven.org/maven2/org/openjfx/javafx-media/19.0.2/javafx-media-19.0.2-win.jar",
+    ]
+
+    for url in urls:
+        run_shell_command(command=f"curl.exe -L -o {os.path.join(appdata_recaf_dependencies_p, os.path.basename(url))} {url}")
+
+    if widget:
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Downloaded Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
+
+
 def install_bluekit(data: dict, should_restart: bool = True):
     common_pre_install()
     remove_worthless_python_exes()
@@ -1396,11 +1419,12 @@ def install_bluekit(data: dict, should_restart: bool = True):
     # Install Zsh on top of git
     install_zsh_over_git()
 
-    # Install Recaf3's JavaFX dependencies to ensure it works even if VM is not connected to the internet
-    # extract_and_place_file("recaf3_javafx_dependencies.zip", utils.resolve_path(r"%APPDATA%\Recaf\dependencies"))
+    # Install Recaf3's JavaFX dependencies to ensure Recaf3 works without internet
+    download_recaf3_javafx_dependencies()
 
     # Install .NET 3.5, which is required by some older malware samples as well as AutoIt Debugger
     install_net_3_5()
+
     common_post_install()
     clean_up_disk()
 
