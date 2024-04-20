@@ -40,7 +40,7 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 Bluekit supports the following command-line arguments:
 
 - `--silent`: Execute the installer without a GUI.
-- `--configuration <path>`: Provide the installer with a custom configuration.
+- `--config <path>`: Provide the installer with a custom configuration.
 
 ## Bundled Files
 
