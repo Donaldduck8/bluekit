@@ -278,8 +278,12 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cach
         traceback.print_exc()
         logger.warning(f"Failed to install {tool_name}, skipping...")
         return False
-    
+
     if delete_cache_afterwards:
+        # If the tool_name contains the bucket, we need to strip that
+        if "/" in tool_name:
+            tool_name = tool_name.split("/")[-1]
+
         run_shell_command(command=f"scoop.cmd cache rm {tool_name}")
 
     return True

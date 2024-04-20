@@ -131,31 +131,6 @@ def query_registry(key_path, value_name):
         print(f"Error accessing registry {key_path}: {str(e)}")
         return None
 
-def is_service_running(service_name):
-    # Using 'sc query' to check the service status
-    try:
-        result = subprocess.run(['sc', 'query', service_name], capture_output=True, text=True)
-        if "RUNNING" in result.stdout:
-            return True
-        else:
-            return False
-    except Exception as e:
-        print(f"Error checking service status for {service_name}: {str(e)}")
-        return False
-
-
-def is_process_running(process_name):
-    # Using 'tasklist' to check if the process is running
-    try:
-        result = subprocess.run(['tasklist', '/FI', f'IMAGENAME eq {process_name}'], capture_output=True, text=True)
-        if process_name in result.stdout:
-            return True
-        else:
-            return False
-    except Exception as e:
-        print(f"Error checking process status for {process_name}: {str(e)}")
-        return False
-
 
 def is_defender_enabled():
     defender_enabled = False
@@ -174,7 +149,7 @@ def is_defender_enabled():
     # Check if Tamper Protection is off, which is less secure
     if settings["TamperProtection"] == 1:
         defender_enabled = True
-    
+
     return defender_enabled
 
 

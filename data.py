@@ -552,7 +552,15 @@ default_configuration = {
                 "value": "System.IsPinnedToNameSpaceTree",
                 "data": "0",
                 "type": "REG_DWORD"
-            }
+            },
+            {
+                "description": "Remove Taskbar Widgets",
+                "hive": "HKEY_LOCAL_MACHINE",
+                "key": "Software\\Policies\\Microsoft\\Dsh",
+                "value": "AllowNewsAndInterests",
+                "data": "0",
+                "type": "REG_DWORD"
+            },
         ]
     }
 }
