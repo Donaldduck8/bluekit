@@ -33,7 +33,7 @@ class MiscFilesTreeFrame(BaseTreeFrame):
                 # Use the description as the main label and target as a sublabel or tooltip
                 config_item = QTreeWidgetItem([item['description'], item['target']])
                 parent_item.addChild(config_item)  # Add the config item under the category
-                
+
                 # Optionally add each source as a child node of the config item
                 for source in item['sources']:
                     source_item = QTreeWidgetItem(["Source", source])
