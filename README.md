@@ -42,21 +42,21 @@ Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is
 
 Bluekit supports bundling files alongside the installer in a file named `bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
 
-```
-┌──────────────────────────────────┐
-│ ┌────────────────                │
+```╭╮╯╰
+╭──────────────────────────────────╮
+│ ╭────────────────                │
 │ ├─ Bluekit.exe                   │
-│ └─ bundled.zip                   │
+│ ╰─ bundled.zip                   │
 │     ├─ ida_pro.zip               │
 │     ├─ ida_pro.json              │
 │     ├─ binary_ninja.zip          │
 │     ├─ binary_ninja.json         │
 │     ├─ linqpad.zip               │
 │     ├─ linqpad.json              │
-│     └─ scoop_cache.zip           │
+│     ╰─ scoop_cache.zip           │
 │         ├─ nodejs#21.7.3[...].7z │
-│         └─ floss#3.1.0[...].zip  │
-└──────────────────────────────────┘
+│         ╰─ floss#3.1.0[...].zip  │
+╰──────────────────────────────────╯
 ```
 
 Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
