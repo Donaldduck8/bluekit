@@ -91,7 +91,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
                 content="JSON data has been successfully saved!",
                 orient=Qt.Horizontal,
                 isClosable=True,
-                position=InfoBarPosition.TOP_RIGHT,
+                position=InfoBarPosition.BOTTOM_RIGHT,
                 duration=2000,
                 parent=self
             )
