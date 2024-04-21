@@ -300,6 +300,9 @@ default_configuration = {
         # Frida
         ("frida-tools", "Frida Tools", "A collection of tools for the Frida instrumentation framework."),
         ("frida", "Frida Python Bindings", "Python bindings for Frida."),
+
+        # Qiling
+        ("https://github.com/qilingframework/qiling/archive/dev.zip", "Qiling", "A high-level emulation framework for Linux, Windows, and macOS."),
     ],
 
     "npm": [
