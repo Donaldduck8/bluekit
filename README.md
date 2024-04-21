@@ -47,20 +47,21 @@ Bluekit supports the following command-line arguments:
 Bluekit supports bundling files alongside the installer in a file named `bluekit_bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
 
 ```
-╭──────────────────────────────────╮
-│ ╭────────────────                │
-│ ├─ bluekit.exe                   │
-│ ╰─ bluekit_bundled.zip           │
-│     ├─ ida_pro.zip               │
-│     ├─ ida_pro.json              │
-│     ├─ binary_ninja.zip          │
-│     ├─ binary_ninja.json         │
-│     ├─ linqpad.zip               │
-│     ├─ linqpad.json              │
-│     ╰─ scoop_cache.zip           │
-│         ├─ nodejs#21.7.3[...].7z │
-│         ╰─ floss#3.1.0[...].zip  │
-╰──────────────────────────────────╯
+╭──────────────────────╮                  ╭───────────────────────────────────╮
+│• bluekit.exe         │         ╭────────┤• x64dbg#2024─04─11_18─47[...].zip │
+╰──────────────────────╯         │        ╰───────────────────────────────────╯
+╭──────────────────────╮         │        ╭───────────────────────────────────╮
+│• bluekit_bundled.zip │         ├────────┤• sysinternals#2024.2.13[...].zip  │
+╰─●────────────────────╯         │        ╰───────────────────────────────────╯
+  │   ╭──────────────────────╮   │                                             
+  ├───│• linqpad.zip         │   │                         ...                 
+  │   ╰──────────────────────╯   │                                             
+  │   ╭──────────────────────╮   │                                             
+  ├───│• linqpad.json        │   │                                             
+  │   ╰──────────────────────╯   │                                             
+  │   ╭──────────────────────╮   │                                             
+  ╰───│• scoop_cache.zip     ●───╯                                             
+      ╰──────────────────────╯                                                 
 ```
 
 Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
