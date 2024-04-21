@@ -1422,9 +1422,6 @@ def install_bluekit(data: dict, should_restart: bool = True):
     # Install Recaf3's JavaFX dependencies to ensure Recaf3 works without internet
     download_recaf3_javafx_dependencies()
 
-    # Install .NET 3.5, which is required by some older malware samples as well as AutoIt Debugger
-    install_net_3_5()
-
     common_post_install()
     clean_up_disk()
 
