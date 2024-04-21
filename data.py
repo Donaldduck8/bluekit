@@ -256,8 +256,7 @@ default_configuration = {
 
     "pip": [
         # Binref
-        ("binary-refinery", "Binary Refinery", "A collection of tools for reverse engineering and binary analysis."),
-        ("cabarchive", "cabarchive", "A dependency to use the xtcab operator."),
+        ("binary-refinery[all]", "Binary Refinery", "A collection of tools for reverse engineering, binary analysis and pipeline creation."),
 
         # Dumpulator
         ("dumpulator", "Dumpulator", "An easy-to-use library for emulating code in minidump files"),
