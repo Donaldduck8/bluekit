@@ -33,7 +33,8 @@ class MiscFilesTreeFrame(BaseTreeFrame):
 
                 # Optionally add each source as a child node of the config item
                 for source in item['sources']:
-                    source_item = QTreeWidgetItem(["Source", source])
+                    file_name = source.split('/')[-1]
+                    source_item = QTreeWidgetItem([file_name])
                     config_item.addChild(source_item)
         self.tree.expandAll()
 
