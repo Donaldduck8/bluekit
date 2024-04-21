@@ -66,7 +66,7 @@ Bluekit supports bundling files alongside the installer in a file named `bluekit
 
 Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
 
-It's recommended to pair them with an alternative free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/malware-analysis-setup-gui/blob/961456f40d03351d38e3b25f80b9d7f110149d51/data.py#L76) for an example.
+It's recommended to pair them with an alternative free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/malware-analysis-setup-gui/blob/e85d06d55c691955b35e928aa41ce728a5c0d9f1/example_custom_configuration.json5#L225) for an example.
 
 
 ## Contributing
