@@ -1,12 +1,8 @@
 # coding:utf-8
-import json5
-import json5.host
-import PyQt5
-from PyQt5.QtWidgets import (QMessageBox, QStackedWidget, QTreeWidgetItem,
-                             QVBoxLayout, QWidget)
-from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel
+from PyQt5.QtWidgets import (QTreeWidgetItem)
 
 from .base_tree_frame import BaseTreeFrame
+from .base_tree_json_interface import BaseTreeAndJsonEditWidget
 
 
 class FileTypeAssocTreeFrame(BaseTreeFrame):
@@ -54,72 +50,6 @@ class FileTypeAssocTreeFrame(BaseTreeFrame):
         self.tree.expandAll()
 
 
-class FileTypeAssocWidget(QWidget):
-    """ Home interface with a pivot to switch between tree view and a JSON editor. """
-
-    def __init__(self, parent=None, title: str = '', data: dict = None):
-        super().__init__(parent)
-        self.setStyleSheet("""
-            ScoopInterface{background: white}
-            QTextEdit{
-                font: 14px 'Segoe UI';
-                border-radius: 8px;
-                margin-top: 8px;
-            }
-        """)
-        self.data = data
-        self.resize(800, 600)
-        self.setObjectName('ftaInterface' + str(id(self)))
-
-        self.titleLabel = TitleLabel(title)
-        self.titleLabel.setAlignment(PyQt5.QtCore.Qt.AlignCenter)
-        self.pivot = SegmentedWidget(self)
-        self.stackedWidget = QStackedWidget(self)
-        self.vBoxLayout = QVBoxLayout(self)
-        self.vBoxLayout.addWidget(self.titleLabel)
-        self.vBoxLayout.addSpacing(10)
-
-        # Tree view interface
-        self.tree_view = FileTypeAssocTreeFrame(parent=self, data=self.data)
-        self.addSubInterface(self.tree_view, 'tree_view', 'Tree View')
-
-        # JSON edit interface
-        self.json_edit = TextEdit(parent=self)
-        self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
-        self.json_edit.setText(json5.dumps(self.data, indent=8, sort_keys=True))
-        self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
-
-        # self.json_edit.setPlainText()
-        self.addSubInterface(self.json_edit, 'json_edit', 'Editor')
-
-        self.vBoxLayout.addWidget(self.pivot)
-        self.vBoxLayout.addWidget(self.stackedWidget)
-        self.vBoxLayout.setContentsMargins(30, 10, 30, 30)
-
-        self.stackedWidget.currentChanged.connect(self.onCurrentIndexChanged)
-        self.stackedWidget.setCurrentWidget(self.tree_view)
-        self.pivot.setCurrentItem(self.tree_view.objectName())
-
-    def addSubInterface(self, widget, objectName, text):
-        widget.setObjectName(objectName)
-        self.stackedWidget.addWidget(widget)
-        self.pivot.addItem(
-            routeKey=objectName,
-            text=text,
-            onClick=lambda: self.stackedWidget.setCurrentWidget(widget),
-        )
-
-    def onCurrentIndexChanged(self, index):
-        widget = self.stackedWidget.widget(index)
-        self.pivot.setCurrentItem(widget.objectName())
-
-        # Call update_data_from_json only if switching back to the tree view
-        if widget == self.tree_view:
-            self.update_data_from_json()
-
-    def update_data_from_json(self):
-        try:
-            data = json5.loads(self.json_edit.toPlainText())
-            self.tree_view.update_data(data)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", "Failed to parse JSON: " + str(e))
+class FileTypeAssocWidget(BaseTreeAndJsonEditWidget):
+    def create_custom_view(self, parent, data):
+        return FileTypeAssocTreeFrame(parent, data)

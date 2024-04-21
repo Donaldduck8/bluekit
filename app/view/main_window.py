@@ -94,6 +94,19 @@ class MainWindow(FluentWindow):
         if not self._executing:
             self._executing = True
 
+            interfaces = [
+                self.scoopInterface,
+                self.pipInterface,
+                self.npmInterface,
+                self.idaPluginInterface,
+                self.vsCodeExtensionInterface,
+                self.taskbarPinsInterface,
+                self.fileTypeAssociationsInterface,
+                self.gitRepositoryInterface,
+                self.registryChangesInterface,
+                self.miscFilesInterface    
+            ]
+
             # Collect the data from all sub-interfaces
             scoop_data = self.scoopInterface.data
             pip_data = self.pipInterface.data
@@ -119,6 +132,10 @@ class MainWindow(FluentWindow):
                 "registry_changes": registry_changes_data,
                 "misc_files": misc_files_data
             }
+
+            # Make all widgets non-editable
+            for interface in interfaces:
+                interface.on_execution_started()
 
             self.executionInterface.execute(
                 execution_data

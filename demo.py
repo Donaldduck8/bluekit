@@ -11,7 +11,6 @@ from PyQt5.QtWidgets import QApplication
 
 import data
 from app import installation_steps, utils
-from app.common.config import cfg
 from app.view.main_window import MainWindow
 from data import default_configuration, required_paths
 

@@ -1,11 +1,11 @@
-from PyQt5.QtWidgets import QFrame, QHBoxLayout
+from PyQt5.QtWidgets import QFrame, QVBoxLayout
 from ..common.style_sheet import StyleSheet
 
 
 class BaseFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.hBoxLayout = QHBoxLayout(self)
+        self.hBoxLayout = QVBoxLayout(self)
         self.hBoxLayout.setContentsMargins(0, 8, 0, 0)
         self.setObjectName('frame')
         StyleSheet.VIEW_INTERFACE.apply(self)
