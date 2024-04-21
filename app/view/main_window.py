@@ -104,7 +104,7 @@ class MainWindow(FluentWindow):
                 self.fileTypeAssociationsInterface,
                 self.gitRepositoryInterface,
                 self.registryChangesInterface,
-                self.miscFilesInterface    
+                self.miscFilesInterface
             ]
 
             # Collect the data from all sub-interfaces
