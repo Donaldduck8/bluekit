@@ -64,7 +64,6 @@ default_configuration = {
         # Triage
         "Triage": [
             ("die", "Detect It Easy", "A program for determining types of files."),
-            ("malware-analysis-bucket/capa", "Capa", "An open-source tool to identify capabilities in executable files."),
             ("malware-analysis-bucket/cyberchef", "Cyberchef", "A web app for analyzing and decoding data."),
             ("malware-analysis-bucket/malcat", "MalCat", "A tool centered around static malware and binary analysis."),
             ("010editor", "010 Editor", "A professional text/hex editor designed to edit any file."),
