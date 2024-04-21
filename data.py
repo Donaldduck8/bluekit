@@ -26,6 +26,7 @@ default_configuration = {
         "Required": [
             ("git", "Git", "A distributed version control system."),
             ("pwsh", "PowerShell", "A task automation and configuration management framework."),
+            ("python27", "Python 2.7", "The newest Python 2.x version available, required for Java bytecode editing."),
             ("python311", "Python 3.11", "The newest Python version currently compatible with IDA Pro.")
         ],
 
@@ -44,6 +45,7 @@ default_configuration = {
             ("upx", "UPX", "A free, portable, extendable, high-performance executable packer for several executable formats."),
             ("openssl-light", "OpenSSL (Light)", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
             ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
+            ("malware-analysis-bucket/pycdc", "Decompyle++", "A C++ python bytecode disassembler and decompiler."),
         ],
 
         "Shell": [
@@ -110,6 +112,7 @@ default_configuration = {
             ("malware-analysis-bucket/mal_unpack64", "Mal_Unpack64", "A tool to unpack malware."),
             ("malware-analysis-bucket/novmp", "NoVMP", "A tool to unpack malware."),
             ("malware-analysis-bucket/xvolkolak", "XVolKolak", "A tool to unpack malware."),
+            ("malware-analysis-bucket/fermion", "Fermion", "An electron wrapper for Frida & Monaco"),
         ],
 
         # Themida (Dynamic)
@@ -194,7 +197,8 @@ default_configuration = {
         # JAVA (Static)
         "JAVA (Static)": [
             ("malware-analysis-bucket/recaf3", "Recaf 3.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 3, which is a modern Java bytecode viewer and decompiler."),
-            ("malware-analysis-bucket/recaf4", "Recaf 4.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler.")
+            ("malware-analysis-bucket/recaf4", "Recaf 4.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler."),
+            ("malware-analysis-bucket/java-disassembler", "Java Disassembler", "A tool to disassemble Java class files."),
         ],
 
         # JAVA (Dynamic)
@@ -253,9 +257,11 @@ default_configuration = {
     "pip": [
         # Binref
         ("binary-refinery", "Binary Refinery", "A collection of tools for reverse engineering and binary analysis."),
+        ("cabarchive", "cabarchive", "A dependency to use the xtcab operator."),
 
         # Dumpulator
         ("dumpulator", "Dumpulator", "An easy-to-use library for emulating code in minidump files"),
+        ("skrapa[yara]", "Skrapa", "A tool to perform YARA matches against the memory of running processes."),
 
         # IDA Pro
         ("envi", "Envi", "A minimal environment variables reader, required for IDAPython."),
@@ -284,13 +290,18 @@ default_configuration = {
         ("z3-solver", "z3-solver", "A theorem prover from Microsoft Research."),
 
         # Python
-        ("uncompyle6", "uncompyle6", "A native Python bytecode decompiler."),
+        ("uncompyle6", "uncompyle6", "A Python bytecode decompiler."),
+        ("decompyle3", "decompyle3", "A Python bytecode decompiler."),
 
         # PowerShell (Static)
         ("git+https://github.com/Donaldduck8/deobshell.git@pip-installable", "deobshell", "A tool to statically deobfuscate PowerShell scripts."),
 
         ("git+https://github.com/Donaldduck8/capa.git", "FLARE-Capa", "A tool to identify capabilities in executable files."),
         ("git+https://github.com/mandiant/speakeasy.git", "Speakeasy", "A comprehensive shellcode emulator and analysis toolkit."),
+
+        # Frida
+        ("frida-tools", "Frida Tools", "A collection of tools for the Frida instrumentation framework."),
+        ("frida", "Frida Python Bindings", "Python bindings for Frida."),
     ],
 
     "npm": [
@@ -307,6 +318,7 @@ default_configuration = {
         ("js-deobfuscator", "js-deobfuscator", "A tool to deobfuscate JavaScript."),
         ("deobfuscator", "deobfuscator", "A tool to deobfuscate JavaScript."),
         ("git+https://github.com/HynekPetrak/malware-jail.git", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
+        ("frida", "Frida", "A dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers."),
     ],
 
     "ida_plugins": [
@@ -345,6 +357,7 @@ default_configuration = {
         ("https://github.com/Donaldduck8/fuxnet", "Fuxnet", "A collection of Python scripts to emulate various server types."),
         ("https://github.com/mandiant/capa-rules", "CAPA Rules", "A collection of rules for the Capa malware analysis framework."),
         ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
+        ("https://github.com/SentineLabs/AlphaGolang", "AlphaGolang", "A collection of scripts to reverse-engineer Go binaries."),
     ],
 
     "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python*\\current\\python3*.dll",
@@ -691,3 +704,30 @@ default_configuration["vscode_extensions"] = natsorted(default_configuration["vs
 default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
 
 default_configuration = json5.loads(json5.dumps(default_configuration))
+
+# TODO: qiling
+# TODO: https://github.com/last-byte/PersistenceSniper/releases/tag/v1.16.0
+# sudo Install-Module PersistenceSniper
+# sudo Import-Module PersistenceSniper
+# sudo Find-AllPersistence -Verbose
+
+
+
+
+# TODO: https://github.com/Impact-I/reFlutter
+# TODO: https://github.com/NozomiNetworks/upx-recovery-tool
+# TODO: https://github.com/0vercl0k/snapshot/releases/tag/v0.2.0
+# TODO: https://github.com/volatilityfoundation/volatility3
+
+# TODO: https://github.com/endgameinc/ClrGuard (is this to do with native aot .net?)
+
+# TODO: https://github.com/3lp4tr0n/BeaconHunter this seems like a small ETW template?
+
+# TODO: lol https://github.com/ufrisk/MemProcFS
+
+# TODO: greenkit -> https://github.com/Lifars/gargamel
+# TODO: grennkit -> https://docs.dissect.tools/en/latest/
+# TODO: grennkit -> https://github.com/simsong/bulk_extractor
+# TODO: greenkit -> https://github.com/securityjoes/MasterParser
+
+# TODO: sockit -> https://github.com/FalconForceTeam/FalconHound 
