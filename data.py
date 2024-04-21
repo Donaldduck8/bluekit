@@ -679,6 +679,7 @@ default_configuration = {
     },
 }
 
+# Sort the entries of the configuration dictionary for OCD
 
 def key_lambda(x):
     if isinstance(x, str):
@@ -689,7 +690,6 @@ def key_lambda(x):
         return x["main"][1]
     else:
         raise ValueError(f"Unknown type: {type(x)}")
-
 
 # Sort everything alphabetically
 for key in default_configuration["scoop"]:
@@ -708,29 +708,153 @@ default_configuration["git_repositories"] = natsorted(default_configuration["git
 
 default_configuration = json5.loads(json5.dumps(default_configuration))
 
+# Keep track of the default configuration
+configuration = default_configuration.copy()
+
+
+# Validation logic for custom configurations
+def validate_bucket_item(item):
+    """ Validate individual bucket items. """
+    return isinstance(item, tuple) and len(item) == 3 and all(isinstance(i, str) for i in item)
+
+def validate_item(item):
+    if isinstance(item, str):
+        return True
+    
+    elif isinstance(item, tuple) or isinstance(item, list):
+        if len(item) != 3:
+            raise RuntimeError(f"Item does not have precisely three entries (id, title, description): {item}")
+        
+        if not all(isinstance(i, str) for i in item):
+            raise RuntimeError(f"Item does not contain all strings: {item}")
+        
+        return True
+    
+    elif isinstance(item, dict):
+        if not all(k in item for k in ["type", "main", "alternative"]):
+            raise RuntimeError(f"Item does not contain all required keys (type, main, alternative): {item}")
+
+        if not isinstance(item["type"], str) or not item["type"] == "one_of":
+            raise RuntimeError(f"Item does not contain a valid type field: {item}")
+        
+        if not validate_item(item["main"]) or not validate_item(item["alternative"]):
+            raise RuntimeError(f"Item does not contain valid main or alternative fields: {item}")
+        
+        return True
+    
+
+def validate_registry_change_item(item):
+    if not isinstance(item, dict):
+        raise RuntimeError(f"Registry change item is not a dictionary: {item}")
+    
+    if not all(k in item for k in ["description", "hive", "key", "value", "data", "type"]):
+        raise RuntimeError(f"Registry change item does not contain all required keys (description, hive, key, value, data, type): {item}")
+    
+    if not all(isinstance(item[k], str) for k in ["description", "hive", "key", "value", "data", "type"]):
+        raise RuntimeError(f"Registry change item does not contain all strings: {item}")
+    
+    # Check hive
+    if item["hive"] not in [
+        "HKEY_CLASSES_ROOT",
+        "HKEY_CURRENT_USER", 
+        "HKEY_LOCAL_MACHINE",
+        "HKEY_USERS",
+        "HKEY_CURRENT_CONFIG",
+    ]:
+        raise RuntimeError(f"Registry change item contains invalid hive: {item}")
+    
+    # Check type
+    if item["type"] not in [
+        "REG_SZ", 
+        "REG_DWORD",
+        "REG_BINARY",
+        "REG_EXPAND_SZ",
+        "REG_MULTI_SZ",
+        "REG_QWORD",
+    ]:
+        raise RuntimeError(f"Registry change item contains invalid type: {item}")
+    
+    return True
+
+
+def validate_fta_item(item):
+    if not isinstance(item, dict):
+        raise RuntimeError(f"File type association item is not a dictionary: {item}")
+    
+    if not all(k in item for k in ["path", "program_name", "arguments", "file_types"]):
+        raise RuntimeError(f"File type association item does not contain all required keys (path, program_name, arguments, file_types): {item}")
+    
+    if not all(isinstance(item[k], str) for k in ["path", "program_name"]) or not isinstance(item["arguments"], list):
+        raise RuntimeError(f"File type association item does not contain all strings: {item}")
+    
+    if not isinstance(item["file_types"], list) or not all(isinstance(i, str) for i in item["file_types"]):
+        raise RuntimeError(f"File type association item does not contain all strings in file_types: {item}")
+    
+    if not isinstance(item["arguments"], list) or not all(isinstance(i, str) for i in item["arguments"]):
+        raise RuntimeError(f"File type association item does not contain all strings in arguments: {item}")
+    
+    return True
+
+
+def validate_misc_files_item(item):
+    if not isinstance(item, dict):
+        raise RuntimeError(f"Miscellaneous files item is not a dictionary: {item}")
+    
+    if not all(k in item for k in ["description", "sources", "target"]):
+        raise RuntimeError(f"Miscellaneous files item does not contain all required keys (description, sources, target): {item}")
+    
+    if not isinstance(item["description"], str) or not isinstance(item["sources"], list) or not isinstance(item["target"], str):
+        raise RuntimeError(f"Miscellaneous files item does not contain all strings: {item}")
+    
+    if not isinstance(item["sources"], list) or not all(isinstance(i, str) for i in item["sources"]):
+        raise RuntimeError(f"Miscellaneous files item does not contain all strings in sources: {item}")
+    
+    return True
+
+
+def validate_configuration(custom_config, default_config):
+    """ Validate the entire configuration against the default configuration. """
+    # Ensure all top-level keys are present
+    default_keys = set(default_config.keys())
+    custom_keys = set(custom_config.keys())
+
+    if default_keys != custom_keys:
+        raise RuntimeError(f"Missing or unexpected keys in custom configuration: {default_keys ^ custom_keys}")
+
+    for _category, list_of_items in custom_config["scoop"].items():
+        for i in list_of_items:
+            validate_item(i)
+
+    for i in custom_config["pip"]:
+        validate_item(i)
+
+    for i in custom_config["npm"]:
+        validate_item(i)
+
+    for i in custom_config["ida_plugins"]:
+        validate_item(i)
+
+    for i in custom_config["vscode_extensions"]:
+        validate_item(i)
+
+    for i in custom_config["git_repositories"]:
+        validate_item(i)
+
+    for _category, list_of_items in custom_config["registry_changes"].items():
+        for i in list_of_items:
+            validate_registry_change_item(i)
+
+    for _category, i in custom_config["file_type_associations"].items():
+        validate_fta_item(i)
+
+    for _category, list_of_items in custom_config["misc_files"].items():
+        for i in list_of_items:
+            validate_misc_files_item(i)
+
+    return True
+
 # TODO: qiling
 # TODO: https://github.com/last-byte/PersistenceSniper/releases/tag/v1.16.0
 # sudo Install-Module PersistenceSniper
 # sudo Import-Module PersistenceSniper
 # sudo Find-AllPersistence -Verbose
-
-
-
-
-# TODO: https://github.com/Impact-I/reFlutter
-# TODO: https://github.com/NozomiNetworks/upx-recovery-tool
-# TODO: https://github.com/0vercl0k/snapshot/releases/tag/v0.2.0
-# TODO: https://github.com/volatilityfoundation/volatility3
-
-# TODO: https://github.com/endgameinc/ClrGuard (is this to do with native aot .net?)
-
-# TODO: https://github.com/3lp4tr0n/BeaconHunter this seems like a small ETW template?
-
-# TODO: lol https://github.com/ufrisk/MemProcFS
-
-# TODO: greenkit -> https://github.com/Lifars/gargamel
-# TODO: grennkit -> https://docs.dissect.tools/en/latest/
-# TODO: grennkit -> https://github.com/simsong/bulk_extractor
-# TODO: greenkit -> https://github.com/securityjoes/MasterParser
-
-# TODO: sockit -> https://github.com/FalconForceTeam/FalconHound 

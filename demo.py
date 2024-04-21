@@ -5,6 +5,8 @@ import os
 import sys
 import traceback
 
+from pathlib import Path
+
 import json5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
@@ -12,7 +14,6 @@ from PyQt5.QtWidgets import QApplication
 import data
 from app import installation_steps, utils
 from app.view.main_window import MainWindow
-from data import default_configuration, required_paths
 
 try:
     import pyi_splash
@@ -26,7 +27,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
-parser.add_argument('-c', '--config', action='store_true', help='Provide a custom configuration file')
+parser.add_argument('-c', '--config', help='Path to the configuration file', type=Path)
 args = parser.parse_args()
 
 
@@ -39,21 +40,6 @@ def run_gui():
     # create application
     app = QApplication(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
-
-    # If Windows Defender is enabled, show an error message
-    # If we are frozen
-    if getattr(sys, "frozen", False):
-        if utils.is_defender_enabled():
-            if pyi_splash and pyi_splash.is_alive():
-                pyi_splash.close()
-
-            ctypes.windll.user32.MessageBoxW(
-                0,
-                "Windows Defender is currently enabled. Please disable it before running this script.",
-                "Windows Defender",
-                0x10,
-            )
-            sys.exit()
 
     if pyi_splash and pyi_splash.is_alive():
         pyi_splash.close()
@@ -69,7 +55,7 @@ def ensure_suitable_environment():
     # If we are frozen
     if getattr(sys, "frozen", False):
         # Add the paths to the PATH environment variable
-        installation_steps.add_paths_to_path(required_paths)
+        installation_steps.add_paths_to_path(data.required_paths)
 
         if not utils.is_admin():
             # Not running as admin, try to get admin privileges
@@ -83,15 +69,16 @@ def load_config(config_p: str):
     if not os.path.isfile(config_p):
         raise FileNotFoundError(f"Config file not found: {config_p}")
 
-    with open(config_p, 'r', encoding="utf-8") as f:
-        custom_data = json5.load(f.read())
+    with open(config_p, 'r', encoding="utf-8") as config_file:
+        custom_data = json5.loads(config_file.read())
 
     # Perform validation on the custom data
     for top_level_keys in custom_data.keys():
-        if top_level_keys not in default_configuration.keys():
+        if top_level_keys not in data.default_configuration.keys():
             raise KeyError(f"Unrecognized key in custom configuration: {top_level_keys}")
-
-    data.default_configuration = custom_data
+        
+    data.validate_configuration(custom_data, data.default_configuration)
+    data.configuration = custom_data
 
 
 def main():
@@ -104,7 +91,7 @@ def main():
         if pyi_splash:
             pyi_splash.close()
 
-        installation_steps.install_bluekit(default_configuration)
+        installation_steps.install_bluekit(data.configuration)
 
     else:
         run_gui()
