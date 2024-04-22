@@ -56,10 +56,10 @@ Bluekit supports bundling files alongside the installer in a file named `bluekit
 │• bluekit_bundled.zip │         ├────────┤• sysinternals#2024.2.13[...].zip  │
 ╰─●────────────────────╯         │        ╰───────────────────────────────────╯
   │   ╭──────────────────────╮   │                                             
-  ├───│• linqpad.zip         │   │                         ...                 
+  ├───│• ida_pro.zip         │   │                         ...                 
   │   ╰──────────────────────╯   │                                             
   │   ╭──────────────────────╮   │                                             
-  ├───│• linqpad.json        │   │                                             
+  ├───│• ida_pro.json        │   │                                             
   │   ╰──────────────────────╯   │                                             
   │   ╭──────────────────────╮   │                                             
   ╰───│• scoop_cache.zip     ●───╯                                             
