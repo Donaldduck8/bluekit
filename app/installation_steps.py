@@ -369,17 +369,17 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
 
                 continue
 
-            if install_context or install_associations:
-                tool_dir = os.path.join(utils.SCOOP_DIR, "apps", tool_name, "current")
+            # Install context menu items and file associations
+            tool_dir = os.path.join(utils.SCOOP_DIR, "apps", tool_name, "current")
 
-                tool_context_reg_p = os.path.join(tool_dir, "install-context.reg")
-                tool_file_associations_reg_p = os.path.join(tool_dir, "install-file-associations.reg")
+            tool_context_reg_p = os.path.join(tool_dir, "install-context.reg")
+            tool_file_associations_reg_p = os.path.join(tool_dir, "install-file-associations.reg")
 
-                if install_context and os.path.isfile(tool_context_reg_p):
-                    run_shell_command(f"regedit /s {tool_context_reg_p}")
+            if install_context and os.path.isfile(tool_context_reg_p):
+                run_shell_command(f"regedit /s {tool_context_reg_p}")
 
-                if install_associations and os.path.isfile(tool_file_associations_reg_p):
-                    run_shell_command(f"regedit /s {tool_file_associations_reg_p}")
+            if install_associations and os.path.isfile(tool_file_associations_reg_p):
+                run_shell_command(f"regedit /s {tool_file_associations_reg_p}")
 
             try_log_installation_step(f"Success: Installed {tool_name_pretty}", InfoBarIcon.SUCCESS)
 

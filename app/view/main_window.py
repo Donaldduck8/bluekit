@@ -106,7 +106,7 @@ class MainWindow(FluentWindow):
             if not w.exec():
                 w.close()
                 return
-            
+
             w.close()
 
             self._executing = True
