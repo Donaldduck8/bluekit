@@ -1,5 +1,5 @@
 # coding:utf-8
-from PyQt5.QtWidgets import (QTreeWidgetItem)
+from PyQt5.QtWidgets import QTreeWidgetItem
 
 from .base_tree_frame import BaseTreeFrame
 from .base_tree_json_interface import BaseTreeAndJsonEditWidget

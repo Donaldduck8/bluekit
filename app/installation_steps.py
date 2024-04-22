@@ -1,4 +1,12 @@
 # pylint: disable=E1101
+"""
+This module contains functions for performing various installation steps.
+
+The functions in this module are used to execute shell commands, install Scoop package manager,
+install Git using Scoop, add Scoop buckets, install Python packages using pip, install Visual C++ build tools,
+and install tools using Scoop package manager.
+"""
+
 import ctypes
 import json
 import logging
@@ -8,7 +16,6 @@ import subprocess
 import sys
 import traceback
 import winreg
-
 from argparse import Namespace
 from typing import List
 
@@ -236,6 +243,9 @@ def pip_install_packages(packages: List[str]):
 
 
 def install_build_tools():
+    """
+    Silently installs Visual C++ build tools using the Visual Studio installer.
+    """
     logger.info("Install Visual C++ build tools")
 
     download_command = r"Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vs_BuildTools.exe' -OutFile vs_BuildTools.exe"
@@ -411,6 +421,9 @@ def prepare_quick_access():
 
 
 def install_vscode_extensions(extensions: List):
+    """
+    Installs Visual Studio Code extensions using the Code/Codium command line.
+    """
     vscode_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscode\current\bin\code.cmd")
     vscodium_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscodium\current\bin\codium.cmd")
 
@@ -851,6 +864,9 @@ def set_fta(extension, program_p, arguments: list[str] = None):
 
 
 def set_file_type_associations(configuration: dict):
+    """
+    Sets file-type associations based on the configuration.
+    """
     if not configuration:
         return
 
@@ -1322,6 +1338,9 @@ def make_registry_changes(registry_changes_data: dict):
 
 
 def install_miscellaneous_files(data: dict):
+    """
+    Downloads and places miscellaneous files to the specified target directories.
+    """
     if not isinstance(data, dict):
         logger.warning("Data is not dictionary, skipping...")
         return
@@ -1386,6 +1405,9 @@ def download_recaf3_javafx_dependencies():
 
 
 def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = True):
+    """
+    Overall method for performing all of Bluekit's installations steps.
+    """
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()

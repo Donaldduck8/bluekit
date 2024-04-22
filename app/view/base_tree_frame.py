@@ -1,6 +1,7 @@
-from .base_frame import BaseFrame
-from qfluentwidgets import TreeWidget
 import PyQt5.QtWidgets
+from qfluentwidgets import TreeWidget
+
+from .base_frame import BaseFrame
 
 
 class BaseTreeFrame(BaseFrame):

@@ -1,13 +1,13 @@
 # coding:utf-8
 # pylint: disable=E1101
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPixmap, QPainter, QPainterPath
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtCore import QRectF, Qt
+from PyQt5.QtGui import QPainter, QPainterPath, QPixmap
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from qfluentwidgets import FluentIcon, ScrollArea
 
-from qfluentwidgets import ScrollArea, FluentIcon
-from ..common.config import HELP_URL, BUCKET_URL, BLOG_URL, FEEDBACK_URL
-from ..components.link_card import LinkCardView
+from ..common.config import BLOG_URL, BUCKET_URL, FEEDBACK_URL, HELP_URL
 from ..common.style_sheet import StyleSheet
+from ..components.link_card import LinkCardView
 
 
 class BannerWidget(QWidget):

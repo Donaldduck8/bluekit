@@ -1,10 +1,12 @@
 # coding:utf-8
 import json
 import traceback
+
 import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox, QStackedWidget, QVBoxLayout, QWidget
-from qfluentwidgets import SegmentedWidget, TextEdit, TitleLabel, PrimaryPushButton, InfoBar, InfoBarPosition
+from qfluentwidgets import (InfoBar, InfoBarPosition, PrimaryPushButton,
+                            SegmentedWidget, TextEdit, TitleLabel)
 
 from .base_tree_frame import BaseFrame
 

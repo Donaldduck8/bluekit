@@ -1,13 +1,12 @@
 # coding:utf-8
 import argparse
 import ctypes
+import json
 import os
 import sys
 import traceback
-
 from pathlib import Path
 
-import json
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 

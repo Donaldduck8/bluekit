@@ -1,24 +1,25 @@
 # coding: utf-8
 from argparse import Namespace
+
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import (FluentWindow, NavigationItemPosition, SplashScreen)
+from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen
 
 import data
 
 from .. import utils
 from ..common import resource
-from ..common.icon import Icon
 from ..common.config import cfg
+from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 from .execution_interface import ExecutionInterface
 from .file_type_association_interface import FileTypeAssocWidget
 from .home_interface import HomeInterface
+from .miscellaneous_files_interface import MiscFilesTreeWidget
 from .package_tree_interface import PackageTreeWidget
 from .registry_changes_interface import RegistryChangesWidget
-from .miscellaneous_files_interface import MiscFilesTreeWidget
 
 if not resource:
     raise ImportError("Resource not found")

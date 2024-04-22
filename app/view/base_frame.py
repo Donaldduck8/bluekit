@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout
+
 from ..common.style_sheet import StyleSheet
 
 

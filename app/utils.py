@@ -3,7 +3,6 @@ import glob
 import os
 import winreg
 import zipfile
-
 from pathlib import Path
 from typing import List
 

@@ -2,9 +2,10 @@
 # pylint: disable=E1101
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from qfluentwidgets import (FluentIcon, IconWidget, SingleDirectionScrollArea,
+                            TextWrap)
 
-from qfluentwidgets import IconWidget, FluentIcon, TextWrap, SingleDirectionScrollArea
 from ..common.style_sheet import StyleSheet
 
 
