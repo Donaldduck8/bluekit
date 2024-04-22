@@ -72,7 +72,24 @@ Bluekit supports bundling files alongside the installer in a file named `bluekit
 
 Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
 
-It's recommended to pair them with an alternative free application as part of a `one_of` entry. See [the standard configuration](https://github.com/Donaldduck8/bluekit/blob/master/example_custom_configuration.json#L187) for an example.
+It's recommended to pair them with an alternative free application as part of a `one_of` entry:
+
+```
+{
+    "type": "one_of",
+    "main": [
+        "binary_ninja.json",
+        "Binary Ninja",
+        "A reverse engineering platform."
+    ],
+    "alternative": [
+        "binary_ninja_free",
+        "Binary Ninja Free",
+        "A free version of Binary Ninja."
+    ]
+},
+```
+### Cache
 
 In order to accelerate multiple installations of Bluekit, you can provide a file named ``scoop_cache.zip`` as part of the bundle. This file will allow Scoop to avoid downloading the same programs repeatedly. This file can be created by installing Bluekit with the `--keep-cache` argument and zipping up the contents of the `%USERPROFILE%\scoop\cache` folder afterwards.
 
