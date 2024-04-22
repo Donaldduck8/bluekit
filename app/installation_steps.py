@@ -1432,7 +1432,11 @@ def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = T
     download_recaf3_javafx_dependencies()
 
     common_post_install()
-    clean_up_disk()
+
+    if args and args.keep_cache:
+        clean_up_disk(keep_cache=True)
+    else:
+        clean_up_disk()
 
     if should_restart:
         restart()
