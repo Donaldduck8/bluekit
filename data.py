@@ -603,6 +603,13 @@ default_configuration = {
                 ],
                 "target": "%APPDATA%\\yazi\\config\\plugins\\donald.yazi"
             },
+            {
+                "description": "Ouch Previewer",
+                "sources": [
+                    "https://github.com/ndtoan96/ouch.yazi/raw/main/init.lua",
+                ],
+                "target": "%APPDATA%\\yazi\\config\\plugins\\ouch.yazi"
+            },
         ],
         "Zsh": [
             {
