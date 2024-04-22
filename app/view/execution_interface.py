@@ -5,6 +5,7 @@ import random
 import threading
 import time
 
+from argparse import Namespace
 from PyQt5.QtCore import Qt, QTime, QTimer, pyqtSignal
 from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QHBoxLayout, QListWidgetItem, QVBoxLayout, QWidget
@@ -196,7 +197,7 @@ class ExecutionInterface(QWidget):
         self.vBoxLayout.addWidget(self.bottomListView)
         self.vBoxLayout.addSpacing(30)
 
-    def execute(self, data):
+    def execute(self, data: dict, args: Namespace = None):
         self.timerWidget.startTime = QTime(0, 0, 0)
         self.timerWidget.start()
 
@@ -207,9 +208,9 @@ class ExecutionInterface(QWidget):
         # check if we are frozen
         import sys
         if getattr(sys, "frozen", False):
-            thread = threading.Thread(target=threading_function, args=(self, data))
+            thread = threading.Thread(target=threading_function, args=(self, data, args))
         else:
-            thread = threading.Thread(target=threading_function_test, args=(self, data))
+            thread = threading.Thread(target=threading_function_test, args=(self, data, args))
         thread.start()
 
     def show_completion_dialog(self):
@@ -230,7 +231,7 @@ class ExecutionInterface(QWidget):
             w.close()
 
 
-def threading_function_test(widget: ExecutionInterface, _data: dict):
+def threading_function_test(widget: ExecutionInterface, _data: dict, _args: Namespace):
     widget.timerWidget.startTime = QTime(1, 0, 0, 0)
     for _ in range(5):
         # widget.rightListView.listWidget.addItem("Item " + str(i))
@@ -246,10 +247,10 @@ def threading_function_test(widget: ExecutionInterface, _data: dict):
     widget.completion_signal.emit()
 
 
-def threading_function(widget: ExecutionInterface, data: dict):
+def threading_function(widget: ExecutionInterface, data: dict, args: Namespace):
     try:
         installation_steps.widget = widget
-        installation_steps.install_bluekit(data, should_restart=False)
+        installation_steps.install_bluekit(data, args=args, should_restart=False)
 
         widget.completion_signal.emit()
     except Exception as e:

@@ -8,6 +8,8 @@ import subprocess
 import sys
 import traceback
 import winreg
+
+from argparse import Namespace
 from typing import List
 
 import pythoncom
@@ -250,7 +252,7 @@ def install_build_tools():
     run_shell_command(command=install_command)
 
 
-def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cache_afterwards: bool = True):
+def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, keep_cache: bool = False):
     """
     Installs a tool using Scoop package manager.
 
@@ -278,7 +280,7 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cach
         logger.warning(f"Failed to install {tool_name}, skipping...")
         return False
 
-    if delete_cache_afterwards:
+    if not keep_cache:
         # If the tool_name contains the bucket, we need to strip that
         if "/" in tool_name:
             tool_name = tool_name.split("/")[-1]
@@ -288,7 +290,7 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, delete_cach
     return True
 
 
-def scoop_install_tooling(tools: dict, install_context=True, install_associations=True):
+def scoop_install_tooling(tools: dict, install_context=True, install_associations=True, keep_cache=False):
     """
     Installs tools using Scoop package manager.
 
@@ -341,7 +343,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
 
                 tool_name = tool.get("main")[0]
                 tool_name_pretty = tool.get("main")[1]
-                if not scoop_install_tool(tool_name, tool_name_pretty):
+                if not scoop_install_tool(tool_name, tool_name_pretty, keep_cache=keep_cache):
                     tool_name = tool.get("alternative")[0]
                     tool_name_pretty = tool.get("alternative")[1]
                     scoop_install_tool(tool_name, tool_name_pretty)
@@ -659,7 +661,7 @@ def extract_and_place_file(file_name: str, target_directory: str, extract: bool 
         shutil.copy(file_p, target_directory)
 
 
-def clean_up_disk():
+def clean_up_disk(keep_cache: bool = False):
     """
     Cleans up the disk by deleting temporary files and caches.
     """
@@ -695,7 +697,6 @@ def clean_up_disk():
     package_cache_dir = r"C:\ProgramData\Package Cache"
 
     folders = [
-        cache_dir,
         temp_dir,
         software_distribution_dir,
         windows_temp_dir,
@@ -703,6 +704,9 @@ def clean_up_disk():
         random_cache_dir,
         package_cache_dir
     ]
+
+    if not keep_cache:
+        folders.append(cache_dir)
 
     for folder in folders:
         delete_everything_recursively_in_directory(folder)
@@ -1387,7 +1391,7 @@ def download_recaf3_javafx_dependencies():
         widget.rightListView.listWidget.add_infobar_signal.emit("Success: Downloaded Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
 
 
-def install_bluekit(data: dict, should_restart: bool = True):
+def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = True):
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()
@@ -1399,7 +1403,12 @@ def install_bluekit(data: dict, should_restart: bool = True):
     scoop_install_pwsh()
 
     scoop_add_buckets(data["scoop"]["Buckets"])
-    scoop_install_tooling(data["scoop"])
+
+    if args and args.keep_cache:
+        scoop_install_tooling(data["scoop"], keep_cache=True)
+    else:
+        scoop_install_tooling(data["scoop"])
+
     pip_install_packages(data["pip"])
     npm_install_libraries(data["npm"])
     install_ida_plugins(data["ida_plugins"])

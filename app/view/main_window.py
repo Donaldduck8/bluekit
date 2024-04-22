@@ -1,4 +1,5 @@
 # coding: utf-8
+from argparse import Namespace
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
@@ -25,11 +26,13 @@ if not resource:
 
 class MainWindow(FluentWindow):
 
-    def __init__(self):
+    def __init__(self, args: Namespace = None):
         super().__init__()
         self.initWindow()
 
         self._executing = False
+
+        self.args = args
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
@@ -138,7 +141,8 @@ class MainWindow(FluentWindow):
                 interface.on_execution_started()
 
             self.executionInterface.execute(
-                execution_data
+                execution_data,
+                args=self.args
             )
 
         # Open the executionInterface

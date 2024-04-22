@@ -6,6 +6,7 @@ import sys
 import traceback
 
 from pathlib import Path
+from argparse import Namespace
 
 import json5
 from PyQt5.QtCore import Qt
@@ -28,10 +29,11 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
 parser.add_argument('-c', '--config', help='Path to the configuration file', type=Path)
+parser.add_argument('--keep-cache', action='store_true', help='Keep the cache directory after the script finishes')
 args = parser.parse_args()
 
 
-def run_gui():
+def run_gui(args: Namespace):
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
@@ -45,7 +47,7 @@ def run_gui():
         pyi_splash.close()
 
     # create main window
-    w = MainWindow()
+    w = MainWindow(args)
     w.show()
 
     app.exec_()
@@ -94,7 +96,7 @@ def main():
         installation_steps.install_bluekit(data.configuration)
 
     else:
-        run_gui()
+        run_gui(args)
 
 
 if __name__ == "__main__":
