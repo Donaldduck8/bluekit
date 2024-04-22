@@ -20,9 +20,12 @@ The full list of tools is available [here](https://github.com/Donaldduck8/blueki
 * Disk capacity > 30 GB
 * Memory > 2GB
 * Internet connection
+* Windows Defender disabled or removed
 
 > [!IMPORTANT]
 > It is strongly recommended to create a Windows ISO with Defender removed, rather than attempting to disable Defender on a running Windows installation.
+>
+> If you must disable Windows Defender after installation, [here](https://lazyadmin.nl/win-11/turn-off-windows-defender-windows-11-permanently/) is a guide to achieve permanent results.
 
 ## Installer
 
