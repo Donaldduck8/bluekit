@@ -11,11 +11,6 @@ class MiscFilesTreeFrame(BaseTreeFrame):
         super().__init__(parent, headers, data)
         self.update_data(data)
 
-    def update_data(self, data: dict):
-        self.tree.clear()  # Clear the existing items
-        self.data = data
-        self.populate_tree()
-
     def populate_tree(self):
         if isinstance(self.data, dict):
             for category, configs in self.data.items():

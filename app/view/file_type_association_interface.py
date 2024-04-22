@@ -11,11 +11,6 @@ class FileTypeAssocTreeFrame(BaseTreeFrame):
         super().__init__(parent, headers, data)
         self.update_data(data)
 
-    def update_data(self, data: dict):
-        self.tree.clear()  # Clear the existing items
-        self.data = data
-        self.populate_tree()
-
     def populate_tree(self):
         if not isinstance(self.data, dict):
             return

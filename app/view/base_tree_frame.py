@@ -25,3 +25,11 @@ class BaseTreeFrame(BaseFrame):
         tree_style_sheet = self.tree.styleSheet()
         tree_style_sheet = tree_style_sheet.replace("background-color: transparent;", "background-color: rgb(251, 251, 252);")
         self.tree.setStyleSheet(tree_style_sheet)
+
+    def update_data(self, data: dict):
+        self.tree.clear()  # Clear the existing items
+        self.data = data
+        self.populate_tree()
+
+    def populate_tree(self):
+        raise NotImplementedError("populate_tree method must be implemented in the subclass")

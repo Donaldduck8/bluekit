@@ -11,11 +11,6 @@ class RegistryChangesTreeFrame(BaseTreeFrame):
         super().__init__(parent, headers, data)
         self.update_data(data)
 
-    def update_data(self, data: dict):
-        self.tree.clear()  # Clear the existing items
-        self.data = data
-        self.populate_tree()
-
     def populate_tree(self):
         for category, items in self.data.items():
             category_item = QTreeWidgetItem([category])

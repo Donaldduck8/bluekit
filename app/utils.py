@@ -119,6 +119,9 @@ def extract_zip(zip_file, target_directory):
 
 
 def query_registry(key_path, value_name):
+    """
+    Query the registry for a specific value.
+    """
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path, 0, winreg.KEY_READ)
         value, _regtype = winreg.QueryValueEx(key, value_name)
