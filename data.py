@@ -136,7 +136,7 @@ default_configuration = {
 
         # Golang (Static)
         "Golang (Static)": [
-            ("malware-analysis-bucket/goresym", "GoResym", "A Golang symbol parser that extracts program metadata, function metadata, filename and line number metadata, and embedded structures and types."),
+            ("malware-analysis-bucket/goresym", "GoResym", "A Golang symbol parser that extracts metadata, embedded structures and types."),
             ("malware-analysis-bucket/redress", "Redress", "A tool for analyzing stripped Go binaries compiled with the Go compiler."),
         ],
 
@@ -693,9 +693,11 @@ default_configuration = {
 def key_lambda(x):
     if isinstance(x, str):
         return x
-    elif isinstance(x, tuple) or isinstance(x, list):
+    
+    if isinstance(x, (list, tuple)):
         return x[1]
-    elif isinstance(x, dict) and x["type"] == "one_of":
+    
+    if isinstance(x, dict) and x["type"] == "one_of":
         return x["main"][1]
 
     raise ValueError(f"Unknown type: {type(x)}")
@@ -729,7 +731,7 @@ def validate_item(item):
     if isinstance(item, str):
         return
 
-    elif isinstance(item, tuple) or isinstance(item, list):
+    elif isinstance(item, (list, tuple)):
         if len(item) != 3:
             raise RuntimeError(f"Item does not have precisely three entries (id, title, description): {item}")
 
@@ -823,20 +825,17 @@ def validate_configuration(custom_config, default_config):
         for i in list_of_items:
             validate_item(i)
 
-    for i in custom_config["pip"]:
-        validate_item(i)
+    items_to_validate = [
+        "pip",
+        "npm",
+        "ida_plugins",
+        "vscode_extensions",
+        "git_repositories",    
+    ]
 
-    for i in custom_config["npm"]:
-        validate_item(i)
-
-    for i in custom_config["ida_plugins"]:
-        validate_item(i)
-
-    for i in custom_config["vscode_extensions"]:
-        validate_item(i)
-
-    for i in custom_config["git_repositories"]:
-        validate_item(i)
+    for section in items_to_validate:
+        for i in custom_config[section]:
+            validate_item(i)
 
     for _category, list_of_items in custom_config["registry_changes"].items():
         for i in list_of_items:
@@ -854,13 +853,9 @@ def validate_configuration(custom_config, default_config):
 # Validate the default configuration
 validate_configuration(default_configuration, default_configuration)
 
-# TODO: qiling
-# TODO: https://github.com/last-byte/PersistenceSniper/releases/tag/v1.16.0
-# sudo Install-Module PersistenceSniper
-# sudo Import-Module PersistenceSniper
-# sudo Find-AllPersistence -Verbose
-
-# TODO: https://github.com/struppigel/hedgehog-tools/blob/main/ECMAScript%20helpers/extract_called_functions.js
-# npm.exe install -save-dev @babel/core commander
-
-# TODO: https://github.com/fkling/astexplorer
+# Other tools that I would like to add:
+# qiling
+# PersistenceSniper
+# https://github.com/struppigel/hedgehog-tools/blob/main/ECMAScript%20helpers/extract_called_functions.js
+#     npm.exe install -save-dev @babel/core commander
+# https://github.com/fkling/astexplorer

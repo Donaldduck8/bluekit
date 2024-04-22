@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Union
 
 from PyQt5.QtCore import QEvent, QPropertyAnimation, QRectF, Qt, pyqtSignal
-from PyQt5.QtGui import QColor, QIcon, QPainter
+from PyQt5.QtGui import QColor, QFontMetrics, QIcon, QPainter
 from PyQt5.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout,
                              QLabel, QSizePolicy, QVBoxLayout, QWidget)
 from qfluentwidgets import FluentIconBase, InfoBarIcon, InfoBarPosition
@@ -166,16 +166,7 @@ class InfoBar(QFrame):
 
         FluentStyleSheet.INFO_BAR.apply(self)
 
-    def __fadeOut(self):
-        """ fade out """
-        self.opacityAni.setDuration(200)
-        self.opacityAni.setStartValue(1)
-        self.opacityAni.setEndValue(0)
-        self.opacityAni.finished.connect(self.close)
-        self.opacityAni.start()
-
     def _adjustText(self):
-        from PyQt5.QtGui import QFontMetrics
 
         def calculate_average_char_width(font):
             # Create a QFontMetrics object for the given font
