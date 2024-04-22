@@ -106,8 +106,8 @@ class MainWindow(FluentWindow):
             if not w.exec():
                 w.close()
                 return
-            else:
-                w.close()
+            
+            w.close()
 
             self._executing = True
 
@@ -124,30 +124,18 @@ class MainWindow(FluentWindow):
                 self.miscFilesInterface
             ]
 
-            # Collect the data from all sub-interfaces
-            scoop_data = self.scoopInterface.data
-            pip_data = self.pipInterface.data
-            npm_data = self.npmInterface.data
-            ida_plugin_data = self.idaPluginInterface.data
-            vscode_extension_data = self.vsCodeExtensionInterface.data
-            taskbar_pins_data = self.taskbarPinsInterface.data
-            file_type_associations_data = self.fileTypeAssociationsInterface.data
-            git_repositories_data = self.gitRepositoryInterface.data
-            registry_changes_data = self.registryChangesInterface.data
-            misc_files_data = self.miscFilesInterface.data
-
             execution_data = {
-                'scoop': scoop_data,
-                'pip': pip_data,
-                'npm': npm_data,
-                'ida_plugins': ida_plugin_data,
-                'vscode_extensions': vscode_extension_data,
-                'taskbar_pins': taskbar_pins_data,
-                'file_type_associations': file_type_associations_data,
-                'git_repositories': git_repositories_data,
+                'scoop': self.scoopInterface.data,
+                'pip': self.pipInterface.data,
+                'npm': self.npmInterface.data,
+                'ida_plugins': self.idaPluginInterface.data,
+                'vscode_extensions': self.vsCodeExtensionInterface.data,
+                'taskbar_pins': self.taskbarPinsInterface.data,
+                'file_type_associations': self.fileTypeAssociationsInterface.data,
+                'git_repositories': self.gitRepositoryInterface.data,
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
-                "registry_changes": registry_changes_data,
-                "misc_files": misc_files_data
+                "registry_changes": self.registryChangesInterface.data,
+                "misc_files": self.miscFilesInterface.data
             }
 
             # Make all widgets non-editable

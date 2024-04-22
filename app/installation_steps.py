@@ -1268,7 +1268,6 @@ def make_registry_changes(registry_changes_data: dict):
                 logger.warning("Registry change is not a dictionary, skipping...")
                 continue
 
-            description = registry_change.get("description")
             key = registry_change.get("key")
             value = registry_change.get("value")
             data = registry_change.get("data")
