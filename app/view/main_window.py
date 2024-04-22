@@ -98,7 +98,7 @@ class MainWindow(FluentWindow):
         if not self._executing:
             # Show a confirmation pop-up
             title = 'Start the installation?'
-            content = """The installation will start now. This process may take a while. Do you want to continue?"""
+            content = """The installation process may take upward of 60 minutes to complete. Would you like to proceed?"""
             w = Dialog(title, content, self)
             w.show()
             w.setTitleBarVisible(False)
