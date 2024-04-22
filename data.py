@@ -690,8 +690,8 @@ def key_lambda(x):
         return x[1]
     elif isinstance(x, dict) and x["type"] == "one_of":
         return x["main"][1]
-    else:
-        raise ValueError(f"Unknown type: {type(x)}")
+
+    raise ValueError(f"Unknown type: {type(x)}")
 
 # Sort everything alphabetically
 for key in default_configuration["scoop"]:
@@ -720,7 +720,7 @@ def validate_bucket_item(item):
 
 def validate_item(item):
     if isinstance(item, str):
-        return True
+        return
 
     elif isinstance(item, tuple) or isinstance(item, list):
         if len(item) != 3:
@@ -729,8 +729,6 @@ def validate_item(item):
         if not all(isinstance(i, str) for i in item):
             raise RuntimeError(f"Item does not contain all strings: {item}")
 
-        return True
-
     elif isinstance(item, dict):
         if not all(k in item for k in ["type", "main", "alternative"]):
             raise RuntimeError(f"Item does not contain all required keys (type, main, alternative): {item}")
@@ -738,10 +736,8 @@ def validate_item(item):
         if not isinstance(item["type"], str) or not item["type"] == "one_of":
             raise RuntimeError(f"Item does not contain a valid type field: {item}")
 
-        if not validate_item(item["main"]) or not validate_item(item["alternative"]):
-            raise RuntimeError(f"Item does not contain valid main or alternative fields: {item}")
-
-        return True
+        validate_item(item["main"])
+        validate_item(item["alternative"])
 
 
 def validate_registry_change_item(item):
@@ -775,8 +771,6 @@ def validate_registry_change_item(item):
     ]:
         raise RuntimeError(f"Registry change item contains invalid type: {item}")
 
-    return True
-
 
 def validate_fta_item(item):
     if not isinstance(item, dict):
@@ -794,8 +788,6 @@ def validate_fta_item(item):
     if not isinstance(item["arguments"], list) or not all(isinstance(i, str) for i in item["arguments"]):
         raise RuntimeError(f"File type association item does not contain all strings in arguments: {item}")
 
-    return True
-
 
 def validate_misc_files_item(item):
     if not isinstance(item, dict):
@@ -809,8 +801,6 @@ def validate_misc_files_item(item):
 
     if not isinstance(item["sources"], list) or not all(isinstance(i, str) for i in item["sources"]):
         raise RuntimeError(f"Miscellaneous files item does not contain all strings in sources: {item}")
-
-    return True
 
 
 def validate_configuration(custom_config, default_config):

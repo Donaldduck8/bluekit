@@ -16,7 +16,7 @@ import pythoncom
 import win32com.client
 from qfluentwidgets import InfoBarIcon
 
-import app.utils as utils
+from app import utils
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -156,7 +156,7 @@ def scoop_add_buckets(buckets: List[str]):
     for bucket in buckets:
         if isinstance(bucket, str):
             bucket_name = bucket
-        elif isinstance(bucket, tuple) or isinstance(bucket, list):
+        elif isinstance(bucket, (list, tuple)):
             bucket_name = bucket[0]
         else:
             logger.warning("Bucket data is of unknown format, skipping...")
@@ -221,7 +221,7 @@ def pip_install_packages(packages: List[str]):
             package_name = package
             package_name_pretty = package_name
 
-        elif isinstance(package, tuple) or isinstance(package, list):
+        elif isinstance(package, (list, tuple)):
             package_name = package[0]
             package_name_pretty = package[1]
 
@@ -327,7 +327,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
                 tool_name_pretty = tool_name
                 scoop_install_tool(tool, keep_cache=keep_cache)
 
-            elif isinstance(tool, list) or isinstance(tool, tuple):
+            elif isinstance(tool, (list, tuple)):
                 tool_name = tool[0]
                 tool_name_pretty = tool[1]
                 scoop_install_tool(tool_name, tool_name_pretty, keep_cache=keep_cache)
@@ -419,7 +419,7 @@ def install_vscode_extensions(extensions: List):
             extension_id = extension
             extension_name = extension_id
 
-        elif isinstance(extension, list) or isinstance(extension, tuple):
+        elif isinstance(extension, (list, tuple)):
             extension_id = extension[0]
             extension_name = extension[1]
 
@@ -479,7 +479,7 @@ def pin_apps_to_taskbar(apps: List[str]):
     for app in apps:
         if isinstance(app, str):
             app_paths.append(app)
-        elif isinstance(app, list) or isinstance(app, tuple):
+        elif isinstance(app, (list, tuple)):
             app_paths.append(app[0])
 
     xml_content = utils.create_start_layout_xml(apps=app_paths)
@@ -920,7 +920,7 @@ def clone_git_repositories(repositories: List[str]):
         if isinstance(repository, str):
             repo_url = repository
 
-        elif isinstance(repository, list) or isinstance(repository, tuple):
+        elif isinstance(repository, (list, tuple)):
             repo_url = repository[0]
 
         else:
@@ -959,7 +959,7 @@ def npm_install_libraries(libs: List[str]):
             lib_name = lib
             lib_name_pretty = lib_name
 
-        elif isinstance(lib, list) or isinstance(lib, tuple):
+        elif isinstance(lib, (list, tuple)):
             lib_name = lib[0]
             lib_name_pretty = lib[1]
 
@@ -1048,7 +1048,8 @@ def make_bindiff_available_to_programs():
         logger.warning("BinDiff JSON not found, skipping...")
         return
 
-    bindiff_data = json.loads(open(bindiff_json_p, "r", encoding="utf-8").read())
+    with open(bindiff_json_p, "r", encoding="utf-8") as bindiff_json_f:
+        bindiff_data = bindiff_json_f.read()
 
     bindiff_data["directory"] = os.path.join(bindiff_dir, ".")
     bindiff_data["ui"]["java_binary"] = os.path.join(bindiff_dir, "ProgramFiles", "BinDiff", "jre", "bin", "javaw.exe")
@@ -1201,7 +1202,7 @@ def install_ida_plugins(plugins: List[str]):
     for plugin in plugins:
         if isinstance(plugin, str):
             plugin_url = plugin
-        elif isinstance(plugin, list) or isinstance(plugin, tuple):
+        elif isinstance(plugin, (list, tuple)):
             plugin_url = plugin[0]
         else:
             logger.warning("Invalid plugin format, skipping...")

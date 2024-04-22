@@ -26,7 +26,7 @@ class PackageTreeFrame(BaseTreeFrame):
                             continue
                         item.addChild(QTreeWidgetItem([sub_item[1], sub_item[2]]))
 
-                    elif isinstance(sub_item, dict) or isinstance(sub_item, tuple):
+                    elif isinstance(sub_item, (dict, tuple)):
                         if sub_item.get("type") == "one_of":
                             main_item = QTreeWidgetItem([sub_item["main"][1], sub_item["main"][2]])
                             alt_item = QTreeWidgetItem([sub_item["alternative"][1], sub_item["alternative"][2]])

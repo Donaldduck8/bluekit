@@ -4,7 +4,10 @@ import PyQt5.QtWidgets
 
 
 class BaseTreeFrame(BaseFrame):
-    def __init__(self, parent=None, headers=[], data=None):
+    def __init__(self, parent=None, headers=None, data=None):
+        if not headers:
+            headers = []
+
         super().__init__(parent)
         self.data = data
         self.tree = TreeWidget(self)

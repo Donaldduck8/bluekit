@@ -73,8 +73,8 @@ def resolve_path(target_path):
     # Handling the result
     if not matching_paths:
         return None
-    else:
-        return matching_paths[0]
+
+    return matching_paths[0]
 
 
 def create_start_layout_xml(apps: List[str]):
@@ -122,7 +122,7 @@ def extract_zip(zip_file, target_directory):
 def query_registry(key_path, value_name):
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path, 0, winreg.KEY_READ)
-        value, regtype = winreg.QueryValueEx(key, value_name)
+        value, _regtype = winreg.QueryValueEx(key, value_name)
         winreg.CloseKey(key)
         return value
     except FileNotFoundError:

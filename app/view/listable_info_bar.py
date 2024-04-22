@@ -227,7 +227,7 @@ class InfoBar(QFrame):
 
         return super().eventFilter(obj, e)
 
-    def closeEvent(self, e):
+    def closeEvent(self, _e):
         self.closedSignal.emit()
         self.deleteLater()
 
