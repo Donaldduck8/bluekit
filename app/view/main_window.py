@@ -152,7 +152,7 @@ class MainWindow(FluentWindow):
         self.resize(960, 780)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(':/gallery/images/jellyfish_logo_small.png'))
-        self.setWindowTitle("Bluekit")
+        self.setWindowTitle(f"Bluekit {data.version}")
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 

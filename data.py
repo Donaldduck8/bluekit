@@ -4,6 +4,7 @@ from natsort import natsorted, ns
 
 from app import utils
 
+version = "1.0.0"
 
 required_paths = [
     utils.resolve_path("%USERPROFILE%\\scoop\\shims"),
@@ -46,6 +47,7 @@ default_configuration = {
             ("openssl-light", "OpenSSL (Light)", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
             ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
             ("malware-analysis-bucket/pycdc", "Decompyle++", "A C++ python bytecode disassembler and decompiler."),
+            ("meld", "Meld", "A visual diff and merge tool., useful for bloated script files."),
         ],
 
         "Shell": [
@@ -858,3 +860,6 @@ def validate_configuration(custom_config, default_config):
 # sudo Install-Module PersistenceSniper
 # sudo Import-Module PersistenceSniper
 # sudo Find-AllPersistence -Verbose
+
+# TODO: https://github.com/struppigel/hedgehog-tools/blob/main/ECMAScript%20helpers/extract_called_functions.js
+# npm.exe install -save-dev @babel/core commander
