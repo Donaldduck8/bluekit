@@ -47,6 +47,21 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 widget = None
 
 
+def try_log_installation_step(message: str, icon: InfoBarIcon = InfoBarIcon.INFORMATION):
+    """
+    Logs an installation step.
+
+    Args:
+        message (str): The message to log.
+        icon (InfoBarIcon, optional): The icon to use. Defaults to InfoBarIcon.INFORMATION.
+    """
+    try:
+        if widget:
+            widget.rightListView.listWidget.add_infobar_signal.emit(message, "", icon)
+    except Exception:
+        pass
+
+
 def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3) -> None:
     """
     Executes a shell command or a PowerShell command.
@@ -114,8 +129,7 @@ def install_scoop() -> None:
     if shutil.which("scoop.cmd") is not None:
         logger.info("Scoop is already installed.")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Info: Scoop is already installed", "", InfoBarIcon.INFORMATION)
+        try_log_installation_step("Info: Scoop is already installed", InfoBarIcon.INFORMATION)
 
         return
 
@@ -129,8 +143,7 @@ def install_scoop() -> None:
 
     run_shell_command(powershell_command=command)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Scoop", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Installed Scoop", InfoBarIcon.SUCCESS)
 
 
 def scoop_install_git() -> None:
@@ -143,8 +156,7 @@ def scoop_install_git() -> None:
 
     run_shell_command(command="scoop.cmd install git")
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Git", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Installed Git", InfoBarIcon.SUCCESS)
 
 
 def scoop_add_buckets(buckets: List[str]):
@@ -167,8 +179,7 @@ def scoop_add_buckets(buckets: List[str]):
         else:
             logger.warning("Bucket data is of unknown format, skipping...")
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Scoop bucket data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
+            try_log_installation_step("Warning: Scoop bucket data is of unknown format, skipping!", InfoBarIcon.WARNING)
 
             continue
 
@@ -206,8 +217,7 @@ def scoop_add_buckets(buckets: List[str]):
 
             retry += 1
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Added Scoop buckets", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Added Scoop buckets", InfoBarIcon.SUCCESS)
 
 
 def pip_install_packages(packages: List[str]):
@@ -232,13 +242,11 @@ def pip_install_packages(packages: List[str]):
             package_name_pretty = package[1]
 
         else:
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: PIP data is of unknown format, skipping!", "", InfoBarIcon.WARNING)
+            try_log_installation_step("Warning: PIP package data is of unknown format, skipping!", InfoBarIcon.WARNING)
 
         run_shell_command(command=f"pip.exe install {package_name}", failure_okay=True)
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {package_name_pretty} (PIP)", "", InfoBarIcon.SUCCESS)
+        try_log_installation_step(f"Success: Installed {package_name_pretty} (PIP)", InfoBarIcon.SUCCESS)
 
 
 def install_build_tools():
@@ -324,9 +332,8 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
 
         if not isinstance(data, list):
             logger.warning("Data is not list, skipping...")
-
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Scoop data is not a list, skipping!", "", InfoBarIcon.WARNING)
+            
+            try_log_installation_step("Warning: Scoop data is not a list, skipping!", InfoBarIcon.WARNING)
 
             continue
 
@@ -345,8 +352,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
                 if not tool.get("type") == "one_of":
                     logger.warning("Tool type is not one_of, skipping...")
 
-                    if widget:
-                        widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Scoop package type is not 'one_of', skipping!", "", InfoBarIcon.WARNING)
+                    try_log_installation_step("Warning: Scoop tool type is not 'one_of', skipping!", InfoBarIcon.WARNING)
 
                     continue
 
@@ -359,8 +365,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
             else:
                 logger.warning("Tool is not string, list, tuple, or dict, skipping...")
 
-                if widget:
-                    widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Scoop tool is of unknown format, skipping!", "", InfoBarIcon.WARNING)
+                try_log_installation_step("Warning: Scoop tool is of unknown format, skipping!", InfoBarIcon.WARNING)
 
                 continue
 
@@ -376,8 +381,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
                 if install_associations and os.path.isfile(tool_file_associations_reg_p):
                     run_shell_command(f"regedit /s {tool_file_associations_reg_p}")
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {tool_name_pretty}", "", InfoBarIcon.SUCCESS)
+            try_log_installation_step(f"Success: Installed {tool_name_pretty}", InfoBarIcon.SUCCESS)
 
 
 def prepare_quick_access():
@@ -441,13 +445,13 @@ def install_vscode_extensions(extensions: List):
 
         if os.path.isfile(vscode_cmd_p):
             run_shell_command(command=f"{vscode_cmd_p} --install-extension {extension_id}", failure_okay=True)
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {extension_name} (VS Code)", "", InfoBarIcon.SUCCESS)
+
+            try_log_installation_step(f"Success: Installed {extension_name} (VS Code)", InfoBarIcon.SUCCESS)
 
         if os.path.isfile(vscodium_cmd_p):
             run_shell_command(command=f"{vscodium_cmd_p} --install-extension {extension_id}", failure_okay=True)
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {extension_name} (VSCodium)", "", InfoBarIcon.SUCCESS)
+
+            try_log_installation_step(f"Success: Installed {extension_name} (VSCodium)", InfoBarIcon.SUCCESS)
 
 
 def remove_taskbar_pin(app_name):
@@ -502,8 +506,7 @@ def pin_apps_to_taskbar(apps: List[str]):
     with open(xml_p, "w+", encoding="UTF-8") as xml_f:
         xml_f.write(xml_content)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Wrote taskbar configuration", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Created taskbar configuration", InfoBarIcon.SUCCESS)
 
 
 def make_vm_stay_awake():
@@ -536,8 +539,7 @@ def make_vm_stay_awake():
     # Execute the PowerShell script
     run_shell_command(powershell_command=ps_script, failure_okay=True)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Disabled standby mode", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Disabled standby mode", InfoBarIcon.SUCCESS)
 
 
 def common_pre_install():
@@ -576,8 +578,7 @@ def common_post_install():
         except Exception:
             traceback.print_exc()
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Common post-installation steps", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Common post-installation steps", InfoBarIcon.SUCCESS)
 
 
 def restart():
@@ -725,8 +726,7 @@ def clean_up_disk(keep_cache: bool = False):
 
     # subprocess.run("Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase".split(" "), check=True)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Cleaned up disk", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Cleaned up disk", InfoBarIcon.SUCCESS)
 
 
 def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
@@ -744,10 +744,9 @@ def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
     if not os.path.isfile(cache_zip_p):
         logger.warning("Cache ZIP file not found, skipping...")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Info: No Scoop cache found", "", InfoBarIcon.INFORMATION)
+        try_log_installation_step("Info: No Scoop cache found", InfoBarIcon.INFORMATION)
 
-        return False
+        return
 
     # Extract the ZIP file to the cache directory
     cache_dir = utils.resolve_path(r"%USERPROFILE%\scoop\cache")
@@ -755,8 +754,7 @@ def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
 
     utils.extract_zip(cache_zip_p, cache_dir)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Extracted Scoop cache", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Extracted Scoop cache", InfoBarIcon.SUCCESS)
 
 
 def install_zsh_over_git():
@@ -803,8 +801,7 @@ def install_zsh_over_git():
     else:
         logger.info("Zsh is already installed.")
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Zsh over Git", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Installed Zsh over Git", InfoBarIcon.SUCCESS)
 
     oh_my_zsh_p = utils.resolve_path(r"%USERPROFILE%\.oh-my-zsh")
 
@@ -814,8 +811,7 @@ def install_zsh_over_git():
         oh_my_zsh_cmd = rf"git clone https://github.com/ohmyzsh/ohmyzsh/ {oh_my_zsh_p}"
         run_shell_command(command=oh_my_zsh_cmd)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Oh My Zsh", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Installed Oh My Zsh", InfoBarIcon.SUCCESS)
 
     powerlevel10k_p = utils.resolve_path(r"%USERPROFILE%\.oh-my-zsh\custom\themes\powerlevel10k")
 
@@ -825,8 +821,7 @@ def install_zsh_over_git():
         powerlevel10k_cmd = rf"git clone --depth=1 https://github.com/romkatv/powerlevel10k.git {powerlevel10k_p}"
         run_shell_command(command=powerlevel10k_cmd)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed Powerlevel10k", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Installed Powerlevel10k", InfoBarIcon.SUCCESS)
 
 
 def set_fta(extension, program_p, arguments: list[str] = None):
@@ -893,8 +888,7 @@ def set_file_type_associations(configuration: dict):
         for extension in extensions:
             set_fta(extension, program_p, arguments)
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Created file-type associations for {category}", "", InfoBarIcon.SUCCESS)
+        try_log_installation_step(f"Success: Created file-type associations for {category}", InfoBarIcon.SUCCESS)
 
 
 def git_clone_repository(url, output_dir=None):
@@ -946,8 +940,7 @@ def clone_git_repositories(repositories: List[str]):
 
         repo_name = repo_url.split("/")[-1].replace(".git", "")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Cloned Git repository {repo_name}", "", InfoBarIcon.SUCCESS)
+        try_log_installation_step(f"Success: Cloned Git repository {repo_name}", InfoBarIcon.SUCCESS)
 
 
 def npm_install_libraries(libs: List[str]):
@@ -964,8 +957,7 @@ def npm_install_libraries(libs: List[str]):
     if not os.path.isfile(npm_cmd_p):
         logger.warning("npm not found, skipping...")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Warning: No NodeJS package manager found!", "", InfoBarIcon.WARNING)
+        try_log_installation_step("Warning: No NodeJS package manager found", InfoBarIcon.WARNING)
 
         return
 
@@ -981,13 +973,10 @@ def npm_install_libraries(libs: List[str]):
         else:
             logger.warning("Library is not string, list, or tuple, skipping...")
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Library is of unknown format, skipping!", "", InfoBarIcon.WARNING)
-
+            try_log_installation_step("Warning: Library is of unknown format, skipping!", InfoBarIcon.WARNING)
             continue
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {lib_name_pretty} (NPM)", "", InfoBarIcon.SUCCESS)
+        try_log_installation_step(f"Success: Installed {lib_name_pretty} (NPM)", InfoBarIcon.SUCCESS)
 
 
 def extract_bundled_zip():
@@ -1010,15 +999,13 @@ def extract_bundled_zip():
     if not os.path.isfile(bundled_zip_p):
         logger.warning("Bundled ZIP file not found, skipping...")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Info: No bundled .zip file found", "", InfoBarIcon.INFORMATION)
+        try_log_installation_step("Info: No bundled .zip file found", InfoBarIcon.INFORMATION)
 
         return
 
     extract_and_place_file(bundled_zip_p, appdata_temp_p, extract=True)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Extracted bundled .zip file", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Extracted bundled .zip file", InfoBarIcon.SUCCESS)
 
 
 def remove_worthless_python_exes():
@@ -1036,8 +1023,7 @@ def remove_worthless_python_exes():
     if os.path.isfile(python3_exe_p):
         run_shell_command(powershell_command=f"Remove-Item {python3_exe_p}", failure_okay=True)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Removed AppAlias Python executables", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Removed AppAlias Python executables", InfoBarIcon.SUCCESS)
 
 
 def make_bindiff_available_to_programs():
@@ -1051,8 +1037,7 @@ def make_bindiff_available_to_programs():
     if not os.path.isdir(bindiff_dir):
         logger.warning("BinDiff not found, skipping...")
 
-        if widget:
-            widget.rightListView.listWidget.add_infobar_signal.emit("Warning: BinDiff not found, skipping configuration!", "", InfoBarIcon.WARNING)
+        try_log_installation_step("Warning: BinDiff not found, skipping!", InfoBarIcon.WARNING)
 
         return
 
@@ -1095,20 +1080,7 @@ def make_bindiff_available_to_programs():
     if os.path.isdir(common_app_data_p):
         shutil.copytree(common_app_data_p, common_app_data_target_p, dirs_exist_ok=True)
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Made BinDiff available to IDA Pro and Binary Ninja", "", InfoBarIcon.SUCCESS)
-
-
-def install_net_3_5():
-    """
-    Installs .NET Framework 3.5 using DISM.
-    """
-    logger.info("Install .NET Framework 3.5 (this usually takes several minutes)")
-
-    run_shell_command(powershell_command="Dism /online /Enable-Feature /FeatureName:NetFx3", failure_okay=True)
-
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed .NET 3.5", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Made BinDiff available to IDA Pro and Binary Ninja", InfoBarIcon.SUCCESS)
 
 
 def ida_py_switch(python_dll_path: str):
@@ -1154,8 +1126,7 @@ def ida_py_switch(python_dll_path: str):
     except Exception as e:
         print(f"Failed to run idapyswitch: {e}")
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Ran IDAPySwitch", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Ran IDAPySwitch", InfoBarIcon.SUCCESS)
 
 
 def add_paths_to_path(paths: List[str]) -> bool:
@@ -1195,9 +1166,8 @@ def scoop_install_pwsh():
     logger.info("Install PowerShell Core using Scoop")
 
     run_shell_command(powershell_command="scoop.cmd install pwsh")
-
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Installed PowerShell 7", "", InfoBarIcon.SUCCESS)
+    
+    try_log_installation_step("Success: Installed PowerShell 7", InfoBarIcon.SUCCESS)
 
 
 def install_ida_plugins(plugins: List[str]):
@@ -1222,8 +1192,7 @@ def install_ida_plugins(plugins: List[str]):
         else:
             logger.warning("Invalid plugin format, skipping...")
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit("Warning: Invalid IDA plugin data format, skipping!", "", InfoBarIcon.WARNING)
+            try_log_installation_step("Warning: Invalid IDA plugin data format, skipping!", InfoBarIcon.WARNING)
 
             continue
 
@@ -1235,15 +1204,13 @@ def install_ida_plugins(plugins: List[str]):
             if os.path.isfile(plugin_p):
                 logger.info("Plugin %s already installed.", plugin_name)
 
-                if widget:
-                    widget.rightListView.listWidget.add_infobar_signal.emit(f"Info: IDA Plugin {plugin_name} already exists", "", InfoBarIcon.INFORMATION)
+                try_log_installation_step(f"Info: IDA Plugin {plugin_name} already exists", InfoBarIcon.INFORMATION)
 
                 continue
 
             run_shell_command(command=f"curl.exe -L -o {plugin_p} {plugin_url}")
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed IDA plugin {plugin_name}", "", InfoBarIcon.SUCCESS)
+            try_log_installation_step(f"Success: Installed IDA plugin {plugin_name}", InfoBarIcon.SUCCESS)
 
 
 def convert_winreg_str_to_type(data_type_s: str) -> int:
@@ -1341,8 +1308,7 @@ def make_registry_changes(registry_changes_data: dict):
                 print(f"Failed to update the registry: {e}")
                 traceback.print_exc()
 
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: {description}", "", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Made registry changes", InfoBarIcon.SUCCESS)
 
 
 def install_miscellaneous_files(data: dict):
@@ -1385,8 +1351,7 @@ def install_miscellaneous_files(data: dict):
             for url in source:
                 run_shell_command(command=f"curl.exe -L -o {os.path.join(target_folder, os.path.basename(url))} {url}", failure_okay=True)
 
-            if widget:
-                widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {description} (Miscellaneous)", "", InfoBarIcon.SUCCESS)
+            try_log_installation_step(f"Success: Installed {description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
 
 def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = True):
