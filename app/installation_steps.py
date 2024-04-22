@@ -325,12 +325,12 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
             if isinstance(tool, str):
                 tool_name = tool
                 tool_name_pretty = tool_name
-                scoop_install_tool(tool)
+                scoop_install_tool(tool, keep_cache=keep_cache)
 
             elif isinstance(tool, list) or isinstance(tool, tuple):
                 tool_name = tool[0]
                 tool_name_pretty = tool[1]
-                scoop_install_tool(tool_name, tool_name_pretty)
+                scoop_install_tool(tool_name, tool_name_pretty, keep_cache=keep_cache)
 
             elif isinstance(tool, dict):
                 if not tool.get("type") == "one_of":
