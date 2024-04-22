@@ -332,7 +332,7 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
 
         if not isinstance(data, list):
             logger.warning("Data is not list, skipping...")
-            
+
             try_log_installation_step("Warning: Scoop data is not a list, skipping!", InfoBarIcon.WARNING)
 
             continue
@@ -1166,7 +1166,7 @@ def scoop_install_pwsh():
     logger.info("Install PowerShell Core using Scoop")
 
     run_shell_command(powershell_command="scoop.cmd install pwsh")
-    
+
     try_log_installation_step("Success: Installed PowerShell 7", InfoBarIcon.SUCCESS)
 
 

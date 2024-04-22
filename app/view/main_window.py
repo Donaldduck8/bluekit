@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen
+from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen, Dialog
 
 import data
 
@@ -96,6 +96,19 @@ class MainWindow(FluentWindow):
 
     def onExecute(self, _):
         if not self._executing:
+            # Show a confirmation pop-up
+            title = 'Start the installation?'
+            content = """The installation will start now. This process may take a while. Do you want to continue?"""
+            w = Dialog(title, content, self)
+            w.show()
+            w.setTitleBarVisible(False)
+
+            if not w.exec():
+                w.close()
+                return
+            else:
+                w.close()
+
             self._executing = True
 
             interfaces = [
