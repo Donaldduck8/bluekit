@@ -677,14 +677,14 @@ def clean_up_disk(keep_cache: bool = False):
             None
         """
         for root, dirs, files in os.walk(directory):
-            for f in files:
+            for file_to_delete in files:
                 try:
-                    os.unlink(os.path.join(root, f))
+                    os.unlink(os.path.join(root, file_to_delete))
                 except Exception:
                     pass
-            for d in dirs:
+            for directory_to_delete in dirs:
                 try:
-                    shutil.rmtree(os.path.join(root, d))
+                    shutil.rmtree(os.path.join(root, directory_to_delete))
                 except Exception:
                     pass
 
@@ -987,14 +987,7 @@ def extract_bundled_zip():
 
     zip_name = "bluekit_bundled.zip"
 
-    # If frozen
-    if getattr(sys, "frozen", False):
-        bundled_zip_p = os.path.join(sys._MEIPASS, "files", zip_name)
-
-        if not os.path.isfile(bundled_zip_p):
-            bundled_zip_p = os.path.join(HERE, zip_name)
-    else:
-        bundled_zip_p = os.path.join(HERE, zip_name)
+    bundled_zip_p = os.path.join(HERE, zip_name)
 
     print("Looking", bundled_zip_p)
 

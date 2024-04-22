@@ -2,10 +2,11 @@
 import ctypes
 import logging
 import random
+import sys
 import threading
 import time
-
 from argparse import Namespace
+
 from PyQt5.QtCore import Qt, QTime, QTimer, pyqtSignal
 from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QHBoxLayout, QListWidgetItem, QVBoxLayout, QWidget
@@ -206,7 +207,6 @@ class ExecutionInterface(QWidget):
         installation_steps.logger.addHandler(log_handler)
 
         # check if we are frozen
-        import sys
         if getattr(sys, "frozen", False):
             thread = threading.Thread(target=threading_function, args=(self, data, args))
         else:

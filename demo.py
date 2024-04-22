@@ -6,7 +6,6 @@ import sys
 import traceback
 
 from pathlib import Path
-from argparse import Namespace
 
 import json
 from PyQt5.QtCore import Qt
@@ -33,7 +32,7 @@ parser.add_argument('--keep-cache', action='store_true', help='Keep the cache di
 args = parser.parse_args()
 
 
-def run_gui(args: Namespace):
+def run_gui():
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
@@ -78,7 +77,7 @@ def load_config(config_p: str):
     for top_level_keys in custom_data.keys():
         if top_level_keys not in data.default_configuration.keys():
             raise KeyError(f"Unrecognized key in custom configuration: {top_level_keys}")
-        
+
     data.validate_configuration(custom_data, data.default_configuration)
     data.configuration = custom_data
 
@@ -96,7 +95,7 @@ def main():
         installation_steps.install_bluekit(data.configuration)
 
     else:
-        run_gui(args)
+        run_gui()
 
 
 if __name__ == "__main__":

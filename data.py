@@ -721,52 +721,52 @@ def validate_bucket_item(item):
 def validate_item(item):
     if isinstance(item, str):
         return True
-    
+
     elif isinstance(item, tuple) or isinstance(item, list):
         if len(item) != 3:
             raise RuntimeError(f"Item does not have precisely three entries (id, title, description): {item}")
-        
+
         if not all(isinstance(i, str) for i in item):
             raise RuntimeError(f"Item does not contain all strings: {item}")
-        
+
         return True
-    
+
     elif isinstance(item, dict):
         if not all(k in item for k in ["type", "main", "alternative"]):
             raise RuntimeError(f"Item does not contain all required keys (type, main, alternative): {item}")
 
         if not isinstance(item["type"], str) or not item["type"] == "one_of":
             raise RuntimeError(f"Item does not contain a valid type field: {item}")
-        
+
         if not validate_item(item["main"]) or not validate_item(item["alternative"]):
             raise RuntimeError(f"Item does not contain valid main or alternative fields: {item}")
-        
+
         return True
-    
+
 
 def validate_registry_change_item(item):
     if not isinstance(item, dict):
         raise RuntimeError(f"Registry change item is not a dictionary: {item}")
-    
+
     if not all(k in item for k in ["description", "hive", "key", "value", "data", "type"]):
         raise RuntimeError(f"Registry change item does not contain all required keys (description, hive, key, value, data, type): {item}")
-    
+
     if not all(isinstance(item[k], str) for k in ["description", "hive", "key", "value", "data", "type"]):
         raise RuntimeError(f"Registry change item does not contain all strings: {item}")
-    
+
     # Check hive
     if item["hive"] not in [
         "HKEY_CLASSES_ROOT",
-        "HKEY_CURRENT_USER", 
+        "HKEY_CURRENT_USER",
         "HKEY_LOCAL_MACHINE",
         "HKEY_USERS",
         "HKEY_CURRENT_CONFIG",
     ]:
         raise RuntimeError(f"Registry change item contains invalid hive: {item}")
-    
+
     # Check type
     if item["type"] not in [
-        "REG_SZ", 
+        "REG_SZ",
         "REG_DWORD",
         "REG_BINARY",
         "REG_EXPAND_SZ",
@@ -774,42 +774,42 @@ def validate_registry_change_item(item):
         "REG_QWORD",
     ]:
         raise RuntimeError(f"Registry change item contains invalid type: {item}")
-    
+
     return True
 
 
 def validate_fta_item(item):
     if not isinstance(item, dict):
         raise RuntimeError(f"File type association item is not a dictionary: {item}")
-    
+
     if not all(k in item for k in ["path", "program_name", "arguments", "file_types"]):
         raise RuntimeError(f"File type association item does not contain all required keys (path, program_name, arguments, file_types): {item}")
-    
+
     if not all(isinstance(item[k], str) for k in ["path", "program_name"]) or not isinstance(item["arguments"], list):
         raise RuntimeError(f"File type association item does not contain all strings: {item}")
-    
+
     if not isinstance(item["file_types"], list) or not all(isinstance(i, str) for i in item["file_types"]):
         raise RuntimeError(f"File type association item does not contain all strings in file_types: {item}")
-    
+
     if not isinstance(item["arguments"], list) or not all(isinstance(i, str) for i in item["arguments"]):
         raise RuntimeError(f"File type association item does not contain all strings in arguments: {item}")
-    
+
     return True
 
 
 def validate_misc_files_item(item):
     if not isinstance(item, dict):
         raise RuntimeError(f"Miscellaneous files item is not a dictionary: {item}")
-    
+
     if not all(k in item for k in ["description", "sources", "target"]):
         raise RuntimeError(f"Miscellaneous files item does not contain all required keys (description, sources, target): {item}")
-    
+
     if not isinstance(item["description"], str) or not isinstance(item["sources"], list) or not isinstance(item["target"], str):
         raise RuntimeError(f"Miscellaneous files item does not contain all strings: {item}")
-    
+
     if not isinstance(item["sources"], list) or not all(isinstance(i, str) for i in item["sources"]):
         raise RuntimeError(f"Miscellaneous files item does not contain all strings in sources: {item}")
-    
+
     return True
 
 
