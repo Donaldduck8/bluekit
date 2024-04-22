@@ -80,6 +80,8 @@ class InfoBar(QFrame):
         self.contentLabel = QLabel(self)
         self.closeButton = TransparentToolButton(FIF.CLOSE, self)
         self.iconWidget = InfoIconWidget(icon)
+        self.timestampLabel = QLabel(self)
+        self.timestampLabel.setObjectName('timestampLabel')
 
         self.hBoxLayout = QHBoxLayout(self)
         self.textLayout = QHBoxLayout() if self.orient == Qt.Horizontal else QVBoxLayout()
@@ -125,8 +127,6 @@ class InfoBar(QFrame):
         self.textLayout.addWidget(self.titleLabel, 1, Qt.AlignTop | Qt.AlignLeft)
         self.titleLabel.setVisible(bool(self.title))
 
-        self.timestampLabel = QLabel(self)
-        self.timestampLabel.setObjectName('timestampLabel')
         timestampText = time.strftime('%H:%M:%S', time.localtime())
         self.timestampLabel.setText(timestampText)
         self.textLayout.addWidget(self.timestampLabel, 0, Qt.AlignRight)

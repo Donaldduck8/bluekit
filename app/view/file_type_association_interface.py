@@ -33,17 +33,6 @@ class FileTypeAssocTreeFrame(BaseTreeFrame):
 
         self.tree.expandAll()
 
-    def populate_tree_item(self, parent_item, items):
-        for sub_item in items:
-            if isinstance(sub_item, tuple) and len(sub_item) == 3:
-                parent_item.addChild(QTreeWidgetItem([sub_item[1], sub_item[2]]))
-            elif isinstance(sub_item, dict) and sub_item.get("type") == "one_of":
-                main_item = QTreeWidgetItem([sub_item["main"][1], sub_item["main"][2]])
-                alt_item = QTreeWidgetItem([sub_item["alternative"][1], sub_item["alternative"][2]])
-                parent_item.addChild(main_item)
-                main_item.addChild(alt_item)
-        self.tree.expandAll()
-
 
 class FileTypeAssocWidget(BaseTreeAndJsonEditWidget):
     def create_custom_view(self, parent, data):

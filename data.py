@@ -693,10 +693,10 @@ default_configuration = {
 def key_lambda(x):
     if isinstance(x, str):
         return x
-    
+
     if isinstance(x, (list, tuple)):
         return x[1]
-    
+
     if isinstance(x, dict) and x["type"] == "one_of":
         return x["main"][1]
 
@@ -731,14 +731,14 @@ def validate_item(item):
     if isinstance(item, str):
         return
 
-    elif isinstance(item, (list, tuple)):
+    if isinstance(item, (list, tuple)):
         if len(item) != 3:
             raise RuntimeError(f"Item does not have precisely three entries (id, title, description): {item}")
 
         if not all(isinstance(i, str) for i in item):
             raise RuntimeError(f"Item does not contain all strings: {item}")
 
-    elif isinstance(item, dict):
+    if isinstance(item, dict):
         if not all(k in item for k in ["type", "main", "alternative"]):
             raise RuntimeError(f"Item does not contain all required keys (type, main, alternative): {item}")
 
