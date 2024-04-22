@@ -1065,7 +1065,7 @@ def make_bindiff_available_to_programs():
         return
 
     with open(bindiff_json_p, "r", encoding="utf-8") as bindiff_json_f:
-        bindiff_data = bindiff_json_f.read()
+        bindiff_data = json.loads(bindiff_json_f.read())
 
     bindiff_data["directory"] = os.path.join(bindiff_dir, ".")
     bindiff_data["ui"]["java_binary"] = os.path.join(bindiff_dir, "ProgramFiles", "BinDiff", "jre", "bin", "javaw.exe")

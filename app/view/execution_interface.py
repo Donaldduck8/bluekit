@@ -5,6 +5,7 @@ import random
 import sys
 import threading
 import time
+import traceback
 from argparse import Namespace
 
 from PyQt5.QtCore import Qt, QTime, QTimer, pyqtSignal
@@ -256,12 +257,14 @@ def threading_function(widget: ExecutionInterface, data: dict, args: Namespace):
     except Exception as e:
         widget.rightListView.listWidget.add_infobar_signal.emit("Error", str(e), InfoBarIcon.ERROR)
         widget.bottomListView.listWidget.addItem(str(e))
-        widget.completion_signal.emit()
+        # widget.completion_signal.emit()
+
+        trace = traceback.format_exc()
 
         # Show message box
         ctypes.windll.user32.MessageBoxW(
             0,
-            "A fatal exception occurred during installation. Please check the log for more information.",
+            "A fatal exception occurred during installation. Please check the log for more information.\n\n" + trace,
             "Installation failed!",
             0x10,
         )
