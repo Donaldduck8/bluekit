@@ -91,7 +91,6 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         except subprocess.CalledProcessError as e:
             if failure_okay:
                 logger.warning(f"Failed to run command: {e.cmd}")
-                print(e)
                 logger.warning(f"Output: {e.stderr}")
             else:
                 logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stderr.decode('utf-8')}")
@@ -1136,22 +1135,22 @@ def ida_py_switch(python_dll_path: str):
     idapyswitch_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\ida_pro\current\idapyswitch.exe")
 
     try:
-        process = subprocess.Popen(
+        with subprocess.Popen(
             [idapyswitch_p],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-        )
+        ) as process:
+            output, error = process.communicate(input="0")
 
-        output, error = process.communicate(input="0")
+            if process.returncode == 0:
+                print("idapyswitch executed successfully.")
+                print(output)
 
-        if process.returncode == 0:
-            print("idapyswitch executed successfully.")
-            print(output)
+            else:
+                print(f"idapyswitch failed with error: {error}")
 
-        else:
-            print(f"idapyswitch failed with error: {error}")
     except Exception as e:
         print(f"Failed to run idapyswitch: {e}")
 
@@ -1247,6 +1246,42 @@ def install_ida_plugins(plugins: List[str]):
                 widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed IDA plugin {plugin_name}", "", InfoBarIcon.SUCCESS)
 
 
+def convert_winreg_str_to_type(data_type_s: str) -> int:
+    if data_type_s == "REG_SZ":
+        data_type = winreg.REG_SZ
+    elif data_type_s == "REG_DWORD":
+        data_type = winreg.REG_DWORD
+    elif data_type_s == "REG_BINARY":
+        data_type = winreg.REG_BINARY
+    elif data_type_s == "REG_EXPAND_SZ":
+        data_type = winreg.REG_EXPAND_SZ
+    elif data_type_s == "REG_MULTI_SZ":
+        data_type = winreg.REG_MULTI_SZ
+    elif data_type_s == "REG_QWORD":
+        data_type = winreg.REG_QWORD
+    else:
+        data_type = None
+
+    return data_type
+
+
+def convert_winreg_str_to_hive(hive_s: str) -> int:
+    if hive_s == "HKEY_CLASSES_ROOT":
+        hive = winreg.HKEY_CLASSES_ROOT
+    elif hive_s == "HKEY_CURRENT_USER":
+        hive = winreg.HKEY_CURRENT_USER
+    elif hive_s == "HKEY_LOCAL_MACHINE":
+        hive = winreg.HKEY_LOCAL_MACHINE
+    elif hive_s == "HKEY_USERS":
+        hive = winreg.HKEY_USERS
+    elif hive_s == "HKEY_CURRENT_CONFIG":
+        hive = winreg.HKEY_CURRENT_CONFIG
+    else:
+        hive = None
+
+    return hive
+
+
 def make_registry_changes(registry_changes_data: dict):
     """
     Makes a list of registry changes.
@@ -1272,22 +1307,19 @@ def make_registry_changes(registry_changes_data: dict):
             data = registry_change.get("data")
 
             data_type_s = registry_change.get("type")
-
-            # Pattern match the data type
-            if data_type_s == "REG_SZ":
-                data_type = winreg.REG_SZ
-            elif data_type_s == "REG_DWORD":
-                data_type = winreg.REG_DWORD
-            elif data_type_s == "REG_BINARY":
-                data_type = winreg.REG_BINARY
-            elif data_type_s == "REG_EXPAND_SZ":
-                data_type = winreg.REG_EXPAND_SZ
-            elif data_type_s == "REG_MULTI_SZ":
-                data_type = winreg.REG_MULTI_SZ
-            elif data_type_s == "REG_QWORD":
-                data_type = winreg.REG_QWORD
-            else:
+            data_type = convert_winreg_str_to_type(data_type_s)
+            if data_type is None:
                 logger.warning(f"Invalid data type {data_type_s}, skipping...")
+                continue
+
+            hive_s = registry_change.get("hive")
+            hive = convert_winreg_str_to_hive(hive_s)
+            if hive is None:
+                logger.warning("Invalid hive, skipping...")
+                continue
+
+            if key is None or value is None or data is None:
+                logger.warning("Key, value, or data not found, skipping...")
                 continue
 
             # Resolve the data if it's a path
@@ -1299,30 +1331,6 @@ def make_registry_changes(registry_changes_data: dict):
 
             if data_type == winreg.REG_DWORD:
                 data = int(data)
-
-            hive_s = registry_change.get("hive")
-
-            # Pattern match the hive
-            if hive_s == "HKEY_CLASSES_ROOT":
-                hive = winreg.HKEY_CLASSES_ROOT
-            elif hive_s == "HKEY_CURRENT_USER":
-                hive = winreg.HKEY_CURRENT_USER
-            elif hive_s == "HKEY_LOCAL_MACHINE":
-                hive = winreg.HKEY_LOCAL_MACHINE
-            elif hive_s == "HKEY_USERS":
-                hive = winreg.HKEY_USERS
-            elif hive_s == "HKEY_CURRENT_CONFIG":
-                hive = winreg.HKEY_CURRENT_CONFIG
-            else:
-                logger.warning("Invalid hive, skipping...")
-                continue
-
-            if key is None or value is None or data is None:
-                logger.warning("Key, value, or data not found, skipping...")
-                continue
-
-            if not data_type:
-                data_type = winreg.REG_SZ
 
             try:
                 winreg.CreateKey(hive, key)
@@ -1381,29 +1389,6 @@ def install_miscellaneous_files(data: dict):
                 widget.rightListView.listWidget.add_infobar_signal.emit(f"Success: Installed {description} (Miscellaneous)", "", InfoBarIcon.SUCCESS)
 
 
-def download_recaf3_javafx_dependencies():
-    """
-    Downloads Recaf3's JavaFX dependencies to the %APPDATA%\\Recaf\\dependencies directory.
-    """
-    logger.info("Download Recaf3's JavaFX dependencies")
-
-    appdata_recaf_dependencies_p = utils.resolve_path(r"%APPDATA%\Recaf\dependencies")
-    os.makedirs(appdata_recaf_dependencies_p, exist_ok=True)
-
-    urls = [
-        "https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/19.0.2/javafx-graphics-19.0.2-win.jar",
-        "https://repo1.maven.org/maven2/org/openjfx/javafx-base/19.0.2/javafx-base-19.0.2-win.jar",
-        "https://repo1.maven.org/maven2/org/openjfx/javafx-controls/19.0.2/javafx-controls-19.0.2-win.jar",
-        "https://repo1.maven.org/maven2/org/openjfx/javafx-media/19.0.2/javafx-media-19.0.2-win.jar",
-    ]
-
-    for url in urls:
-        run_shell_command(command=f"curl.exe -L -o {os.path.join(appdata_recaf_dependencies_p, os.path.basename(url))} {url}")
-
-    if widget:
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: Downloaded Recaf3's JavaFX dependencies", "", InfoBarIcon.SUCCESS)
-
-
 def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = True):
     """
     Overall method for performing all of Bluekit's installations steps.
@@ -1443,9 +1428,6 @@ def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = T
 
     # Install Zsh on top of git
     install_zsh_over_git()
-
-    # Install Recaf3's JavaFX dependencies to ensure Recaf3 works without internet
-    download_recaf3_javafx_dependencies()
 
     common_post_install()
 

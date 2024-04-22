@@ -684,6 +684,18 @@ default_configuration = {
                 ],
                 "target": "%LOCALAPPDATA%\\Chromium\\User Data\\Default"
             },
+        ],
+        "Recaf3": [
+            {
+                "description": "JavaFX Dependencies",
+                "sources": [
+                    "https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/19.0.2/javafx-graphics-19.0.2-win.jar",
+                    "https://repo1.maven.org/maven2/org/openjfx/javafx-base/19.0.2/javafx-base-19.0.2-win.jar",
+                    "https://repo1.maven.org/maven2/org/openjfx/javafx-controls/19.0.2/javafx-controls-19.0.2-win.jar",
+                    "https://repo1.maven.org/maven2/org/openjfx/javafx-media/19.0.2/javafx-media-19.0.2-win.jar",
+                ],
+                "target": "%APPDATA%\\Recaf\\dependencies"
+            },
         ]
     },
 }
