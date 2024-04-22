@@ -132,25 +132,4 @@ def query_registry(key_path, value_name):
         return None
 
 
-def is_defender_enabled():
-    defender_enabled = False
-
-    # Check various registry settings
-    settings = {
-        "DisableAntiSpyware": query_registry(r"SOFTWARE\Microsoft\Windows Defender", "DisableAntiSpyware"),
-        "DisableAntiVirus": query_registry(r"SOFTWARE\Microsoft\Windows Defender", "DisableAntiVirus"),
-        "TamperProtection": query_registry(r"SOFTWARE\Microsoft\Windows Defender\Features", "TamperProtection")
-    }
-
-    # If any key explicitly disables Defender, consider it disabled
-    if settings["DisableAntiSpyware"] == 0 or settings["DisableAntiVirus"] == 0:
-        defender_enabled = True
-
-    # Check if Tamper Protection is off, which is less secure
-    if settings["TamperProtection"] == 1:
-        defender_enabled = True
-
-    return defender_enabled
-
-
 SCOOP_DIR = resolve_path(r"%USERPROFILE%\scoop")

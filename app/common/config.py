@@ -1,4 +1,5 @@
 # coding:utf-8
+# pylint: disable=E1101
 import sys
 
 from qfluentwidgets import (QConfig, ConfigItem, BoolValidator,

@@ -1,4 +1,5 @@
 # coding:utf-8
+# pylint: disable=E1101
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QPixmap, QPainter, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
