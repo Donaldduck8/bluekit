@@ -1,4 +1,4 @@
-import json5
+import json
 
 from natsort import natsorted, ns
 
@@ -708,11 +708,10 @@ default_configuration["ida_plugins"] = natsorted(default_configuration["ida_plug
 default_configuration["vscode_extensions"] = natsorted(default_configuration["vscode_extensions"], key=key_lambda, alg=ns.IGNORECASE)
 default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
 
-default_configuration = json5.loads(json5.dumps(default_configuration))
+default_configuration = json.loads(json.dumps(default_configuration))
 
 # Keep track of the default configuration
 configuration = default_configuration.copy()
-
 
 # Validation logic for custom configurations
 def validate_bucket_item(item):
@@ -855,6 +854,9 @@ def validate_configuration(custom_config, default_config):
 
     return True
 
+# Validate the default configuration
+validate_configuration(default_configuration, default_configuration)
+
 # TODO: qiling
 # TODO: https://github.com/last-byte/PersistenceSniper/releases/tag/v1.16.0
 # sudo Install-Module PersistenceSniper
@@ -863,3 +865,5 @@ def validate_configuration(custom_config, default_config):
 
 # TODO: https://github.com/struppigel/hedgehog-tools/blob/main/ECMAScript%20helpers/extract_called_functions.js
 # npm.exe install -save-dev @babel/core commander
+
+# TODO: https://github.com/fkling/astexplorer

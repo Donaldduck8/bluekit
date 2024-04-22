@@ -8,7 +8,7 @@ import traceback
 from pathlib import Path
 from argparse import Namespace
 
-import json5
+import json
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
@@ -72,7 +72,7 @@ def load_config(config_p: str):
         raise FileNotFoundError(f"Config file not found: {config_p}")
 
     with open(config_p, 'r', encoding="utf-8") as config_file:
-        custom_data = json5.loads(config_file.read())
+        custom_data = json.loads(config_file.read())
 
     # Perform validation on the custom data
     for top_level_keys in custom_data.keys():
