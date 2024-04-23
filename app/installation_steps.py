@@ -322,12 +322,6 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
     """
     logger.info("Scoop: Install Tooling")
 
-    # Ensure aria2 is installed first in order to make use of potential scoop cache
-    run_shell_command("scoop.cmd install aria2")
-
-    # Turn off the aria2 warning
-    run_shell_command("scoop.cmd config aria2-warning-enabled false")
-
     for category, data in tools.items():
         if category == "Buckets":
             continue
@@ -648,14 +642,8 @@ def extract_and_install_application(application_name: str):
     with open(application_json_p, "w", encoding="utf-8") as application_json_f:
         application_json_f.write(json.dumps(scoop_data, indent=4))
 
-    # Disable aria2 for the installation to allow file:// URLs
-    run_shell_command("scoop.cmd config aria2-enabled false")
-
     # Install the application
     run_shell_command(f"scoop.cmd install {application_json_p}")
-
-    # Re-enable aria2
-    run_shell_command("scoop.cmd config aria2-enabled true")
 
     return True
 
