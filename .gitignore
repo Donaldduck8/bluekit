@@ -11,3 +11,4 @@ log.txt
 app/install.log
 /.vscode
 app/configuration.json
+app/configuration_dump.json

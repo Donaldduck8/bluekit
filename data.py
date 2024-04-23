@@ -852,6 +852,13 @@ def validate_configuration(custom_config, default_config):
         for i in list_of_items:
             validate_misc_files_item(i)
 
+    for custom_config_key, item in custom_config["config"].items():
+        if custom_config_key not in default_config["config"]:
+            raise RuntimeError(f"Unknown key in configuration: {custom_config_key}")
+
+        if not isinstance(item, type(default_config["config"][custom_config_key])):
+            raise RuntimeError(f"Invalid type for configuration item {custom_config_key}: {type(item)}")
+
     return True
 
 # Validate the default configuration

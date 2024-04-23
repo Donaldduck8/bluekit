@@ -42,7 +42,6 @@ class ListWidgetLogHandler(logging.Handler):
 
 
 class ListFrame(BaseFrame):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.listWidget = CustomListWidget(self)
@@ -54,7 +53,6 @@ class CustomListWidget(ListWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # self.setWordWrap(True)
         self.add_infobar_signal.connect(self.add_infobar)
 
         FluentStyleSheet.LIST_VIEW.apply(self)  # pylint: disable=no-member
@@ -85,7 +83,6 @@ class CustomListWidget(ListWidget):
         self.addItem(item)
         self.setItemWidget(item, infoBar)
         self.setSpacing(4)
-        self.scrollToBottom()
         self.scrollToBottom()
 
     def resizeEvent(self, e: QResizeEvent) -> None:
