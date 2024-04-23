@@ -70,9 +70,36 @@ Bluekit supports bundling files alongside the installer in a file named `bluekit
       ╰──────────────────────╯                                                 
 ```
 
-Bundled applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a [valid Scoop manifest](https://github.com/Donaldduck8/malware-analysis-bucket/blob/master/bucket/malcat.json) `.json` file alongside your portable application.
+### Licensed Applications
 
-It's recommended to pair them with an alternative free application as part of a `one_of` entry:
+Licensed / non-free applications are configured through `<app_name>.json` entries in the Bluekit configuration. Be sure to include a valid Scoop manifest `.json` file alongside a `.zip` file of the same name containing your licensed application. For example, a manifest for IDA Pro would look like this:
+
+```
+{
+    "version": "static",
+    "description": "A multi-processor disassembler, debugger and decompiler",
+    "homepage": "https://hex-rays.com/ida-pro/",
+    "license": "Proprietary",
+    "url": "file://this/path/will/be/replaced/by/bluekit",
+    "hash": "this-hash-will-be-replaced-by-bluekit",
+    "bin": [
+        ["ida64.exe", "ida64"],
+        ["ida.exe", "ida32"]
+    ],
+    "shortcuts": [
+        [
+            "ida64.exe",
+            "IDA Pro (x64)"
+        ],
+        [
+            "ida.exe",
+            "IDA Pro (x86)"
+        ]
+    ]
+}
+```
+
+It's recommended to pair licensed applications with an alternative free application as part of a `one_of` entry inside your configuration. This way, other people are still able to use the same configuration, even if they don't own a copy of the licensed application:
 
 ```
 {
@@ -87,8 +114,9 @@ It's recommended to pair them with an alternative free application as part of a 
         "Binary Ninja Free",
         "A free version of Binary Ninja."
     ]
-},
+}
 ```
+
 ### Cache
 
 In order to accelerate multiple installations of Bluekit, you can provide a file named ``scoop_cache.zip`` as part of the bundle. This file will allow Scoop to avoid downloading the same programs repeatedly. 
