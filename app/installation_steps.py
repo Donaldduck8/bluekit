@@ -33,14 +33,7 @@ if "_MEI" in HERE and getattr(sys, "frozen", False):
     HERE = os.path.dirname(sys.executable)
 
 log_p = os.path.join(HERE, "install.log")
-
-with open(log_p, "w+", encoding="utf-8") as f:
-    pass
-
 configuration_out_p = os.path.join(HERE, "configuration_dump.json")
-
-with open(configuration_out_p, "w+", encoding="utf-8") as f:
-    pass
 
 
 logging.basicConfig(level=logging.INFO,

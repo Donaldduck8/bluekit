@@ -1,5 +1,6 @@
 import json
 
+from itertools import chain
 from natsort import natsorted, ns
 
 from app import utils
@@ -808,7 +809,7 @@ def validate_misc_files_item(item):
         raise RuntimeError(f"Miscellaneous files item does not contain all strings in sources: {item}")
 
 
-def validate_configuration(custom_config, default_config):
+def validate_configuration(custom_config, default_config):  # pylint: disable=too-many-branches
     """ Validate the entire configuration against the default configuration. """
     # Ensure all top-level keys are present
     default_keys = set(default_config.keys())
