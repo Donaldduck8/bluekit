@@ -1,0 +1,21 @@
+{
+    "version": "static",
+    "description": "The .NET programmer’s playground",
+    "homepage": "https://www.linqpad.net",
+    "license": "Proprietary",
+    "url": "file://this/path/will/be/replaced/by/bluekit",
+    "hash": "this-hash-will-be-replaced-by-bluekit",
+    "bin": [
+        ["LINQPad7-x64.exe", "linqpad"]
+    ],
+    "shortcuts": [
+        [
+            "LINQPad7-x64.exe",
+            "Linqpad 7 (x64)"
+        ],
+        [
+            "LINQPad7-x86.exe",
+            "Linqpad 7 (x86)"
+        ]
+    ]
+}

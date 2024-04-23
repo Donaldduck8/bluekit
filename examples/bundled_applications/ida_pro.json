@@ -1,0 +1,22 @@
+{
+    "version": "static",
+    "description": "A multi-processor disassembler and debugger that offers so many features it is hard to describe them all",
+    "homepage": "https://hex-rays.com/ida-pro/",
+    "license": "Proprietary",
+    "url": "file://this/path/will/be/replaced/by/bluekit",
+    "hash": "this-hash-will-be-replaced-by-bluekit",
+    "bin": [
+        ["ida64.exe", "ida64"],
+        ["ida.exe", "ida32"]
+    ],
+    "shortcuts": [
+        [
+            "ida64.exe",
+            "IDA Pro (x64)"
+        ],
+        [
+            "ida.exe",
+            "IDA Pro (x86)"
+        ]
+    ]
+}

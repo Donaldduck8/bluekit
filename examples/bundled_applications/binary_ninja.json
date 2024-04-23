@@ -1,0 +1,17 @@
+{
+    "version": "static",
+    "description": "An interactive decompiler, disassembler, debugger, and binary analysis platform",
+    "homepage": "https://binary.ninja/",
+    "license": "Proprietary",
+    "url": "file://this/path/will/be/replaced/by/bluekit",
+    "hash": "this-hash-will-be-replaced-by-bluekit",
+    "bin": [
+        ["binaryninja.exe", "binja"]
+    ],
+    "shortcuts": [
+        [
+            "binaryninja.exe",
+            "Binary Ninja"
+        ]
+    ]
+}
