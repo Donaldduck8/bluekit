@@ -1,6 +1,5 @@
 import json
 
-from itertools import chain
 from natsort import natsorted, ns
 
 from app import utils
