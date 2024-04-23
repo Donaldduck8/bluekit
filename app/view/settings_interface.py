@@ -134,9 +134,7 @@ class SettingsInterface(ScrollArea):
         """ connect signal to slot """
         cfg.appRestartSig.connect(self.__showRestartTooltip)
 
-        self.saferCard.checkedChanged.connect(
-            lambda checked: self.malwareFolderCard.setEnabled(checked)
-        )
+        self.saferCard.checkedChanged.connect(self.malwareFolderCard.setEnabled)
 
     def on_execution_started(self):
         # Disable all cards

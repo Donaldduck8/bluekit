@@ -41,4 +41,4 @@ def save(_self):
     pass
 
 
-cfg.save = types.MethodType(save, QConfig)
+cfg.save = types.MethodType(save, QConfig) # noqa
