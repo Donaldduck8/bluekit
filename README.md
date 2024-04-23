@@ -114,7 +114,7 @@ It's recommended to pair licensed applications with an alternative free applicat
         "Binary Ninja Free",
         "A free version of Binary Ninja."
     ]
-},
+}
 ```
 
 ### Cache
