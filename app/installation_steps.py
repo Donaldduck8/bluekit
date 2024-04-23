@@ -8,6 +8,7 @@ and install tools using Scoop package manager.
 """
 
 import ctypes
+import hashlib
 import json
 import logging
 import os
@@ -197,7 +198,7 @@ def scoop_add_buckets(buckets: List[str]):
         retry = 0
 
         while not os.path.isdir(bucket_bucket_p):
-            logger.warning("This bitch did not download correctly " + bucket_p)
+            logger.warning("Bucket did not download correctly: " + bucket_p)
 
             if retry >= 5:
                 # Show error message box
@@ -322,9 +323,10 @@ def scoop_install_tooling(tools: dict, install_context=True, install_association
     logger.info("Scoop: Install Tooling")
 
     # Ensure aria2 is installed first in order to make use of potential scoop cache
-    subprocess.run("scoop.cmd install aria2".split(" "), check=True)
+    run_shell_command("scoop.cmd install aria2")
+
     # Turn off the aria2 warning
-    subprocess.run("scoop.cmd config aria2-warning-enabled false".split(" "), check=True)
+    run_shell_command("scoop.cmd config aria2-warning-enabled false")
 
     for category, data in tools.items():
         if category == "Buckets":
@@ -636,18 +638,24 @@ def extract_and_install_application(application_name: str):
     # Point the scoop URL at the extracted ZIP file
     scoop_data["url"] = "file://" + application_zip_p.replace("\\", "/")
 
+    # Replace the hash with the correct one
+    with open(application_zip_p, "rb") as application_zip_f:
+        application_hash = hashlib.sha256(application_zip_f.read()).hexdigest()
+
+    scoop_data["hash"] = application_hash
+
     # Write the JSON file back
     with open(application_json_p, "w", encoding="utf-8") as application_json_f:
         application_json_f.write(json.dumps(scoop_data, indent=4))
 
     # Disable aria2 for the installation to allow file:// URLs
-    subprocess.run("scoop.cmd config aria2-enabled false".split(" "), check=True)
+    run_shell_command("scoop.cmd config aria2-enabled false")
 
     # Install the application
-    subprocess.run(f"scoop.cmd install {application_json_p}".split(" "), check=True)
+    run_shell_command(f"scoop.cmd install {application_json_p}")
 
     # Re-enable aria2
-    subprocess.run("scoop.cmd config aria2-enabled true".split(" "), check=True)
+    run_shell_command("scoop.cmd config aria2-enabled true")
 
     return True
 

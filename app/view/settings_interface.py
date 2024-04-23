@@ -66,7 +66,7 @@ class SettingsInterface(ScrollArea):
         self.makeBindiffAvailableCard = SwitchSettingCard(
             FIF.APPLICATION,
             'Make BinDiff available',
-            'Create additional plug-ins to make BinDiff available in IDA Pro and Binary Ninja, if available.',
+            'Create additional plug-ins to make BinDiff available to IDA Pro and Binary Ninja, if possible.',
             cfg.makeBindiffAvailable,
             self.bindiffGroup
         )
@@ -75,7 +75,7 @@ class SettingsInterface(ScrollArea):
             "Zsh", self.scrollWidget)
         self.installZshCard = SwitchSettingCard(
             FIF.APPLICATION,
-            'Install Zsh on top of Git for Windows using Symlinks',
+            'Install Zsh on top of Git using Symlinks',
             'Enables the use of Zsh in Git Bash, and allows for the use of Oh My Zsh. (Required if using default configuration)',
             cfg.installZsh,
             self.zshGroup

@@ -184,6 +184,7 @@ class ExecutionInterface(QWidget):
 
         # Existing ListWidget at the bottom
         self.bottomListView = ListFrame(self)
+        self.bottomListView.listWidget.setAutoScroll(True)
 
         # Add word wrap instead of cutting off the entry
         self.bottomListView.listWidget.setWordWrap(True)
