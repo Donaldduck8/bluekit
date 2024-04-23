@@ -201,6 +201,9 @@ default_configuration = {
             ("malware-analysis-bucket/recaf4", "Recaf 4.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler."),
             ("malware-analysis-bucket/java-disassembler", "Java Disassembler", "A tool to disassemble Java class files."),
             ("malware-analysis-bucket/java-deobfuscator", "Java Deobfuscator", "A tool to deobfuscate Java class files."),
+            ("cfr", "CFR", "A Java decompiler."),
+            ("procyon", "Procyon", "A Java decompiler."),
+            ("malware-analysis-bucket/fernflower", "Fernflower", "A Java decompiler."),
         ],
 
         # JAVA (Dynamic)
@@ -343,6 +346,7 @@ default_configuration = {
         ("ms-toolsai.jupyter", "Jupyter", "A Jupyter extension for Visual Studio Code."),
         ("akamud.vscode-theme-onedark", "One Dark Pro", "A dark theme for Visual Studio Code."),
         ("ms-vscode.powershell", "PowerShell", "A PowerShell extension for Visual Studio Code."),
+        ("vscjava.vscode-java-pack", "Java Extension Pack", "A collection of popular Java extensions for Visual Studio Code."),
     ],
 
     "taskbar_pins": [
@@ -851,3 +855,5 @@ validate_configuration(default_configuration, default_configuration)
 # https://github.com/struppigel/hedgehog-tools/blob/main/ECMAScript%20helpers/extract_called_functions.js
 #     npm.exe install -save-dev @babel/core commander
 # https://github.com/fkling/astexplorer
+
+# https://github.com/stong/maple-ir/tree/ubsan
