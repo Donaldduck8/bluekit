@@ -7,7 +7,7 @@ from .base_tree_json_interface import BaseTreeAndJsonEditWidget
 
 class RegistryChangesTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
-        headers = ["Name", "Value", "Type", "Data"]
+        headers = ["Name", "Description"]
         super().__init__(parent, headers, data)
         self.update_data(data)
 
@@ -22,10 +22,8 @@ class RegistryChangesTreeFrame(BaseTreeFrame):
     def populate_tree_item(self, parent_item, items):
         for item in items:
             details = [
-                item.get('description', ''),
                 item.get('value', ''),
-                item.get('type', ''),
-                item.get('data', '')
+                item.get('description', '')
             ]
             child_item = QTreeWidgetItem(details)
             parent_item.addChild(child_item)

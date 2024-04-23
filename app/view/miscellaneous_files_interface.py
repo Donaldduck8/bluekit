@@ -7,7 +7,7 @@ from .base_tree_json_interface import BaseTreeAndJsonEditWidget
 
 class MiscFilesTreeFrame(BaseTreeFrame):
     def __init__(self, parent=None, data: dict = None):
-        headers = ["Name", "Description"]
+        headers = ["Name", "Location"]
         super().__init__(parent, headers, data)
         self.update_data(data)
 

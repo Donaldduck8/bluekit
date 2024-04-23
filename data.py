@@ -527,14 +527,6 @@ default_configuration = {
                 "type": "REG_DWORD"
             },
             {
-                "description": "Use Taskbar Pins",
-                "hive": "HKEY_CURRENT_USER",
-                "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Group Policy Objects\\{7810E935-4876-4362-BF9C-D1EA60BCBB24}User\\Software\\Policies\\Microsoft\\Windows\\Explorer",
-                "value": "LockedStartLayout",
-                "data": "1",
-                "type": "REG_DWORD"
-            },
-            {
                 "description": "Specify Taskbar Pins",
                 "hive": "HKEY_CURRENT_USER",
                 "key": "Software\\Policies\\Microsoft\\Windows\\Explorer",
