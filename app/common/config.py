@@ -41,4 +41,4 @@ def save(_self):
     pass
 
 
-cfg.save = types.MethodType(save, QConfig) # noqa
+cfg.save = types.MethodType(save, QConfig) # pylint: disable=attribute-defined-outside-init
