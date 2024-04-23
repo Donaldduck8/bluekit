@@ -57,7 +57,7 @@ class CustomListWidget(ListWidget):
         # self.setWordWrap(True)
         self.add_infobar_signal.connect(self.add_infobar)
 
-        FluentStyleSheet.LIST_VIEW.apply(self)
+        FluentStyleSheet.LIST_VIEW.apply(self)  # pylint: disable=no-member
 
         self.setContentsMargins(0, 400, 8, 4)
         self.setViewportMargins(0, 4, 0, 4)
