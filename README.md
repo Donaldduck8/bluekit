@@ -16,7 +16,7 @@ The full list of tools is available [here](https://github.com/Donaldduck8/blueki
 > Bluekit should not be installed on a physical machine. It is designed to run on a clean virtual machine.
 
 * Windows 10 / 11
-* PowerShell (64-bit and 32-bit)
+* PowerShell > 5.1
 * Disk capacity > 30 GB
 * Memory > 2GB
 * Internet connection
