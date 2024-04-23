@@ -94,7 +94,7 @@ class SettingsInterface(ScrollArea):
         # initialize style sheet
         self.scrollWidget.setObjectName('scrollWidget')
         self.settingLabel.setObjectName('settingLabel')
-        StyleSheet.SETTING_INTERFACE.apply(self)
+        StyleSheet.SETTING_INTERFACE.apply(self)  # pylint: disable=no-member
 
         # initialize layout
         self.__initLayout()
