@@ -192,7 +192,7 @@ default_configuration = {
 
         # JAVA (Dependencies)
         "JAVA (Dependencies)": [
-            ("temurin17-jdk", "Temurin JDK 17", "A free and open-source implementation of the Java Platform, Standard Edition."),
+            ("zulufx17-jdk", "Zulu JDK FX 17", "A Java Development Kit with JavaFX 17."),
         ],
 
         # JAVA (Static)
@@ -200,6 +200,7 @@ default_configuration = {
             ("malware-analysis-bucket/recaf3", "Recaf 3.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 3, which is a modern Java bytecode viewer and decompiler."),
             ("malware-analysis-bucket/recaf4", "Recaf 4.0.0-SNAPSHOT", "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler."),
             ("malware-analysis-bucket/java-disassembler", "Java Disassembler", "A tool to disassemble Java class files."),
+            ("malware-analysis-bucket/java-deobfuscator", "Java Deobfuscator", "A tool to deobfuscate Java class files."),
         ],
 
         # JAVA (Dynamic)
@@ -417,7 +418,7 @@ default_configuration = {
         },
 
         "Java": {
-            "path": "%USERPROFILE%\\scoop\\apps\\temurin17-jdk\\current\\bin\\java.exe",
+            "path": "%USERPROFILE%\\scoop\\apps\\zulufx17-jdk\\current\\bin\\java.exe",
             "program_name": "Java",
             "arguments": ["-jar"],
             "file_types": [
@@ -659,18 +660,6 @@ default_configuration = {
                     "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/chromium_bookmarks/Preferences",
                 ],
                 "target": "%LOCALAPPDATA%\\Chromium\\User Data\\Default"
-            },
-        ],
-        "Recaf3": [
-            {
-                "description": "JavaFX Dependencies",
-                "sources": [
-                    "https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/19.0.2/javafx-graphics-19.0.2-win.jar",
-                    "https://repo1.maven.org/maven2/org/openjfx/javafx-base/19.0.2/javafx-base-19.0.2-win.jar",
-                    "https://repo1.maven.org/maven2/org/openjfx/javafx-controls/19.0.2/javafx-controls-19.0.2-win.jar",
-                    "https://repo1.maven.org/maven2/org/openjfx/javafx-media/19.0.2/javafx-media-19.0.2-win.jar",
-                ],
-                "target": "%APPDATA%\\Recaf\\dependencies"
             },
         ]
     },
