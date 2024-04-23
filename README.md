@@ -98,7 +98,7 @@ This file can be created by installing Bluekit with the `--keep-cache` argument 
 ## FAQ
 
 > [!NOTE]
-> My terminal is lacking the Windows bar and I can't move / close it!
+> My terminal is missing the Windows bar and I can't move / close it!
 
 When using the default configuration, Windows Terminal is launched in Focus mode. You can press `Ctrl+Shift+P` to open the command palette and search for "Toggle focus mode" to disable it.
 
