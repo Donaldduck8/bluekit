@@ -37,6 +37,12 @@ log_p = os.path.join(HERE, "install.log")
 with open(log_p, "w+", encoding="utf-8") as f:
     pass
 
+configuration_out_p = os.path.join(HERE, "configuration_dump.json")
+
+with open(configuration_out_p, "w+", encoding="utf-8") as f:
+    pass
+
+
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -1463,6 +1469,9 @@ def install_bluekit(data: dict, should_restart: bool = True):
     """
     Overall method for performing all of Bluekit's installations steps.
     """
+    with open(configuration_out_p, "w+", encoding="utf-8") as configuration_out_f:
+        configuration_out_f.write(json.dumps(data, indent=4))
+
     common_pre_install()
     remove_worthless_python_exes()
     extract_bundled_zip()

@@ -10,3 +10,4 @@ log.txt
 .vscode/launch.json
 app/install.log
 /.vscode
+app/configuration.json

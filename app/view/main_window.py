@@ -145,7 +145,13 @@ class MainWindow(FluentWindow):
                 'git_repositories': self.gitRepositoryInterface.data,
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
                 "registry_changes": self.registryChangesInterface.data,
-                "misc_files": self.miscFilesInterface.data
+                "misc_files": self.miscFilesInterface.data,
+                "config": {
+                    'enable_windows_safer': cfg.saferEnabled.value,
+                    'malware_folders': [utils.resolve_path(x) for x in cfg.malwareFolders.value],
+                    'install_zsh_over_git': cfg.installZsh.value,
+                    'make_bindiff_available': cfg.makeBindiffAvailable.value
+                }
             }
 
             # Make all widgets non-editable
