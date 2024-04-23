@@ -1,8 +1,10 @@
 # coding:utf-8
 # pylint: disable=E1101
 import sys
+import types
 
-from qfluentwidgets import BoolValidator, ConfigItem, QConfig, Theme
+from qfluentwidgets import BoolValidator, ConfigItem
+from qfluentwidgets.common.config import QConfig
 
 
 def isWin11():
@@ -15,6 +17,16 @@ class Config(QConfig):
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
 
+    saferEnabled = ConfigItem("Safer", "SaferEnabled", True, BoolValidator())
+    malwareFolders = ConfigItem(
+        "Safer", "malwareFolders", [], None)
+
+    makeBindiffAvailable = ConfigItem("Bindiff", "MakeBindiffAvailable", True, BoolValidator())
+
+    scoopKeepCache = ConfigItem("Scoop", "KeepCache", False, BoolValidator())
+
+    installZsh = ConfigItem("Scoop", "InstallZsh", True, BoolValidator())
+
 
 HELP_URL = "https://github.com/Donaldduck8/bluekit"
 BUCKET_URL = "https://github.com/Donaldduck8/malware-analysis-bucket"
@@ -22,4 +34,11 @@ BLOG_URL = "https://sinkhole.dev"
 FEEDBACK_URL = "https://github.com/Donaldduck8/bluekit/issues"
 
 cfg = Config()
-cfg.themeMode.value = Theme.AUTO
+
+
+# Monkey-patch save method
+def save(_self):
+    pass
+
+
+cfg.save = types.MethodType(save, QConfig)

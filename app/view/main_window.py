@@ -4,8 +4,9 @@ from argparse import Namespace
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
+from qfluentwidgets import Dialog
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen, Dialog
+from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen
 
 import data
 
@@ -20,6 +21,7 @@ from .home_interface import HomeInterface
 from .miscellaneous_files_interface import MiscFilesTreeWidget
 from .package_tree_interface import PackageTreeWidget
 from .registry_changes_interface import RegistryChangesWidget
+from .settings_interface import SettingsInterface
 
 if not resource:
     raise ImportError("Resource not found")
@@ -49,6 +51,8 @@ class MainWindow(FluentWindow):
         self.miscFilesInterface = MiscFilesTreeWidget(self, "Miscellaneous Files", data.configuration["misc_files"])
         self.executionInterface = ExecutionInterface(self)
 
+        self.settingsInterface = SettingsInterface(self)
+
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
         self.setCustomBackgroundColor(QColor(240, 244, 249), QColor(32, 32, 32))
@@ -77,6 +81,9 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.taskbarPinsInterface, FIF.PIN, 'Taskbar Pins')
         self.addSubInterface(self.registryChangesInterface, Icon.REGISTRY_EDITOR, 'Registry Changes')
         self.addSubInterface(self.miscFilesInterface, FIF.FOLDER, 'Miscellaneous Files')
+
+        self.addSubInterface(
+            self.settingsInterface, FIF.SETTING, "Settings", NavigationItemPosition.BOTTOM)
 
         # add custom widget to bottom
         self.navigationInterface.addItem(
@@ -111,6 +118,9 @@ class MainWindow(FluentWindow):
 
             self._executing = True
 
+            # Disable all settings
+            self.settingsInterface.on_execution_started()
+
             interfaces = [
                 self.scoopInterface,
                 self.pipInterface,
@@ -143,8 +153,7 @@ class MainWindow(FluentWindow):
                 interface.on_execution_started()
 
             self.executionInterface.execute(
-                execution_data,
-                args=self.args
+                execution_data
             )
 
         # Open the executionInterface

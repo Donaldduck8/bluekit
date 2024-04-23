@@ -7,7 +7,6 @@ import sys
 import threading
 import time
 import traceback
-from argparse import Namespace
 
 from PyQt5.QtCore import Qt, QTime, QTimer, pyqtSignal
 from PyQt5.QtGui import QResizeEvent
@@ -200,7 +199,7 @@ class ExecutionInterface(QWidget):
         self.vBoxLayout.addWidget(self.bottomListView)
         self.vBoxLayout.addSpacing(30)
 
-    def execute(self, data: dict, args: Namespace = None):
+    def execute(self, data: dict):
         self.timerWidget.startTime = QTime(0, 0, 0)
         self.timerWidget.start()
 
@@ -210,9 +209,9 @@ class ExecutionInterface(QWidget):
 
         # check if we are frozen
         if getattr(sys, "frozen", False):
-            thread = threading.Thread(target=threading_function, args=(self, data, args))
+            thread = threading.Thread(target=threading_function, args=(self, data))
         else:
-            thread = threading.Thread(target=threading_function_test, args=(self, data, args))
+            thread = threading.Thread(target=threading_function_test, args=(self, data))
         thread.start()
 
     def show_completion_dialog(self):
@@ -233,14 +232,14 @@ class ExecutionInterface(QWidget):
             w.close()
 
 
-def threading_function_test(widget: ExecutionInterface, _data: dict, _args: Namespace):
+def threading_function_test(widget: ExecutionInterface, _data: dict):
     widget.timerWidget.startTime = QTime(1, 0, 0, 0)
     for _ in range(5):
         # widget.rightListView.listWidget.addItem("Item " + str(i))
-        widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 21), "", InfoBarIcon.SUCCESS)
+        widget.rightListView.listWidget.add_infobar_signal.emit("Success: " + "word " * int(random.random() * 5), "", InfoBarIcon.SUCCESS)
 
         # Add a standard list item to the bottom list view
-        widget.bottomListView.listWidget.addItem(QListWidgetItem("A " * 10000))
+        widget.bottomListView.listWidget.addItem(QListWidgetItem("Lorem ipsum..."))
         widget.bottomListView.listWidget.scrollToBottom()
         widget.rightListView.listWidget.scrollToBottom()
 
@@ -249,10 +248,10 @@ def threading_function_test(widget: ExecutionInterface, _data: dict, _args: Name
     widget.completion_signal.emit()
 
 
-def threading_function(widget: ExecutionInterface, data: dict, args: Namespace):
+def threading_function(widget: ExecutionInterface, data: dict):
     try:
         installation_steps.widget = widget
-        installation_steps.install_bluekit(data, args=args, should_restart=False)
+        installation_steps.install_bluekit(data, should_restart=False)
 
         widget.completion_signal.emit()
     except Exception as e:
@@ -269,5 +268,7 @@ def threading_function(widget: ExecutionInterface, data: dict, args: Namespace):
             "Installation failed!",
             0x10,
         )
+
+        widget.rightListView.listWidget.add_infobar_signal.emit("Error: " + trace, "", InfoBarIcon.ERROR)
 
         raise e

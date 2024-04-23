@@ -487,22 +487,6 @@ default_configuration = {
                 "type": "REG_DWORD"
             },
             {
-                "description": "Disable SmartScreen",
-                "hive": "HKEY_LOCAL_MACHINE",
-                "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
-                "value": "EnableSmartScreen",
-                "data": "0",
-                "type": "REG_DWORD"
-            },
-            {
-                "description": "Disable Microsoft Edge Phishing Filter",
-                "hive": "HKEY_LOCAL_MACHINE",
-                "key": "SOFTWARE\\Policies\\Microsoft\\MicrosoftEdge\\PhishingFilter",
-                "value": "EnabledV9",
-                "data": "0",
-                "type": "REG_DWORD"
-            },
-            {
                 "description": "Disable Windows Firewall (Standard Profile)",
                 "hive": "HKEY_LOCAL_MACHINE",
                 "key": "SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\StandardProfile",
@@ -698,6 +682,14 @@ default_configuration = {
             },
         ]
     },
+    "config": {
+        "enable_windows_safer": True,
+        "malware_folders": [
+            "%USERPROFILE%\\malware"
+        ],
+        "install_zsh_over_git": True,
+        "make_bindiff_available": True,
+    }
 }
 
 # Sort the entries of the configuration dictionary for OCD

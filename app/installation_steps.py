@@ -15,8 +15,8 @@ import shutil
 import subprocess
 import sys
 import traceback
+import uuid
 import winreg
-from argparse import Namespace
 from typing import List
 
 import pythoncom
@@ -24,6 +24,7 @@ import win32com.client
 from qfluentwidgets import InfoBarIcon
 
 from app import utils
+from app.common.config import cfg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -1353,30 +1354,19 @@ def install_miscellaneous_files(data: dict):
             try_log_installation_step(f"Success: Installed {description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
 
-def reinstate_safer_and_add_malware_path(malware_p: str):
+def apply_registry_change(hive: int, key: str, value: str, data_type: int, data: str):
+    winreg.CreateKey(hive, key)
+    with winreg.OpenKey(hive, key, 0, winreg.KEY_WRITE) as reg_key:
+        winreg.SetValueEx(reg_key, value, 0, data_type, data)
 
-    def apply_registry_change(hive: int, key: str, value: str, data_type: int, data: str):
-        winreg.CreateKey(hive, key)
-        with winreg.OpenKey(hive, key, 0, winreg.KEY_WRITE) as reg_key:
-            winreg.SetValueEx(reg_key, value, 0, data_type, data)
 
+def enable_windows_safer():
     hive = winreg.HKEY_LOCAL_MACHINE
     base_key = "SOFTWARE\\Policies\\Microsoft\\Windows\\Safer\\CodeIdentifiers"
 
-    authenticode_value = "authenticodeenabled"
-    authenticode_type = winreg.REG_DWORD
-    authenticode_data = 0
+    apply_registry_change(hive, base_key, "authenticodeenabled", winreg.REG_DWORD, 0)
+    apply_registry_change(hive, base_key, "DefaultLevel", winreg.REG_DWORD, 0x9c40)
 
-    apply_registry_change(hive, base_key, authenticode_value, authenticode_type, authenticode_data)
-
-    default_level_value = "DefaultLevel"
-    default_level_type = winreg.REG_DWORD
-    default_level_data = 0x9c40
-
-    apply_registry_change(hive, base_key, default_level_value, default_level_type, default_level_data)
-
-    executable_types_value = "ExecutableTypes"
-    executable_types_type = winreg.REG_MULTI_SZ
     executable_types_data = [
         "ADE",
         "ADP",
@@ -1408,54 +1398,17 @@ def reinstate_safer_and_add_malware_path(malware_p: str):
         "WSC",
     ]
 
-    apply_registry_change(hive, base_key, executable_types_value, executable_types_type, executable_types_data)
+    apply_registry_change(hive, base_key, "ExecutableTypes", winreg.REG_MULTI_SZ, executable_types_data)
+    apply_registry_change(hive, base_key, "Levels", winreg.REG_DWORD, 0x71000)
+    apply_registry_change(hive, base_key, "LogFileName", winreg.REG_SZ, "C:\\Windows\\system32\\LogFiles\\SAFER.LOG")
+    apply_registry_change(hive, base_key, "PolicyScope", winreg.REG_DWORD, 0)
+    apply_registry_change(hive, base_key, "TransparentEnabled", winreg.REG_DWORD, 2)
 
-    levels_value = "Levels"
-    levels_type = winreg.REG_DWORD
-    levels_data = 0x71000
+    apply_registry_change(hive, "SOFTWARE\\Microsoft\\Windows Script Host\\Settings", "UseWinSAFER", winreg.REG_SZ, "1")
+    apply_registry_change(hive, "SOFTWARE\\Policies\\Microsoft\\SystemCertificates\\TrustedPublisher\\Safer", "AuthentiCodeFlags", winreg.REG_DWORD, 0x300)
+    apply_registry_change(hive, "SYSTEM\\CurrentControlSet\\Control\\Srp\\GP", "RuleCount", winreg.REG_DWORD, 0)
 
-    apply_registry_change(hive, base_key, levels_value, levels_type, levels_data)
-
-    log_file_value = "LogFileName"
-    log_file_type = winreg.REG_SZ
-    log_file_data = "C:\\Windows\\system32\\LogFiles\\SAFER.LOG"
-
-    apply_registry_change(hive, base_key, log_file_value, log_file_type, log_file_data)
-
-    policy_scope_value = "PolicyScope"
-    policy_scope_type = winreg.REG_DWORD
-    policy_scope_data = 0
-
-    apply_registry_change(hive, base_key, policy_scope_value, policy_scope_type, policy_scope_data)
-
-    transparent_enabled_value = "TransparentEnabled"
-    transparent_enabled_type = winreg.REG_DWORD
-    transparent_enabled_data = 2
-
-    apply_registry_change(hive, base_key, transparent_enabled_value, transparent_enabled_type, transparent_enabled_data)
-
-    windows_script_host_use_safer_key = "SOFTWARE\\Microsoft\\Windows Script Host\\Settings"
-    windows_script_host_use_safer_value = "UseWinSAFER"
-    windows_script_host_use_safer_type = winreg.REG_SZ
-    windows_script_host_use_safer_data = "1"
-
-    apply_registry_change(hive, windows_script_host_use_safer_key, windows_script_host_use_safer_value, windows_script_host_use_safer_type, windows_script_host_use_safer_data)
-
-    trustedpublisher_cert_key = "SOFTWARE\\Policies\\Microsoft\\SystemCertificates\\TrustedPublisher\\Safer"
-    trustedpublisher_cert_value = "AuthentiCodeFlags"
-    trustedpublisher_cert_type = winreg.REG_DWORD
-    trustedpublisher_cert_data = 0x00000300
-
-    apply_registry_change(hive, trustedpublisher_cert_key, trustedpublisher_cert_value, trustedpublisher_cert_type, trustedpublisher_cert_data)
-
-    srp_gp_rule_count_key = "SYSTEM\\CurrentControlSet\\Control\\Srp\\GP"
-    srp_gp_rule_count_value = "RuleCount"
-    srp_gp_rule_count_type = winreg.REG_DWORD
-    srp_gp_rule_count_data = 0
-
-    apply_registry_change(hive, srp_gp_rule_count_key, srp_gp_rule_count_value, srp_gp_rule_count_type, srp_gp_rule_count_data)
-
-    # Add all the boilerplate bullshit
+    # Create empty keys for all the levels
     bases = [
         "SOFTWARE\\Policies\\Microsoft\\safer\\codeidentifiers",
         "SOFTWARE\\WOW6432Node\\Policies\\Microsoft\\Windows\\safer\\codeidentifiers"
@@ -1481,39 +1434,32 @@ def reinstate_safer_and_add_malware_path(malware_p: str):
                 level_key = "\\".join([base, level, key])
                 winreg.CreateKey(hive, level_key)
 
-    # Add the malware path
-    malware_path_guid = "{00B97DA0-641E-474E-BDCC-3F2294507AC3}"
+
+def register_windows_safer_path(malware_p: str):
+    malware_p = utils.resolve_path(malware_p)
+    os.makedirs(malware_p, exist_ok=True)
+
+    hive = winreg.HKEY_LOCAL_MACHINE
+
+    bases = [
+        "SOFTWARE\\Policies\\Microsoft\\safer\\codeidentifiers",
+        "SOFTWARE\\WOW6432Node\\Policies\\Microsoft\\Windows\\safer\\codeidentifiers"
+    ]
+
+    # Generate a guid
+    malware_path_guid = f"{{{uuid.uuid4()}}}"
 
     for base in bases:
         malware_path_key = "\\".join([base, "0", "Paths", malware_path_guid])
         winreg.CreateKey(hive, malware_path_key)
 
-        malware_path_description_value = "Description"
-        malware_path_description_type = winreg.REG_SZ
-        malware_path_description_data = "Malware Path"
-
-        apply_registry_change(hive, malware_path_key, malware_path_description_value, malware_path_description_type, malware_path_description_data)
-
-        malware_path_item_data_value = "ItemData"
-        malware_path_item_data_type = winreg.REG_SZ
-        malware_path_item_data_data = malware_p
-
-        apply_registry_change(hive, malware_path_key, malware_path_item_data_value, malware_path_item_data_type, malware_path_item_data_data)
-
-        malware_path_last_modified_value = "LastModified"
-        malware_path_last_modified_type = winreg.REG_BINARY
-        malware_path_last_modified_data = bytearray.fromhex("c014546e8df9c501")
-
-        apply_registry_change(hive, malware_path_key, malware_path_last_modified_value, malware_path_last_modified_type, malware_path_last_modified_data)
-
-        malware_path_safer_flags_value = "SaferFlags"
-        malware_path_safer_flags_type = winreg.REG_DWORD
-        malware_path_safer_flags_data = 0
-
-        apply_registry_change(hive, malware_path_key, malware_path_safer_flags_value, malware_path_safer_flags_type, malware_path_safer_flags_data)
+        apply_registry_change(hive, malware_path_key, "Description", winreg.REG_SZ, "Malware Path")
+        apply_registry_change(hive, malware_path_key, "ItemData", winreg.REG_SZ, malware_p)
+        apply_registry_change(hive, malware_path_key, "LastModified", winreg.REG_BINARY, bytearray.fromhex("c014546e8df9c501"))
+        apply_registry_change(hive, malware_path_key, "SaferFlags", winreg.REG_DWORD, 0)
 
 
-def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = True):
+def install_bluekit(data: dict, should_restart: bool = True):
     """
     Overall method for performing all of Bluekit's installations steps.
     """
@@ -1529,7 +1475,7 @@ def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = T
 
     scoop_add_buckets(data["scoop"]["Buckets"])
 
-    if args and args.keep_cache:
+    if cfg.scoopKeepCache.value:
         scoop_install_tooling(data["scoop"], keep_cache=True)
     else:
         scoop_install_tooling(data["scoop"])
@@ -1548,19 +1494,23 @@ def install_bluekit(data: dict, args: Namespace = None, should_restart: bool = T
     ida_py_switch(data["ida_py_switch"])
 
     # Make Bindiff available to other programs
-    make_bindiff_available_to_programs()
+    if cfg.makeBindiffAvailable.value:
+        make_bindiff_available_to_programs()
 
     # Install Zsh on top of git
-    install_zsh_over_git()
+    if cfg.installZsh.value:
+        install_zsh_over_git()
 
-    # Fix SRP and restrict the malware path
-    malware_p = utils.resolve_path("%USERPROFILE%\\malware")
-    os.makedirs(malware_p, exist_ok=True)
-    reinstate_safer_and_add_malware_path(malware_p=malware_p)
+    # Fix Safer and restrict the malware path
+    if cfg.saferEnabled.value:
+        enable_windows_safer()
+
+        for malware_p in cfg.malwareFolders.value:
+            register_windows_safer_path(malware_p=malware_p)
 
     common_post_install()
 
-    if args and args.keep_cache:
+    if cfg.scoopKeepCache.value:
         clean_up_disk(keep_cache=True)
     else:
         clean_up_disk()

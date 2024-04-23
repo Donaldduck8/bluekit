@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QApplication
 
 import data
 from app import installation_steps, utils
+from app.common.config import cfg
 from app.view.main_window import MainWindow
 
 try:
@@ -29,6 +30,9 @@ parser.add_argument('-s', '--silent', action='store_true', help='Run the script 
 parser.add_argument('-c', '--config', help='Path to the configuration file', type=Path)
 parser.add_argument('--keep-cache', action='store_true', help='Keep the cache directory after the script finishes')
 args = parser.parse_args()
+
+if args and args.keep_cache:
+    cfg.keep_cache = True
 
 
 def run_gui():
@@ -86,6 +90,14 @@ def main():
 
     if args.config:
         load_config(args.config)
+
+    cfg.saferEnabled.value = data.configuration["config"]['enable_windows_safer']
+    cfg.malwareFolders.value = [utils.resolve_path(x) for x in data.configuration['config']['malware_folders']]
+    cfg.installZsh.value = data.configuration['config']['install_zsh_over_git']
+    cfg.makeBindiffAvailable.value = data.configuration['config']['make_bindiff_available']
+
+    if args and args.keep_cache:
+        cfg.scoopKeepCache.value = args.keep_cache
 
     if args.silent:
         if pyi_splash:
