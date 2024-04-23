@@ -95,7 +95,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
             if p.returncode != 0:
                 raise subprocess.CalledProcessError(p.returncode, p.args, p.stdout, p.stderr)
 
-            stdout = p.stdout.decode("utf-8").strip()
+            stdout = p.stdout.decode("utf-8", errors="replace").strip()
             stdout = stdout.replace("\r\n\r\n", "\r\n")
             stdout = stdout.replace("\n\n", "\n")
 
