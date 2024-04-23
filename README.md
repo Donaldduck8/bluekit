@@ -91,7 +91,18 @@ It's recommended to pair them with an alternative free application as part of a 
 ```
 ### Cache
 
-In order to accelerate multiple installations of Bluekit, you can provide a file named ``scoop_cache.zip`` as part of the bundle. This file will allow Scoop to avoid downloading the same programs repeatedly. This file can be created by installing Bluekit with the `--keep-cache` argument and zipping up the contents of the `%USERPROFILE%\scoop\cache` folder afterwards.
+In order to accelerate multiple installations of Bluekit, you can provide a file named ``scoop_cache.zip`` as part of the bundle. This file will allow Scoop to avoid downloading the same programs repeatedly. 
+
+This file can be created by installing Bluekit with the `--keep-cache` argument (or enabling the corresponding option in the settings) and zipping up the contents of the `%USERPROFILE%\scoop\cache` folder after installation.
+
+## FAQ
+
+> [!NOTE]
+> My terminal is lacking the Windows bar and I can't move / close it!
+
+When using the default configuration, Windows Terminal is launched in Focus mode. You can press `Ctrl+Shift+P` to open the command palette and search for "Toggle focus mode" to disable it.
+
+Alternatively, you could start GlazeWM and explore a tiling windows manager! ChrisTitusTech has a nice introduction to GlazeWM on [Youtube](https://www.youtube.com/watch?v=0I8HyVMKEeo).
 
 
 ## Contributing
