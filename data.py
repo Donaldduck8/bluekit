@@ -37,7 +37,7 @@ default_configuration = {
             ("chromium", "Chromium", "A web browser that is the basis for Google Chrome."),
             ("sublime-text", "Sublime Text", "A sophisticated text editor for code, markup, and prose."),
             ("7zip", "7-Zip", "A file archiver with a high compression ratio."),
-            ("vscode", "Visual Studio Code", "A code editor redefined and optimized for building and debugging modern web and cloud applications."),
+            ("vscodium", "Codium", "A code editor redefined and optimized for building and debugging modern web and cloud applications."),
         ],
 
         "Miscellaneous": [
@@ -285,11 +285,11 @@ default_configuration = {
         ("unicorn", "Unicorn", "A lightweight, multi-platform, multi-architecture CPU emulator framework."),
         ("olefile", "olefile", "A Python package to parse, read, and write Microsoft OLE2 files."),
         ("oletools[full]", "oletools", "A set of tools to analyze Microsoft OLE2 files."),
-        ("git+https://github.com/N0fix/rustbinsign.git", "RustBinSign", "A tool to generate FLIRT / SIGKIT signatures from Rust binaries."),
+        ("git+https://github.com/Donaldduck8/rustbinsign", "RustBinSign", "A tool to generate FLIRT / SIGKIT signatures from Rust binaries."),
 
         # Donut Shellcode
-        ("git+https://github.com/volexity/chaskey-lts.git", "chaskey-lts", "A Python implementation of the Chaskey-LTS block cipher."),
-        ("git+https://github.com/volexity/donut-decryptor.git", "donut-decryptor", "A tool to decrypt Donut shellcode."),
+        ("git+https://github.com/volexity/chaskey-lts", "chaskey-lts", "A Python implementation of the Chaskey-LTS block cipher."),
+        ("git+https://github.com/volexity/donut-decryptor", "donut-decryptor", "A tool to decrypt Donut shellcode."),
 
         # D810
         ("z3-solver", "z3-solver", "A theorem prover from Microsoft Research."),
@@ -299,10 +299,10 @@ default_configuration = {
         ("decompyle3", "decompyle3", "A Python bytecode decompiler."),
 
         # PowerShell (Static)
-        ("git+https://github.com/Donaldduck8/deobshell.git@pip-installable", "deobshell", "A tool to statically deobfuscate PowerShell scripts."),
+        ("git+https://github.com/Donaldduck8/deobshell@pip-installable", "deobshell", "A tool to statically deobfuscate PowerShell scripts."),
 
-        ("git+https://github.com/Donaldduck8/capa.git", "FLARE-Capa", "A tool to identify capabilities in executable files."),
-        ("git+https://github.com/mandiant/speakeasy.git", "Speakeasy", "A comprehensive shellcode emulator and analysis toolkit."),
+        ("flare-capa", "FLARE-Capa", "A tool to identify capabilities in executable files."),
+        ("git+https://github.com/mandiant/speakeasy", "Speakeasy", "A comprehensive shellcode emulator and analysis toolkit."),
 
         # Frida
         ("frida-tools", "Frida Tools", "A collection of tools for the Frida instrumentation framework."),
@@ -327,7 +327,6 @@ default_configuration = {
         ("deobfuscator", "deobfuscator", "A tool to deobfuscate JavaScript."),
         ("git+https://github.com/Donaldduck8/malware-jail#npm-installable", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
         ("frida", "Frida", "A dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers."),
-        ("webcrack", "WebCrack", "A tool to deobfuscate JavaScript."),
     ],
 
     "ida_plugins": [
@@ -613,6 +612,13 @@ default_configuration = {
                 ],
                 "target": "%USERPROFILE%\\scoop\\apps\\vscode\\current\\data\\user-data\\User"
             },
+            {
+            "description": "Configuration (Codium)",
+                "sources": [
+                    "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/vscode_settings/settings.json",
+                ],
+                "target": "%USERPROFILE%\\scoop\\apps\\vscodium\\current\\data\\user-data\\User"
+            },
         ],
         "Terminal": [
             {
@@ -860,3 +866,5 @@ validate_configuration(default_configuration, default_configuration)
 # https://github.com/stong/maple-ir/tree/ubsan
 
 # How to deal with javascript malware that requires ActiveXObject?
+
+# ("webcrack", "WebCrack", "A tool to deobfuscate JavaScript."),  # LMAO THIS REQUIRES VISUAL C++ BUILD TOOLS WHAT THE FUCK ITS JAVASCRIPT???
