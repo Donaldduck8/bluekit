@@ -324,8 +324,9 @@ default_configuration = {
         ("obfuscator-io-deobfuscator", "obfuscator.io Deobfuscator", "A tool to deobfuscate JavaScript from obfuscator.io."),
         ("js-deobfuscator", "js-deobfuscator", "A tool to deobfuscate JavaScript."),
         ("deobfuscator", "deobfuscator", "A tool to deobfuscate JavaScript."),
-        ("git+https://github.com/HynekPetrak/malware-jail.git", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
+        ("git+https://github.com/Donaldduck8/malware-jail#npm-installable", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
         ("frida", "Frida", "A dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers."),
+        ("webcrack", "WebCrack", "A tool to deobfuscate JavaScript."),
     ],
 
     "ida_plugins": [
@@ -364,7 +365,6 @@ default_configuration = {
     "git_repositories": [
         ("https://github.com/Donaldduck8/fuxnet", "Fuxnet", "A collection of Python scripts to emulate various server types."),
         ("https://github.com/mandiant/capa-rules", "CAPA Rules", "A collection of rules for the Capa malware analysis framework."),
-        ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
         ("https://github.com/SentineLabs/AlphaGolang", "AlphaGolang", "A collection of scripts to reverse-engineer Go binaries."),
     ],
 
