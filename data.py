@@ -114,6 +114,7 @@ default_configuration = {
             ("malware-analysis-bucket/novmp", "NoVMP", "A tool to unpack malware."),
             ("malware-analysis-bucket/xvolkolak", "XVolKolak", "A tool to unpack malware."),
             ("malware-analysis-bucket/fermion", "Fermion", "An electron wrapper for Frida & Monaco"),
+            ("malware-analysis-bucket/fakenet", "Fakenet-NG", "A tool to analyze network traffic."),
         ],
 
         # Themida (Dynamic)
