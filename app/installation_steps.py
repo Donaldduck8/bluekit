@@ -1344,7 +1344,13 @@ def install_miscellaneous_files(data: dict):
                 source = [source]
 
             for url in source:
-                run_shell_command(command=f"curl.exe -L -o {os.path.join(target_folder, os.path.basename(url))} {url}", failure_okay=True)
+                destination = os.path.join(target_folder, os.path.basename(url))
+
+                if " " in destination:
+                    command_parts = ["curl.exe", "-L", "-o", destination, url]
+                    run_shell_command(command_parts=command_parts, failure_okay=True)
+                else:
+                    run_shell_command(command=f"curl.exe -L -o {destination} {url}", failure_okay=True)
 
             try_log_installation_step(f"Success: Installed {description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
