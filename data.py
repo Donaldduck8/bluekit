@@ -857,3 +857,5 @@ validate_configuration(default_configuration, default_configuration)
 # https://github.com/fkling/astexplorer
 
 # https://github.com/stong/maple-ir/tree/ubsan
+
+# How to deal with javascript malware that requires ActiveXObject?

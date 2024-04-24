@@ -972,6 +972,8 @@ def npm_install_libraries(libs: List[str]):
             try_log_installation_step("Warning: Library is of unknown format, skipping!", InfoBarIcon.WARNING)
             continue
 
+        run_shell_command(command=f"{npm_cmd_p} install -g {lib_name}", failure_okay=True)
+
         try_log_installation_step(f"Success: Installed {lib_name_pretty} (NPM)", InfoBarIcon.SUCCESS)
 
 
