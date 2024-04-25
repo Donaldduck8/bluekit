@@ -37,7 +37,7 @@ class SettingsInterface(ScrollArea):
         self.saferCard = SwitchSettingCard(
             FIF.TRANSPARENT,
             'Enable the Windows Safer feature',
-            'Prevents program and script execution within specified folders.',
+            'Prevents program and script execution within specified folders. Make sure to disable this setting for a dynamic analysis environment!',
             cfg.saferEnabled,
             self.malwareSafetyGroup
         )
