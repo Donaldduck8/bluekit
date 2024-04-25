@@ -50,7 +50,7 @@ Bluekit supports the following command-line arguments:
 
 ## Bundled Files
 
-Bluekit supports bundling files alongside the installer in a file named `bluekit_bundled.zip`. In order to install licensed applications, a bundle can be constructed like so:
+Bluekit supports bundling files alongside the installer in a file named `bluekit_bundled.zip`. In order to install applications that cannot be provided through a Scoop bucket, a bundle can be constructed like so:
 
 ```
 ╭──────────────────────╮                  ╭───────────────────────────────────╮
