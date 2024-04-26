@@ -1,6 +1,6 @@
 # Bluekit
 
-Bluekit is a cybersecurity-focused workstation setup script that aims to provide a well-rounded and complete analysis environment. 
+Bluekit is a cybersecurity-focused workstation setup script that aims to provide a well-rounded and complete analysis environment all in one shot.
 
 Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is complemented by the [Malware Analysis bucket](https://github.com/Donaldduck8/malware-analysis-bucket).
 
