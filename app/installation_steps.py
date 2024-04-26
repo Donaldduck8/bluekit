@@ -1480,8 +1480,6 @@ def install_bluekit(data: dict, should_restart: bool = True):
     scoop_install_git()
     scoop_install_pwsh()
 
-    install_build_tools()
-
     scoop_add_buckets(data["scoop"]["Buckets"])
 
     if cfg.scoopKeepCache.value:
