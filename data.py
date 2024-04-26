@@ -2,12 +2,10 @@ import json
 import zipfile
 
 from natsort import natsorted, ns
+from qfluentwidgets import MessageBox
 
 from app import utils
-
 from app.common.config import cfg
-
-from qfluentwidgets import MessageBox
 
 version = "1.0.0"
 
@@ -879,11 +877,11 @@ def get_scoop_package_name_and_alternative(tool):
 
     raise ValueError(f"Unknown type: {type(tool)}")
 
-def get_all_potentially_bundled_scoop_packages(configuration) -> list:
+def get_all_potentially_bundled_scoop_packages(configuration_to_check) -> list:
     """ Get all scoop package names from the configuration. """
     results = []
 
-    for _category, list_of_items in configuration["scoop"].items():
+    for _category, list_of_items in configuration_to_check["scoop"].items():
         for i in list_of_items:
             main_name, alternative_name = get_scoop_package_name_and_alternative(i)
 

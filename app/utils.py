@@ -143,8 +143,8 @@ def check_windows_defender_installed():
     # Check if the output contains RUNNING or STOPPED which indicates the service is present
     if "RUNNING" in result.stdout or "STOPPED" in result.stdout:
         return True
-    else:
-        return False
+
+    return False
 
 
 def is_defender_real_time_protection_enabled():
@@ -160,10 +160,10 @@ def is_defender_real_time_protection_enabled():
 
         if is_disabled == "True":
             return False
-        else:
-            return True
-    else:
-        return False
+
+        return True
+
+    return False
 
 
 SCOOP_DIR = resolve_path(r"%USERPROFILE%\scoop")

@@ -1,5 +1,4 @@
 # coding: utf-8
-import zipfile
 from argparse import Namespace
 
 from PyQt5.QtCore import QSize
