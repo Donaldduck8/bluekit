@@ -1,6 +1,7 @@
 import ctypes
 import glob
 import os
+import subprocess
 import winreg
 import zipfile
 from pathlib import Path
@@ -132,6 +133,37 @@ def query_registry(key_path, value_name):
     except Exception as e:
         print(f"Error accessing registry {key_path}: {str(e)}")
         return None
+
+
+def check_windows_defender_installed():
+    # Command to check if Windows Defender service is present
+    command = "sc query WinDefend"
+    # Run the command and capture the output
+    result = subprocess.run(command, capture_output=True, text=True, shell=True, check=False)
+    # Check if the output contains RUNNING or STOPPED which indicates the service is present
+    if "RUNNING" in result.stdout or "STOPPED" in result.stdout:
+        return True
+    else:
+        return False
+
+
+def is_defender_real_time_protection_enabled():
+    if check_windows_defender_installed():
+        # Command to check the status of real-time protection
+        command = "powershell -Command \"Get-MpPreference | Select-Object -ExpandProperty DisableRealtimeMonitoring\""
+
+        # Run the command and capture the output
+        result = subprocess.run(command, capture_output=True, text=True, shell=True, check=False)
+
+        # DisableRealtimeMonitoring returns True if real-time protection is disabled
+        is_disabled = result.stdout.strip()
+
+        if is_disabled == "True":
+            return False
+        else:
+            return True
+    else:
+        return False
 
 
 SCOOP_DIR = resolve_path(r"%USERPROFILE%\scoop")

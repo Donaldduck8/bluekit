@@ -3,12 +3,25 @@
 import sys
 import types
 
-from qfluentwidgets import BoolValidator, ConfigItem
+from pathlib import Path
+
+from qfluentwidgets import BoolValidator, ConfigItem, ConfigValidator
 from qfluentwidgets.common.config import QConfig
 
 
 def isWin11():
     return sys.platform == 'win32' and sys.getwindowsversion().build >= 22000
+
+
+class ZipFileValidator(ConfigValidator):
+    """ .ZIP file validator """
+
+    def validate(self, value):
+        result = Path(value).exists() and Path(value).is_file() and Path(value).suffix == ".zip"
+        return result
+
+    def correct(self, value):
+        return value
 
 
 class Config(QConfig):
@@ -26,6 +39,8 @@ class Config(QConfig):
     scoopKeepCache = ConfigItem("Scoop", "KeepCache", False, BoolValidator())
 
     installZsh = ConfigItem("Scoop", "InstallZsh", True, BoolValidator())
+
+    bundledZipFile = ConfigItem("BundledFiles", "BundledZipFile", "", ZipFileValidator())
 
 
 HELP_URL = "https://github.com/Donaldduck8/bluekit"

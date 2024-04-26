@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-s', '--silent', action='store_true', help='Run the script without any GUI prompts')
 parser.add_argument('-c', '--config', help='Path to the configuration file', type=Path)
+parser.add_argument('--bundle', help='Path to the bundled .zip file', type=Path)
 parser.add_argument('--keep-cache', action='store_true', help='Keep the cache directory after the script finishes')
 args = parser.parse_args()
 
@@ -68,6 +69,19 @@ def ensure_suitable_environment():
             )
             sys.exit()
 
+        if utils.is_defender_real_time_protection_enabled():
+            if pyi_splash:
+                pyi_splash.close()
+
+            ctypes.windll.user32.MessageBoxW(
+                0,
+                "Windows Defender Real-Time Protection is enabled. "
+                "Please disable it before running this script.",
+                "Windows Defender Real-Time Protection",
+                0x10
+            )
+            sys.exit(1)
+
 
 def load_config(config_p: str):
     if not os.path.isfile(config_p):
@@ -90,6 +104,12 @@ def main():
 
     if args.config:
         load_config(args.config)
+
+    if args.bundle:
+        if not os.path.isfile(args.bundle):
+            raise FileNotFoundError(f"Bundled .zip file not found: {args.bundle}")
+
+        cfg.bundledZipFile.value = args.bundle.as_posix()
 
     cfg.saferEnabled.value = data.configuration["config"]['enable_windows_safer']
     cfg.malwareFolders.value = [utils.resolve_path(x) for x in data.configuration['config']['malware_folders']]

@@ -131,11 +131,13 @@ class FluentTimer(QWidget):
 
 class ExecutionInterface(QWidget):
     completion_signal = pyqtSignal()
+    stop_signal = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.completion_signal.connect(self.show_completion_dialog)
+        self.stop_signal.connect(self.stop)
 
         self.setObjectName('executionInterface' + str(id(self)))
 
@@ -188,7 +190,6 @@ class ExecutionInterface(QWidget):
 
         # Add word wrap instead of cutting off the entry
         self.bottomListView.listWidget.setWordWrap(True)
-        self.bottomListView.listWidget.setAutoScroll(True)
 
         # Remove the spacing between element in the bottomListView
         self.bottomListView.listWidget.setSpacing(0)
@@ -229,6 +230,10 @@ class ExecutionInterface(QWidget):
         else:
             w.close()
 
+    def stop(self):
+        self.timerWidget.stop()
+        self.progressRing.stop()
+
 
 def threading_function_test(widget: ExecutionInterface, _data: dict):
     widget.timerWidget.startTime = QTime(1, 0, 0, 0)
@@ -243,7 +248,7 @@ def threading_function_test(widget: ExecutionInterface, _data: dict):
 
         time.sleep(1)
 
-    widget.completion_signal.emit()
+    widget.stop_signal.emit()
 
 
 def threading_function(widget: ExecutionInterface, data: dict):
@@ -255,7 +260,7 @@ def threading_function(widget: ExecutionInterface, data: dict):
     except Exception as e:
         widget.rightListView.listWidget.add_infobar_signal.emit("Error", str(e), InfoBarIcon.ERROR)
         widget.bottomListView.listWidget.addItem(str(e))
-        # widget.completion_signal.emit()
+        widget.stop_signal.emit()
 
         trace = traceback.format_exc()
 

@@ -2,11 +2,11 @@
 import types
 
 from PyQt5.QtCore import QStandardPaths, Qt
-from PyQt5.QtWidgets import QLabel, QWidget
+from PyQt5.QtWidgets import QLabel, QWidget, QFileDialog
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (FolderListSettingCard, InfoBar, ScrollArea,
-                            SettingCardGroup, SwitchSettingCard, qconfig)
+                            SettingCardGroup, SwitchSettingCard, qconfig, PrimaryPushSettingCard)
 
 from ..common.config import cfg
 from ..common.style_sheet import StyleSheet
@@ -30,6 +30,17 @@ class SettingsInterface(ScrollArea):
 
         # setting label
         self.settingLabel = QLabel("Settings", self)
+
+        self.bundledFileGroup = SettingCardGroup(
+            "Bundled Files", self.scrollWidget
+        )
+        self.bundledFileCard = PrimaryPushSettingCard(
+            self.tr('Choose bundled .zip file'),
+            FIF.DOWNLOAD,
+            self.tr("Bundled .zip file"),
+            cfg.get(cfg.bundledZipFile),
+            self.bundledFileGroup
+        )
 
         # Groups
         self.malwareSafetyGroup = SettingCardGroup(
@@ -104,6 +115,8 @@ class SettingsInterface(ScrollArea):
         self.settingLabel.move(36, 30)
 
         # add cards to group
+        self.bundledFileGroup.addSettingCard(self.bundledFileCard)
+
         self.malwareSafetyGroup.addSettingCard(self.saferCard)
         self.malwareSafetyGroup.addSettingCard(self.malwareFolderCard)
 
@@ -116,6 +129,7 @@ class SettingsInterface(ScrollArea):
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
+        self.expandLayout.addWidget(self.bundledFileGroup)
         self.expandLayout.addWidget(self.malwareSafetyGroup)
         self.expandLayout.addWidget(self.scoopGroup)
         self.expandLayout.addWidget(self.bindiffGroup)
@@ -130,16 +144,45 @@ class SettingsInterface(ScrollArea):
             parent=self
         )
 
+    def __onBundledZipFileClicked(self):
+        bundled_file_path_result = QFileDialog.getOpenFileName(self, self.tr("Choose bundled file"), "./", "Zip files (*.zip)")
+
+        if not bundled_file_path_result or not bundled_file_path_result[0]:
+            return
+
+        bundled_file_path = bundled_file_path_result[0]
+
+        if cfg.get(cfg.bundledZipFile) == bundled_file_path:
+            return
+
+        cfg.set(cfg.bundledZipFile, bundled_file_path)
+        self.bundledFileCard.setContent(bundled_file_path)
+
     def __connectSignalToSlot(self):
         """ connect signal to slot """
         cfg.appRestartSig.connect(self.__showRestartTooltip)
 
         self.saferCard.checkedChanged.connect(self.malwareFolderCard.setEnabled)
+        self.bundledFileCard.clicked.connect(self.__onBundledZipFileClicked)
 
     def on_execution_started(self):
         # Disable all cards
+        self.bundledFileCard.setEnabled(False)
         self.saferCard.setEnabled(False)
         self.malwareFolderCard.setEnabled(False)
         self.keepCacheCard.setEnabled(False)
         self.makeBindiffAvailableCard.setEnabled(False)
         self.installZshCard.setEnabled(False)
+
+    def refresh_data(self):
+        self.bundledFileCard.setContent(cfg.bundledZipFile.value)
+        self.saferCard.setChecked(cfg.saferEnabled.value)
+        self.malwareFolderCard.setValue(cfg.malwareFolders.value)
+        self.keepCacheCard.setChecked(cfg.scoopKeepCache.value)
+        self.makeBindiffAvailableCard.setChecked(cfg.makeBindiffAvailable.value)
+        self.installZshCard.setChecked(cfg.installZsh.value)
+
+    # Call refresh_data every time this is opened
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.refresh_data()

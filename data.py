@@ -1,8 +1,13 @@
 import json
+import zipfile
 
 from natsort import natsorted, ns
 
 from app import utils
+
+from app.common.config import cfg
+
+from qfluentwidgets import MessageBox
 
 version = "1.0.0"
 
@@ -170,7 +175,7 @@ default_configuration = {
             ("codetrack", "CodeTrack", "A tool to monitor and analyze .NET application performance."),
             {
                 "type": "one_of",
-                "main": ("linqpad.json", "LINQPad", "A tool to easily write C# scripts to interact with .NET malware samples."),
+                "main": ("linqpad_pro.json", "LINQPad", "A tool to easily write C# scripts to interact with .NET malware samples."),
                 "alternative": ("linqpad", "LINQPad (Free)", "A tool to easily write C# scripts to interact with .NET malware samples."),
             },
             ("malware-analysis-bucket/extreme_dumper", "Extreme Dumper", "A tool to dump .NET assemblies from running .NET applications by hooking Assembly-related functions."),
@@ -230,8 +235,10 @@ default_configuration = {
         ],
 
         # Rust (Static)
-        # "rust",  # Relies on Visual C++ build tools
-        # "rustup",  # Relies on Visual C++ build tools
+        "Rust" : [
+            ("rust", "Rust", "A systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety."),  # Relies on Visual C++ build tools
+            ("rustup", "Rustup", "A tool to manage Rust installations."),  # Relies on Visual C++ build tools
+        ],
 
         # AutoIt (Static)
         "AutoIt (Static)": [
@@ -326,7 +333,9 @@ default_configuration = {
         ("js-deobfuscator", "js-deobfuscator", "A tool to deobfuscate JavaScript."),
         ("deobfuscator", "deobfuscator", "A tool to deobfuscate JavaScript."),
         ("git+https://github.com/Donaldduck8/malware-jail#npm-installable", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
-        ("frida", "Frida", "A dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers."),
+        # ("frida", "Frida", "A dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers."),  # Requires Visual C++ build tools, currently does not work
+
+        # ("webcrack", "WebCrack", "A tool to deobfuscate JavaScript."),  # Requires Visual C++ build tools, currently does not work
     ],
 
     "ida_plugins": [
@@ -687,9 +696,6 @@ default_configuration = {
 # Sort the entries of the configuration dictionary for OCD
 
 def key_lambda(x):
-    if isinstance(x, str):
-        return x
-
     if isinstance(x, (list, tuple)):
         return x[1]
 
@@ -699,6 +705,12 @@ def key_lambda(x):
     raise ValueError(f"Unknown type: {type(x)}")
 
 # Sort everything alphabetically
+default_configuration["pip"] = natsorted(default_configuration["pip"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["npm"] = natsorted(default_configuration["npm"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["ida_plugins"] = natsorted(default_configuration["ida_plugins"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["vscode_extensions"] = natsorted(default_configuration["vscode_extensions"], key=key_lambda, alg=ns.IGNORECASE)
+default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
+
 for key in default_configuration["scoop"]:
     if isinstance(default_configuration["scoop"][key], list):
         default_configuration["scoop"][key] = natsorted(default_configuration["scoop"][key], key=key_lambda, alg=ns.IGNORECASE)
@@ -707,12 +719,7 @@ for key in default_configuration["registry_changes"]:
     if isinstance(default_configuration["registry_changes"][key], list):
         default_configuration["registry_changes"][key] = natsorted(default_configuration["registry_changes"][key], key=lambda x: x["description"], alg=ns.IGNORECASE)
 
-default_configuration["pip"] = natsorted(default_configuration["pip"], key=key_lambda, alg=ns.IGNORECASE)
-default_configuration["npm"] = natsorted(default_configuration["npm"], key=key_lambda, alg=ns.IGNORECASE)
-default_configuration["ida_plugins"] = natsorted(default_configuration["ida_plugins"], key=key_lambda, alg=ns.IGNORECASE)
-default_configuration["vscode_extensions"] = natsorted(default_configuration["vscode_extensions"], key=key_lambda, alg=ns.IGNORECASE)
-default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
-
+# Run through JSON
 default_configuration = json.loads(json.dumps(default_configuration))
 
 # Keep track of the default configuration
@@ -724,9 +731,6 @@ def validate_bucket_item(item):
     return isinstance(item, tuple) and len(item) == 3 and all(isinstance(i, str) for i in item)
 
 def validate_item(item):
-    if isinstance(item, str):
-        return
-
     if isinstance(item, (list, tuple)):
         if len(item) != 3:
             raise RuntimeError(f"Item does not have precisely three entries (id, title, description): {item}")
@@ -734,7 +738,7 @@ def validate_item(item):
         if not all(isinstance(i, str) for i in item):
             raise RuntimeError(f"Item does not contain all strings: {item}")
 
-    if isinstance(item, dict):
+    elif isinstance(item, dict):
         if not all(k in item for k in ["type", "main", "alternative"]):
             raise RuntimeError(f"Item does not contain all required keys (type, main, alternative): {item}")
 
@@ -744,6 +748,8 @@ def validate_item(item):
         validate_item(item["main"])
         validate_item(item["alternative"])
 
+    else:
+        raise RuntimeError(f"Item is not a list, tuple, or dictionary: {item}")
 
 def validate_registry_change_item(item):
     if not isinstance(item, dict):
@@ -856,6 +862,81 @@ def validate_configuration(custom_config, default_config):  # pylint: disable=to
 # Validate the default configuration
 validate_configuration(default_configuration, default_configuration)
 
+def get_scoop_tool_name(item):
+    """ Get the name of a scoop tool. """
+    if isinstance(item, (list, tuple)):
+        return item[0]
+
+    raise ValueError(f"Unknown type: {type(item)}")
+
+def get_scoop_package_name_and_alternative(tool):
+    """ Get the name of a scoop tool. """
+    if isinstance(tool, (list, tuple)):
+        return (get_scoop_tool_name(tool), None)
+
+    if isinstance(tool, dict) and tool["type"] == "one_of":
+        return (get_scoop_tool_name(tool["main"]), get_scoop_tool_name(tool["alternative"]))
+
+    raise ValueError(f"Unknown type: {type(tool)}")
+
+def get_all_potentially_bundled_scoop_packages(configuration) -> list:
+    """ Get all scoop package names from the configuration. """
+    results = []
+
+    for _category, list_of_items in configuration["scoop"].items():
+        for i in list_of_items:
+            main_name, alternative_name = get_scoop_package_name_and_alternative(i)
+
+            if main_name.endswith(".json"):
+                results.append((main_name, alternative_name))
+
+    return results
+
+def validateConfiguration(parent, execution_data: dict) -> bool:
+    """ Validate which potentially bundled applications are actually present """
+    errors = []
+
+    # Go through execution_data["scoop"] and find any .json entries
+    potentially_bundled_applications = get_all_potentially_bundled_scoop_packages(execution_data)
+
+    # Get a list of all actually bundled applications
+    bundled_applications = []
+
+    if cfg.bundledZipFile.value:
+        with zipfile.ZipFile(cfg.bundledZipFile.value, 'r') as zip_ref:
+            bundled_applications = [x for x in zip_ref.namelist() if x.endswith(".json")]
+
+            # Ensure each bundled application has a corresponding .zip file
+            for bundled_application in bundled_applications:
+                zip_file = f"{bundled_application[:-5]}.zip"
+                if zip_file not in zip_ref.namelist():
+                    bundled_applications.remove(bundled_application)
+                    errors.append(f"JSON file '{bundled_application}' found, but no corresponding .zip file found: {zip_file}")
+
+    # Check if all bundled applications are actually in the configuration
+    for potentially_bundled_application in potentially_bundled_applications:
+        if potentially_bundled_application[0] not in bundled_applications:
+            if potentially_bundled_application[1] is not None:
+                errors.append(f"Bundled application '{potentially_bundled_application[0]}' not provided, installing '{potentially_bundled_application[1]}' instead.")
+            else:
+                errors.append(f"Bundled application '{potentially_bundled_application[0]}' not provided and no alternative registered, skipping.")
+
+    if len(errors) > 0:
+        # Show a dialog with the errors
+        title = 'Configuration Validation'
+
+        # Create nice looking content
+        content = f"""The configuration validation has produced the following messages:<ul>{'<li>' + '</li><li>'.join(errors) + '</li>'}</ul>Would you like to proceed anyway?"""
+        w = MessageBox(title, content, parent)
+        w.show()
+        if not w.exec():
+            w.close()
+            return False
+
+        w.close()
+
+    return True
+
 # Other tools that I would like to add:
 # qiling
 # PersistenceSniper
@@ -866,5 +947,3 @@ validate_configuration(default_configuration, default_configuration)
 # https://github.com/stong/maple-ir/tree/ubsan
 
 # How to deal with javascript malware that requires ActiveXObject?
-
-# ("webcrack", "WebCrack", "A tool to deobfuscate JavaScript."),  # LMAO THIS REQUIRES VISUAL C++ BUILD TOOLS WHAT THE FUCK ITS JAVASCRIPT???

@@ -1,12 +1,13 @@
 # coding: utf-8
+import zipfile
 from argparse import Namespace
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import Dialog
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import FluentWindow, NavigationItemPosition, SplashScreen
+from qfluentwidgets import (FluentWindow, MessageBox, NavigationItemPosition,
+                            SplashScreen)
 
 import data
 
@@ -103,24 +104,6 @@ class MainWindow(FluentWindow):
 
     def onExecute(self, _):
         if not self._executing:
-            # Show a confirmation pop-up
-            title = 'Start the installation?'
-            content = """The installation process may take upward of 60 minutes to complete. Would you like to proceed?"""
-            w = Dialog(title, content, self)
-            w.show()
-            w.setTitleBarVisible(False)
-
-            if not w.exec():
-                w.close()
-                return
-
-            w.close()
-
-            self._executing = True
-
-            # Disable all settings
-            self.settingsInterface.on_execution_started()
-
             interfaces = [
                 self.scoopInterface,
                 self.pipInterface,
@@ -153,6 +136,26 @@ class MainWindow(FluentWindow):
                     'make_bindiff_available': cfg.makeBindiffAvailable.value
                 }
             }
+
+            if not data.validateConfiguration(self, execution_data):
+                return
+
+            # Show a confirmation pop-up
+            title = 'Start the installation?'
+            content = """The installation process may take upward of 60 minutes to complete. Would you like to proceed?"""
+            w = MessageBox(title, content, self)
+            w.show()
+
+            if not w.exec():
+                w.close()
+                return
+
+            w.close()
+
+            self._executing = True
+
+            # Disable all settings
+            self.settingsInterface.on_execution_started()
 
             # Make all widgets non-editable
             for interface in interfaces:

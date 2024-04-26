@@ -109,7 +109,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 logger.warning(f"Failed to run command: {e.cmd}")
                 logger.warning(f"Output: {e.stderr}")
             else:
-                logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stderr.decode('utf-8')}")
+                logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stdout.decode('utf-8')}\n{e.stderr.decode('utf-8')}")
                 raise e
         except Exception as e:
             trace = traceback.format_exc()
@@ -268,6 +268,8 @@ def install_build_tools():
 
     run_shell_command(powershell_command=download_command)
     run_shell_command(command=install_command)
+
+    try_log_installation_step("Success: Installed Visual C++ Build Tools", InfoBarIcon.SUCCESS)
 
 
 def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, keep_cache: bool = False):
@@ -987,16 +989,15 @@ def extract_bundled_zip():
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
 
-    zip_name = "bluekit_bundled.zip"
-
-    bundled_zip_p = os.path.join(HERE, zip_name)
-
-    print("Looking", bundled_zip_p)
+    if cfg.bundledZipFile and os.path.isfile(cfg.bundledZipFile.value):
+        bundled_zip_p = cfg.bundledZipFile.value
+    else:
+        zip_name = "bluekit_bundled.zip"
+        bundled_zip_p = os.path.join(HERE, zip_name)
 
     # If it doesn't exist, oh no!
     if not os.path.isfile(bundled_zip_p):
         logger.warning("Bundled ZIP file not found, skipping...")
-
         try_log_installation_step("Info: No bundled .zip file found", InfoBarIcon.INFORMATION)
 
         return
@@ -1478,6 +1479,8 @@ def install_bluekit(data: dict, should_restart: bool = True):
     install_scoop()
     scoop_install_git()
     scoop_install_pwsh()
+
+    install_build_tools()
 
     scoop_add_buckets(data["scoop"]["Buckets"])
 
