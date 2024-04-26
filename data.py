@@ -570,6 +570,14 @@ default_configuration = {
                 "data": "1",
                 "type": "REG_SZ"
             },
+            {
+                "description": "Make distutils use Windows SDK to enable portable build tools",
+                "hive": "HKEY_CURRENT_USER",
+                "key": "Environment",
+                "value": "DISTUTILS_USE_SDK",
+                "data": "1",
+                "type": "REG_SZ"
+            },
         ]
     },
     "misc_files": {
