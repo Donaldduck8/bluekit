@@ -115,10 +115,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 raise e
         except Exception as e:
             trace = traceback.format_exc()
-            if failure_okay:
-                logger.warning(f"Failed to run command: {trace}")
-            else:
-                logger.error(f"Failed to run command: {trace}")
+            logger.warning(f"Failed to run command: {trace}")
+
+            if not failure_okay:
                 raise e
 
 
