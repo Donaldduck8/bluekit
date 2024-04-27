@@ -700,6 +700,7 @@ default_configuration = {
         ],
         "install_zsh_over_git": True,
         "make_bindiff_available": True,
+        "install_build_tools": True,
     }
 }
 
@@ -722,6 +723,9 @@ default_configuration["vscode_extensions"] = natsorted(default_configuration["vs
 default_configuration["git_repositories"] = natsorted(default_configuration["git_repositories"], key=key_lambda, alg=ns.IGNORECASE)
 
 for key in default_configuration["scoop"]:
+    # Preserve intended order for the Required key
+    if key == "Required":
+        continue
     if isinstance(default_configuration["scoop"][key], list):
         default_configuration["scoop"][key] = natsorted(default_configuration["scoop"][key], key=key_lambda, alg=ns.IGNORECASE)
 

@@ -105,11 +105,13 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
             break
 
         except subprocess.CalledProcessError as e:
-            if failure_okay:
-                logger.warning(f"Failed to run command: {e.cmd}")
-                logger.warning(f"Output: {e.stderr}")
-            else:
-                logger.error(f"Failed to run command: {e.cmd}\nOutput: {e.stdout.decode('utf-8')}\n{e.stderr.decode('utf-8')}")
+            logger.warning(f"Failed to run command: {e.cmd}")
+            if e.stdout:
+                logger.warning(f"Output: {e.stdout.decode('utf-8')}")
+            if e.stderr:
+                logger.warning(f"Error: {e.stderr.decode('utf-8')}")
+
+            if not failure_okay:
                 raise e
         except Exception as e:
             trace = traceback.format_exc()
@@ -1480,12 +1482,18 @@ def install_bluekit(data: dict, should_restart: bool = True):
     scoop_install_git()
     scoop_install_pwsh()
 
+    if cfg.installBuildTools.value:
+        install_build_tools()
+
+    # Registry changes early in case they are relevant during installation
+    make_registry_changes(data["registry_changes"])
+
     scoop_add_buckets(data["scoop"]["Buckets"])
 
-    if cfg.scoopKeepCache.value:
-        scoop_install_tooling(data["scoop"], keep_cache=True)
-    else:
-        scoop_install_tooling(data["scoop"])
+    # Required packages first, in case others depend on them
+    if "Required" in data["scoop"]:
+        scoop_install_tooling({"Required": data["scoop"]["Required"]}, keep_cache=cfg.scoopKeepCache.value)
+    scoop_install_tooling(data["scoop"], keep_cache=True)
 
     pip_install_packages(data["pip"])
     npm_install_libraries(data["npm"])
@@ -1493,7 +1501,6 @@ def install_bluekit(data: dict, should_restart: bool = True):
     set_file_type_associations(data["file_type_associations"])
     pin_apps_to_taskbar(data["taskbar_pins"])
     clone_git_repositories(data["git_repositories"])
-    make_registry_changes(data["registry_changes"])
     install_vscode_extensions(data["vscode_extensions"])
     install_miscellaneous_files(data["misc_files"])
 

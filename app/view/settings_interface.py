@@ -42,6 +42,17 @@ class SettingsInterface(ScrollArea):
             self.bundledFileGroup
         )
 
+        self.installBuildToolsGroup = SettingCardGroup(
+            "Visual C++ Build Tools", self.scrollWidget
+        )
+        self.installBuildToolsCard = SwitchSettingCard(
+            FIF.LIBRARY,
+            "Install Visual C++ Build Tools",
+            "Allows for the installation of Rust, netifaces and other packages that require the Visual C++ Build Tools.",
+            cfg.installBuildTools,
+            self.installBuildToolsGroup
+        )
+
         # Groups
         self.malwareSafetyGroup = SettingCardGroup(
             "Malware Safety", self.scrollWidget)
@@ -117,6 +128,8 @@ class SettingsInterface(ScrollArea):
         # add cards to group
         self.bundledFileGroup.addSettingCard(self.bundledFileCard)
 
+        self.installBuildToolsGroup.addSettingCard(self.installBuildToolsCard)
+
         self.malwareSafetyGroup.addSettingCard(self.saferCard)
         self.malwareSafetyGroup.addSettingCard(self.malwareFolderCard)
 
@@ -130,6 +143,7 @@ class SettingsInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
         self.expandLayout.addWidget(self.bundledFileGroup)
+        self.expandLayout.addWidget(self.installBuildToolsGroup)
         self.expandLayout.addWidget(self.malwareSafetyGroup)
         self.expandLayout.addWidget(self.scoopGroup)
         self.expandLayout.addWidget(self.bindiffGroup)
@@ -168,6 +182,7 @@ class SettingsInterface(ScrollArea):
     def on_execution_started(self):
         # Disable all cards
         self.bundledFileCard.setEnabled(False)
+        self.installBuildToolsCard.setEnabled(False)
         self.saferCard.setEnabled(False)
         self.malwareFolderCard.setEnabled(False)
         self.keepCacheCard.setEnabled(False)
@@ -176,6 +191,7 @@ class SettingsInterface(ScrollArea):
 
     def refresh_data(self):
         self.bundledFileCard.setContent(cfg.bundledZipFile.value)
+        self.installBuildToolsCard.setChecked(cfg.installBuildTools.value)
         self.saferCard.setChecked(cfg.saferEnabled.value)
         self.malwareFolderCard.setValue(cfg.malwareFolders.value)
         self.keepCacheCard.setChecked(cfg.scoopKeepCache.value)
