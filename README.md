@@ -67,7 +67,7 @@ Bluekit supports bundling files alongside the installer in a specially construct
   ├───│• ida_pro.json        │   │                                             
   │   ╰──────────────────────╯   │                                             
   │   ╭──────────────────────╮   │                                             
-  ╰───│• scoop_cache.zip     ●───╯                                             
+  ╰───│• scoop_cache/        ●───╯                                             
       ╰──────────────────────╯                                                 
 ```
 
@@ -132,9 +132,9 @@ It's recommended to pair licensed applications with an alternative free applicat
 
 ### Cache
 
-In order to accelerate multiple installations of Bluekit, you can provide a file named ``scoop_cache.zip`` inside your bundled `.zip` file. This file will allow Scoop to avoid downloading the same programs repeatedly. 
+In order to accelerate multiple installations of Bluekit, you can provide a folder named ``scoop_cache`` inside your bundled `.zip` file. This folder will allow Scoop to avoid downloading the same programs repeatedly. 
 
-This file can be created by installing Bluekit with the `--keep-cache` argument (or enabling the corresponding option in the settings) and zipping up the contents of the `%USERPROFILE%\scoop\cache` folder after your first installation.
+This folder can be created by installing Bluekit with the `--keep-cache` argument (or enabling the corresponding option in the settings) and copying the contents of the `%USERPROFILE%\scoop\cache` folder after your first installation.
 
 ## FAQ
 
