@@ -734,27 +734,29 @@ def extract_scoop_cache(cache_name: str = "scoop_cache") -> bool:
     Extracts a .zip file to the Scoop cache directory. The .zip file is expected to be in the %LOCALAPPDATA%\\Temp directory.
 
     Args:
-        cache_name (str): The name of the cache ZIP file to extract. Defaults to "scoop_cache".
+        cache_name (str): The name of the cache folder to look for. Defaults to "scoop_cache".
     """
     logger.info("Extract bundled Scoop cache, if available")
 
     appdata_temp_p = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
-    cache_zip_p = os.path.join(appdata_temp_p, f"{cache_name}.zip")
+    cache_source_folder_p = os.path.join(appdata_temp_p, cache_name)
 
-    if not os.path.isfile(cache_zip_p):
-        logger.warning("Cache ZIP file not found, skipping...")
+    if not os.path.isdir(cache_source_folder_p):
+        logger.warning("Cache folder not found, skipping...")
 
         try_log_installation_step("Info: No Scoop cache found", InfoBarIcon.INFORMATION)
 
         return
 
-    # Extract the ZIP file to the cache directory
+    # Copy all files in the cache source folder to the cache directory
     cache_dir = utils.resolve_path(r"%USERPROFILE%\scoop\cache")
     os.makedirs(cache_dir, exist_ok=True)
 
-    utils.extract_zip(cache_zip_p, cache_dir)
+    for root, _dirs, files in os.walk(cache_source_folder_p):
+        for file_to_copy in files:
+            shutil.copy(os.path.join(root, file_to_copy), cache_dir)
 
-    try_log_installation_step("Success: Extracted Scoop cache", InfoBarIcon.SUCCESS)
+    try_log_installation_step("Success: Copied Scoop cache", InfoBarIcon.SUCCESS)
 
 
 def install_zsh_over_git():

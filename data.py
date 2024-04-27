@@ -32,7 +32,6 @@ default_configuration = {
             ("pwsh", "PowerShell", "A task automation and configuration management framework."),
             ("python27", "Python 2.7", "The newest Python 2.x version available, required for Java bytecode editing."),
             ("python311", "Python 3.11", "The newest Python version currently compatible with IDA Pro."),
-            ("malware-analysis-bucket/portable_build_tools", "Portable Build Tools", "A portable version of Visual C++ build tools."),
         ],
 
         "Basics": [
