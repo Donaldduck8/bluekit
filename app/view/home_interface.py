@@ -62,7 +62,7 @@ class BannerWidget(QWidget):
         painter.setPen(Qt.NoPen)
 
         # Scale the pixmap to a specific width while keeping the aspect ratio
-        pixmap = self.banner.scaledToWidth(self.width() * 0.82, Qt.SmoothTransformation)
+        pixmap = self.banner.scaledToWidth(int(self.width() * 0.82), Qt.SmoothTransformation)
 
         # Calculate the top-left position to center the pixmap in the widget
         x = (self.width() - pixmap.width()) / 2
@@ -76,7 +76,7 @@ class BannerWidget(QWidget):
         painter.setClipPath(path)
 
         # Draw the pixmap at the calculated position within the clipped region
-        painter.drawPixmap(x, y, pixmap)
+        painter.drawPixmap(int(x), int(y), pixmap)
 
 
 class HomeInterface(ScrollArea):
