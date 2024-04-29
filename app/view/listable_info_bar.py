@@ -33,6 +33,8 @@ class InfoIconWidget(QWidget):
         else:
             drawIcon(self.icon, painter, rect, indexes=[0], fill=themeColor().name())
 
+        painter.end()
+
 
 class InfoBar(QFrame):
     """ Information bar """
@@ -246,6 +248,8 @@ class InfoBar(QFrame):
 
         rect = self.rect().adjusted(1, 1, -1, -1)
         painter.drawRoundedRect(rect, 6, 6)
+
+        painter.end()
 
     def resizeEvent(self, a0) -> None:
         super().resizeEvent(a0)

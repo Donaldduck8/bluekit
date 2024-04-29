@@ -77,6 +77,7 @@ class BannerWidget(QWidget):
 
         # Draw the pixmap at the calculated position within the clipped region
         painter.drawPixmap(int(x), int(y), pixmap)
+        painter.end()
 
 
 class HomeInterface(ScrollArea):

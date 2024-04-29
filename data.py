@@ -957,3 +957,5 @@ def validateConfiguration(parent, execution_data: dict) -> bool:
 # https://github.com/stong/maple-ir/tree/ubsan
 
 # How to deal with javascript malware that requires ActiveXObject?
+
+# Narumii
