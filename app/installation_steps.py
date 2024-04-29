@@ -7,6 +7,7 @@ install Git using Scoop, add Scoop buckets, install Python packages using pip, i
 and install tools using Scoop package manager.
 """
 
+from collections import OrderedDict
 import ctypes
 import hashlib
 import json
@@ -63,7 +64,86 @@ def try_log_installation_step(message: str, icon: InfoBarIcon = InfoBarIcon.INFO
         pass
 
 
-def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3) -> None:
+def get_registry_environment(key_handle, sub_key):
+    """Retrieve environment variables from Windows Registry."""
+    environment = {}
+    try:
+        with winreg.OpenKey(key_handle, sub_key) as key:
+            i = 0
+            while True:
+                try:
+                    name, value, _ = winreg.EnumValue(key, i)
+                    environment[name] = value
+                    i += 1
+                except WindowsError:
+                    break
+    except WindowsError as e:
+        print(f"Failed to open registry key: {e}")
+    return environment
+
+
+def update_environment_from_registry():
+    # Get system and user environment variables from registry
+    # system_env = get_registry_environment(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment")
+    user_env = get_registry_environment(winreg.HKEY_CURRENT_USER, r"Environment")
+
+    for k,v in user_env.items():
+        if isinstance(v, list):
+            v_new = []
+
+            for x in v:
+                if utils.resolve_path(x) is not None:
+                    v_new.append(utils.resolve_path(x))
+                else:
+                    v_new.append(x)
+
+        else:
+            if utils.resolve_path(v) is not None:
+                v_new = utils.resolve_path(v)
+            else:
+                v_new = v
+
+        v_str = ";".join(v) if isinstance(v, list) else v
+
+        existing = os.getenv(k)
+
+        if existing is None:
+            new_value = v
+        else:
+            new_value = f"{existing};{v_str}"
+
+        # Deduplicate new value
+        new_value = ";".join(list(OrderedDict.fromkeys(new_value.split(";"))))
+
+        os.environ[k] = new_value
+
+    # Go through each item again and if the item is actually just another environment variable, resolve it
+    for k,v in os.environ.items():
+        v_items = v.split(";")
+        v_items_new = []
+
+        for v_item in v_items:
+            if v_item.startswith("%") and v_item.endswith("%") and v_item[1:-1] in os.environ:
+                v_items_new.append(os.environ[v_item[1:-1]])
+            else:
+                v_items_new.append(v_item)
+
+        os.environ[k] = ";".join(v_items_new)
+
+    # Make TMP and TEMP each a single path
+    if "TMP" in os.environ:
+        os.environ["TMP"] = os.environ["TMP"].split(";")[0]
+
+    if "TEMP" in os.environ:
+        os.environ["TEMP"] = os.environ["TEMP"].split(";")[0]
+
+    # Run a single PowerShell script for all environment variables
+    commands = [f'[Environment]::SetEnvironmentVariable("{k}", "{os.environ[k]}", "Machine")' for k, _ in user_env.items()]
+    commands_joined = ";\n".join(commands)
+    subprocess.run(["powershell", "-Command", "$(" + commands_joined + ")"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3, needs_refresh: bool = False) -> None:
     """
     Executes a shell command or a PowerShell command.
 
@@ -82,15 +162,16 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         try:
             if command:
                 logger.info(f"Shell: '{command}'")
-                p = subprocess.run(command.split(" "), stdout=subprocess.PIPE, check=True)
+                p = subprocess.run(command.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
 
             elif powershell_command:
                 logger.info(f"PowerShell: '{powershell_command}'")
-                p = subprocess.run(["powershell", "-Command", "$(" + powershell_command + ")"], check=True, stdout=subprocess.PIPE)
+                p = subprocess.run([r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe", "-Command", "$(" + powershell_command + ")"],
+                                   check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             elif command_parts:
                 logger.info(f"Shell: '{json.dumps(command_parts)}'")
-                p = subprocess.run(command_parts, check=True, stdout=subprocess.PIPE)
+                p = subprocess.run(command_parts, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             if p.returncode != 0:
                 raise subprocess.CalledProcessError(p.returncode, p.args, p.stdout, p.stderr)
@@ -101,6 +182,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
 
             if len(stdout) > 0:
                 logger.info(stdout)
+
+            if len(stderr := p.stderr.decode("utf-8", errors="replace").strip()) > 0:
+                logger.info(stderr)
 
             break
 
@@ -119,6 +203,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
 
             if not failure_okay:
                 raise e
+
+    if needs_refresh:
+        update_environment_from_registry()
 
 
 def install_scoop() -> None:
@@ -143,7 +230,7 @@ def install_scoop() -> None:
     {install_script_p} -RunAsAdmin
     """
 
-    run_shell_command(powershell_command=command)
+    run_shell_command(powershell_command=command, needs_refresh=True)
 
     try_log_installation_step("Success: Installed Scoop", InfoBarIcon.SUCCESS)
 
@@ -156,7 +243,7 @@ def scoop_install_git() -> None:
     """
     logger.info("Scoop: Install Git")
 
-    run_shell_command(command="scoop.cmd install git")
+    run_shell_command(command="scoop.cmd install git", needs_refresh=True)
 
     try_log_installation_step("Success: Installed Git", InfoBarIcon.SUCCESS)
 
@@ -294,7 +381,7 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, keep_cache:
             if not extract_and_install_application(tool_name):
                 return False
         else:
-            run_shell_command(command=f"scoop.cmd install {tool_name}")
+            run_shell_command(command=f"scoop.cmd install {tool_name}", needs_refresh=True)
 
     except Exception:
         traceback.print_exc()
@@ -1016,14 +1103,8 @@ def remove_worthless_python_exes():
     """
     logger.info("Remove AppAlias Python executables")
 
-    python_exe_p = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\WindowsApps\python.exe")
-    python3_exe_p = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\WindowsApps\python3.exe")
-
-    if os.path.isfile(python_exe_p):
-        run_shell_command(powershell_command=f"Remove-Item {python_exe_p}", failure_okay=True)
-
-    if os.path.isfile(python3_exe_p):
-        run_shell_command(powershell_command=f"Remove-Item {python3_exe_p}", failure_okay=True)
+    # Remove the entire folder at %USERPROFILE%\AppData\Local\Microsoft\WindowsApps
+    run_shell_command(powershell_command='Remove-Item -Path $env:USERPROFILE\\AppData\\Local\\Microsoft\\WindowsApps -Recurse -Force', failure_okay=True)
 
     try_log_installation_step("Success: Removed AppAlias Python executables", InfoBarIcon.SUCCESS)
 
@@ -1131,7 +1212,7 @@ def ida_py_switch(python_dll_path: str):
     try_log_installation_step("Success: Ran IDAPySwitch", InfoBarIcon.SUCCESS)
 
 
-def add_paths_to_path(paths: List[str]) -> bool:
+def add_paths_to_path(paths: List[str], at_start: bool = False) -> bool:
     """
     Adds a list of paths to the PATH environment variable.
 
@@ -1150,13 +1231,17 @@ def add_paths_to_path(paths: List[str]) -> bool:
     for p in paths:
         if p not in path:
             added_entries = True
-            path += f";{p}"
+
+            if at_start:
+                path = f"{p};{path}"
+            else:
+                path += f";{p}"
 
     os.environ["PATH"] = path
 
     # Save this to the system PATH
     if added_entries:
-        run_shell_command(powershell_command=f'[Environment]::SetEnvironmentVariable("PATH", "{path}", "User")')
+        run_shell_command(powershell_command=f'[Environment]::SetEnvironmentVariable("PATH", "{path}", "Machine")')
 
     return added_entries
 
@@ -1167,7 +1252,7 @@ def scoop_install_pwsh():
     """
     logger.info("Install PowerShell Core using Scoop")
 
-    run_shell_command(powershell_command="scoop.cmd install pwsh")
+    run_shell_command(powershell_command="scoop.cmd install pwsh", needs_refresh=True)
 
     try_log_installation_step("Success: Installed PowerShell 7", InfoBarIcon.SUCCESS)
 
@@ -1358,6 +1443,10 @@ def install_miscellaneous_files(data: dict):
                 else:
                     run_shell_command(command=f"curl.exe -L -o {destination} {url}", failure_okay=True)
 
+                # Extract the file if it's a .zip
+                if destination.endswith(".zip"):
+                    utils.extract_zip(destination, target_folder)
+
             try_log_installation_step(f"Success: Installed {description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
 
@@ -1483,9 +1572,6 @@ def install_bluekit(data: dict, should_restart: bool = True):
     scoop_install_git()
     scoop_install_pwsh()
 
-    if cfg.installBuildTools.value:
-        install_build_tools()
-
     # Registry changes early in case they are relevant during installation
     make_registry_changes(data["registry_changes"])
 
@@ -1494,6 +1580,10 @@ def install_bluekit(data: dict, should_restart: bool = True):
     # Required packages first, in case others depend on them
     if "Required" in data["scoop"]:
         scoop_install_tooling({"Required": data["scoop"]["Required"]}, keep_cache=cfg.scoopKeepCache.value)
+
+    # Add MSVC_BIN and SDK_BIN to path because PortableBuildTools is inexplicably unstable
+    add_paths_to_path([utils.resolve_path("%MSVC_BIN%"), utils.resolve_path("%SDK_BIN%")], at_start=True)
+
     scoop_install_tooling(data["scoop"], keep_cache=True)
 
     pip_install_packages(data["pip"])

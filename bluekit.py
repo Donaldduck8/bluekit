@@ -59,9 +59,7 @@ def run_gui():
 def ensure_suitable_environment():
     # If we are frozen
     if getattr(sys, "frozen", False):
-        # Add the paths to the PATH environment variable
-        installation_steps.add_paths_to_path(data.required_paths)
-
+        # Check if we are running as admin
         if not utils.is_admin():
             # Not running as admin, try to get admin privileges
             ctypes.windll.shell32.ShellExecuteW(

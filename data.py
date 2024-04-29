@@ -4,18 +4,9 @@ import zipfile
 from natsort import natsorted, ns
 from qfluentwidgets import MessageBox
 
-from app import utils
 from app.common.config import cfg
 
 version = "1.0.0"
-
-required_paths = [
-    utils.resolve_path("%USERPROFILE%\\scoop\\shims"),
-    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current"),
-    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\Scripts"),
-    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin"),
-    utils.resolve_path("%USERPROFILE%\\scoop\\apps\\nodejs\\current")
-]
 
 default_configuration = {
     "scoop": {
@@ -30,8 +21,12 @@ default_configuration = {
         "Required": [
             ("git", "Git", "A distributed version control system."),
             ("pwsh", "PowerShell", "A task automation and configuration management framework."),
-            ("python27", "Python 2.7", "The newest Python 2.x version available, required for Java bytecode editing."),
+
+            # No-pollute version because Python2 is only used for Krakatoa
+            ("malware-analysis-bucket/python27-no-pollute", "Python 2.7", "The newest Python 2.x version available, required for Java bytecode editing."),
+
             ("python311", "Python 3.11", "The newest Python version currently compatible with IDA Pro."),
+            ("malware-analysis-bucket/portable_build_tools", "Portable Build Tools", "A portable version of Visual C++ build tools."),
         ],
 
         "Basics": [
@@ -47,7 +42,10 @@ default_configuration = {
             ("malware-analysis-bucket/glazewm_extra", "Glaze Window Manager", "A tiling window manager for Windows."),
             ("setuserfta", "SetUserFTA", "A tool to change the default program associated with a file type."),
             ("upx", "UPX", "A free, portable, extendable, high-performance executable packer for several executable formats."),
-            ("openssl-light", "OpenSSL (Light)", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
+
+            # No pollute version because otherwise, x64dbg plugin manager will mysteriously fail to install.
+            ("malware-analysis-bucket/openssl-light-no-pollute", "OpenSSL", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
+
             ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
             ("malware-analysis-bucket/pycdc", "Decompyle++", "A C++ python bytecode disassembler and decompiler."),
             ("meld", "Meld", "A visual diff and merge tool., useful for bloated script files."),
@@ -234,7 +232,6 @@ default_configuration = {
 
         # Rust (Static)
         "Rust" : [
-            ("rust", "Rust", "A systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety."),  # Relies on Visual C++ build tools
             ("rustup", "Rustup", "A tool to manage Rust installations."),  # Relies on Visual C++ build tools
         ],
 
@@ -318,6 +315,9 @@ default_configuration = {
 
         # Fuxnet
         ("netifaces", "netifaces", "A package to query network interfaces."),
+
+        # Ghidrathon
+        ("jep", "Jep", "A Python-Java bridge."),
     ],
 
     "npm": [
@@ -352,9 +352,7 @@ default_configuration = {
     "vscode_extensions": [
         ("ms-python.debugpy", "Python Debug", "A Python debugger for Visual Studio Code."),
         ("ms-python.python", "Python", "A Python language server for Visual Studio Code."),
-        ("ms-python.vscode-pylance", "Pylance", "A Python language server for Visual Studio Code."),
         ("infosec-intern.yara", "Yara", "A YARA language server for Visual Studio Code."),
-        ("ms-toolsai.jupyter", "Jupyter", "A Jupyter extension for Visual Studio Code."),
         ("akamud.vscode-theme-onedark", "One Dark Pro", "A dark theme for Visual Studio Code."),
         ("ms-vscode.powershell", "PowerShell", "A PowerShell extension for Visual Studio Code."),
         ("vscjava.vscode-java-pack", "Java Extension Pack", "A collection of popular Java extensions for Visual Studio Code."),
