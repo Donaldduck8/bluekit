@@ -113,7 +113,6 @@ def main():
     cfg.malwareFolders.value = [utils.resolve_path(x) for x in data.configuration['config']['malware_folders']]
     cfg.installZsh.value = data.configuration['config']['install_zsh_over_git']
     cfg.makeBindiffAvailable.value = data.configuration['config']['make_bindiff_available']
-    cfg.installBuildTools.value = data.configuration['config']['install_build_tools']
 
     if args and args.keep_cache:
         cfg.scoopKeepCache.value = args.keep_cache

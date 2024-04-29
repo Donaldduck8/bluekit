@@ -697,7 +697,6 @@ default_configuration = {
         ],
         "install_zsh_over_git": True,
         "make_bindiff_available": True,
-        "install_build_tools": True,
     }
 }
 
