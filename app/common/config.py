@@ -42,8 +42,6 @@ class Config(QConfig):
 
     bundledZipFile = ConfigItem("BundledFiles", "BundledZipFile", "", ZipFileValidator())
 
-    installBuildTools = ConfigItem("BuildTools", "InstallBuildTools", True, BoolValidator())
-
 
 HELP_URL = "https://github.com/Donaldduck8/bluekit"
 BUCKET_URL = "https://github.com/Donaldduck8/malware-analysis-bucket"
