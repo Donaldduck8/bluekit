@@ -75,9 +75,9 @@ def get_registry_environment(key_handle, sub_key):
                     name, value, _ = winreg.EnumValue(key, i)
                     environment[name] = value
                     i += 1
-                except WindowsError:
+                except Exception:
                     break
-    except WindowsError as e:
+    except Exception as e:
         print(f"Failed to open registry key: {e}")
     return environment
 
