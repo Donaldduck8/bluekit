@@ -8,7 +8,7 @@ from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (FluentWindow, MessageBox, NavigationItemPosition,
                             SplashScreen)
 
-import app.data as data
+from app import data
 
 from .. import utils
 from ..common import resource

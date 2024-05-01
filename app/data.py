@@ -1,4 +1,3 @@
-import json
 import winreg
 
 from dataclasses import dataclass
@@ -138,13 +137,13 @@ class RegistryChange():
         # Validate hive and type
         if hive not in ["HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER", "HKEY_LOCAL_MACHINE", "HKEY_USERS", "HKEY_CURRENT_CONFIG"]:
             raise ValueError(f"Invalid hive: {hive}")
-        
+
         # Convert hive to winreg constant
         self.hive = getattr(winreg, hive)
 
         if type not in ["REG_SZ", "REG_EXPAND_SZ", "REG_MULTI_SZ", "REG_DWORD", "REG_QWORD", "REG_BINARY"]:
             raise ValueError(f"Invalid type: {type}")
-        
+
         # Convert type to winreg constant
         self.type = getattr(winreg, type)
 
@@ -211,22 +210,22 @@ class Configuration():
 
         if ida_plugins is not None:
             self.ida_plugins = IdaPlugins(**ida_plugins)
-        
+
         if vscode_extensions is not None:
             self.vscode_extensions = VscodeExtensions(**vscode_extensions)
-        
+
         if taskbar_pins is not None:
             self.taskbar_pins = TaskbarPins(**taskbar_pins)
-        
+
         if git_repositories is not None:
             self.git_repositories = GitRepositories(**git_repositories)
-        
+
         if file_type_associations is not None:
             self.file_type_associations = FileTypeAssociations(**file_type_associations)
-        
+
         if registry_changes is not None:
             self.registry_changes = RegistryChanges(**registry_changes)
-        
+
         if misc_files is not None:
             self.misc_files = MiscFiles(**misc_files)
 
@@ -275,7 +274,7 @@ default_configuration = {
                 ("upx", "UPX", "A free, portable, extendable, high-performance executable packer for several executable formats."),
 
                 # No pollute version because otherwise, x64dbg plugin manager will mysteriously fail to install.
-                ("malware-analysis-bucket/openssl-light-no-pollute", "OpenSSL", "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."),
+                ("malware-analysis-bucket/openssl-light-no-pollute", "OpenSSL", "A robust, commercial-grade, and full-featured toolkit for TLS and SSL."),
 
                 ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
                 ("malware-analysis-bucket/pycdc", "Decompyle++", "A C++ python bytecode disassembler and decompiler."),
@@ -687,7 +686,7 @@ default_configuration = {
                     "war",
                     "ear",
                 ]
-            },  
+            },
         }
     },
 

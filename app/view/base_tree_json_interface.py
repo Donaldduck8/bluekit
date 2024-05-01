@@ -1,7 +1,7 @@
 # coding:utf-8
-import jsonpickle
 import traceback
 
+import jsonpickle
 import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox, QStackedWidget, QVBoxLayout, QWidget

@@ -88,8 +88,8 @@ def load_config(config_p: str):
         custom_data = json.loads(config_file.read())
 
     # Perform validation on the custom data
-    for top_level_keys in custom_data.keys():
-        if top_level_keys not in data.default_configuration.keys():
+    for top_level_keys in custom_data:
+        if top_level_keys not in data.default_configuration:
             raise KeyError(f"Unrecognized key in custom configuration: {top_level_keys}")
 
     data.configuration = data.Configuration(**custom_data)
