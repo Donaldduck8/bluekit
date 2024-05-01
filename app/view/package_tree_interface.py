@@ -1,5 +1,5 @@
 # coding:utf-8
-from dataclasses import dataclass, fields
+from dataclasses import fields
 
 from PyQt5.QtWidgets import QTreeWidgetItem
 
