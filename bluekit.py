@@ -99,9 +99,15 @@ def main():
     ensure_suitable_environment()
 
     if args.config:
+        if not os.path.isabs(args.config):
+            args.config = Path.cwd() / args.config
+
         load_config(args.config)
 
     if args.bundle:
+        if not os.path.isabs(args.bundle):
+            args.bundle = Path.cwd() / args.bundle
+
         if not os.path.isfile(args.bundle):
             raise FileNotFoundError(f"Bundled .zip file not found: {args.bundle}")
 
