@@ -19,7 +19,7 @@
             [
                 "java",
                 "Java",
-                "Java Development Kit and Java Runtime Environment."
+                "Java Development Kit and Java Runtime Environment." 
             ],
             [
                 "malware-analysis-bucket https://github.com/Donaldduck8/malware-analysis-bucket",
@@ -752,9 +752,10 @@
                 "A set of tools to analyze Microsoft OLE2 files."
             ],
             [
-                "git+https://github.com/Donaldduck8/rustbinsign pipx",
+                "git+https://github.com/Donaldduck8/rustbinsign",
                 "RustBinSign",
-                "A tool to generate FLIRT / SIGKIT signatures from Rust binaries."
+                "A tool to generate FLIRT / SIGKIT signatures from Rust binaries.",
+                "pipx"
             ],
             [
                 "git+https://github.com/volexity/chaskey-lts",
@@ -772,19 +773,22 @@
                 "A theorem prover from Microsoft Research."
             ],
             [
-                "uncompyle6 pipx",
                 "uncompyle6",
-                "A Python bytecode decompiler."
+                "uncompyle6",
+                "A Python bytecode decompiler.",
+                "pipx"
             ],
             [
-                "decompyle3 pipx",
                 "decompyle3",
-                "A Python bytecode decompiler."
+                "decompyle3",
+                "A Python bytecode decompiler.",
+                "pipx"
             ],
             [
-                "git+https://github.com/Donaldduck8/deobshell@pip-installable pipx",
+                "git+https://github.com/Donaldduck8/deobshell@pip-installable",
                 "deobshell",
-                "A tool to statically deobfuscate PowerShell scripts."
+                "A tool to statically deobfuscate PowerShell scripts.",
+                "pipx"
             ],
             [
                 "flare-capa",
@@ -792,9 +796,10 @@
                 "A tool to identify capabilities in executable files."
             ],
             [
-                "git+https://github.com/mandiant/speakeasy pipx",
+                "git+https://github.com/mandiant/speakeasy",
                 "Speakeasy",
-                "A comprehensive shellcode emulator and analysis toolkit."
+                "A comprehensive shellcode emulator and analysis toolkit.",
+                "pipx"
             ],
             [
                 "frida-tools",
