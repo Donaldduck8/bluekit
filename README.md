@@ -112,22 +112,19 @@ For example, a manifest for IDA Pro would look like this:
 }
 ```
 
-It's recommended to pair licensed applications with an alternative free application as part of a `one_of` entry inside your configuration. This way, other people are still able to use the same configuration, even if they don't own a copy of the licensed application:
+It's recommended to pair licensed applications with an alternative free application inside your configuration. This way, other people are still able to use the same configuration, even if they don't own a copy of the licensed application:
 
 ```javascript
 {
-    "type": "one_of",
-    "main": [
-        "binary_ninja.json",
-        "Binary Ninja",
-        "A reverse engineering platform."
-    ],
+    "id": "ida_pro.json",
+    "name": "IDA Pro",
+    "description": "A disassembler and debugger for analyzing binary files.",
     "alternative": [
-        "binary_ninja_free",
-        "Binary Ninja Free",
-        "A free version of Binary Ninja."
+        "ida-free",
+        "IDA Free",
+        "A free version of IDA Pro."
     ]
-}
+},
 ```
 
 ### Cache
