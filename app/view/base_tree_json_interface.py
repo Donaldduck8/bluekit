@@ -1,5 +1,5 @@
 # coding:utf-8
-import json
+import jsonpickle
 import traceback
 
 import PyQt5
@@ -24,7 +24,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
                 margin-top: 8px;
             }
         """)
-        self.data = json.loads(json.dumps(data, sort_keys=True))
+        self.data = data
         self.resize(800, 600)
         self.setObjectName('widgetInterface' + str(id(self)))
 
@@ -45,7 +45,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
         self.json_edit = TextEdit(parent=self)
         self.json_edit.setContentsMargins(0, 0, 0, 0)
         self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
-        self.json_edit.setText(json.dumps(self.data, indent=8, sort_keys=True))
+        self.json_edit.setText(jsonpickle.dumps(self.data, indent=8))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
         self.json_save_button = PrimaryPushButton(parent=self, text='Save')
 
@@ -86,7 +86,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
 
     def update_data_from_json(self):
         try:
-            data = json.loads(self.json_edit.toPlainText())
+            data = jsonpickle.loads(self.json_edit.toPlainText())
             self.custom_view.update_data(data)
             InfoBar.success(
                 title='Success!',

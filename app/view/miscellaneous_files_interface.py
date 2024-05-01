@@ -1,36 +1,29 @@
 # coding:utf-8
 from PyQt5.QtWidgets import QTreeWidgetItem
 
+from ..data import MiscFiles
 from .base_tree_frame import BaseTreeFrame
 from .base_tree_json_interface import BaseTreeAndJsonEditWidget
 
 
 class MiscFilesTreeFrame(BaseTreeFrame):
-    def __init__(self, parent=None, data: dict = None):
+    data: MiscFiles
+
+    def __init__(self, parent=None, data: MiscFiles = None):
         headers = ["Name", "Location"]
         super().__init__(parent, headers, data)
         self.update_data(data)
 
     def populate_tree(self):
-        if isinstance(self.data, dict):
-            for category, configs in self.data.items():
-                category_item = QTreeWidgetItem([category])  # Create a category item
-                self.populate_tree_item(category_item, configs)  # Populate this category with its configs
-                self.tree.addTopLevelItem(category_item)  # Add category to tree
-        self.tree.expandAll()
+        for category, value in self.data.files.items():
+            category_item = QTreeWidgetItem([category])
+            self.tree.addTopLevelItem(category_item)
 
-    def populate_tree_item(self, parent_item, items):
-        for item in items:
-            if isinstance(item, dict):
-                # Use the description as the main label and target as a sublabel or tooltip
-                config_item = QTreeWidgetItem([item['description'], item['target']])
-                parent_item.addChild(config_item)  # Add the config item under the category
+            for file in value:
+                for source in file.sources:
+                    entry_item = QTreeWidgetItem([source.split("/")[-1], file.target])
+                    category_item.addChild(entry_item)
 
-                # Optionally add each source as a child node of the config item
-                for source in item['sources']:
-                    file_name = source.split('/')[-1]
-                    source_item = QTreeWidgetItem([file_name])
-                    config_item.addChild(source_item)
         self.tree.expandAll()
 
 

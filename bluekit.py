@@ -10,8 +10,7 @@ from pathlib import Path
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
-import data
-from app import installation_steps, utils
+from app import data, installation_steps, utils
 from app.common.config import cfg
 from app.view.main_window import MainWindow
 
@@ -93,8 +92,7 @@ def load_config(config_p: str):
         if top_level_keys not in data.default_configuration.keys():
             raise KeyError(f"Unrecognized key in custom configuration: {top_level_keys}")
 
-    data.validate_configuration(custom_data, data.default_configuration)
-    data.configuration = custom_data
+    data.configuration = data.Configuration(**custom_data)
 
 
 def main():
@@ -109,10 +107,10 @@ def main():
 
         cfg.bundledZipFile.value = args.bundle.as_posix()
 
-    cfg.saferEnabled.value = data.configuration["config"]['enable_windows_safer']
-    cfg.malwareFolders.value = [utils.resolve_path(x) for x in data.configuration['config']['malware_folders']]
-    cfg.installZsh.value = data.configuration['config']['install_zsh_over_git']
-    cfg.makeBindiffAvailable.value = data.configuration['config']['make_bindiff_available']
+    cfg.saferEnabled.value = data.configuration.settings.enable_windows_safer
+    cfg.malwareFolders.value = [utils.resolve_path(x) for x in data.configuration.settings.malware_folders]
+    cfg.installZsh.value = data.configuration.settings.install_zsh_over_git
+    cfg.makeBindiffAvailable.value = data.configuration.settings.make_bindiff_available
 
     if args and args.keep_cache:
         cfg.scoopKeepCache.value = args.keep_cache

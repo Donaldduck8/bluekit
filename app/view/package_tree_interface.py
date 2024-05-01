@@ -1,4 +1,6 @@
 # coding:utf-8
+from dataclasses import dataclass, fields
+
 from PyQt5.QtWidgets import QTreeWidgetItem
 
 from .base_tree_frame import BaseTreeFrame
@@ -6,44 +8,54 @@ from .base_tree_json_interface import BaseTreeAndJsonEditWidget
 
 
 class PackageTreeFrame(BaseTreeFrame):
-    def __init__(self, parent=None, data: dict = None):
+    def __init__(self, parent = None, data = None):
         headers = ["Name", "Description"]
         super().__init__(parent, headers, data)
         self.update_data(data)
 
     def populate_tree(self):
-        if isinstance(self.data, dict):
-            for category, items in self.data.items():
-                item = QTreeWidgetItem([category])
-                for sub_item in items:
-                    if isinstance(sub_item, list):
-                        if len(sub_item) != 3:
-                            continue
-                        item.addChild(QTreeWidgetItem([sub_item[1], sub_item[2]]))
+        for field in fields(self.data):
+            if field.name == "buckets":
+                # Add all buckets
+                buckets_item = QTreeWidgetItem(["Buckets"])
+                for bucket in getattr(self.data, field.name):
+                    bucket_item = QTreeWidgetItem([bucket.name])
+                    buckets_item.addChild(bucket_item)
 
-                    elif isinstance(sub_item, (dict, tuple)):
-                        if sub_item.get("type") == "one_of":
-                            main_item = QTreeWidgetItem([sub_item["main"][1], sub_item["main"][2]])
-                            alt_item = QTreeWidgetItem([sub_item["alternative"][1], sub_item["alternative"][2]])
-                            item.addChild(main_item)
-                            main_item.addChild(alt_item)
+                self.tree.addTopLevelItem(buckets_item)
 
-                self.tree.addTopLevelItem(item)
-        elif isinstance(self.data, list):
-            for item in self.data:
-                self.tree.addTopLevelItem(QTreeWidgetItem([item[1], item[2]]))
+            elif field.name == "required":
+                # Add all required packages
+                required_item = QTreeWidgetItem(["Required"])
 
-        self.tree.expandAll()
+                for package in getattr(self.data, field.name):
+                    required_item.addChild(QTreeWidgetItem([package.name, package.description]))
+                self.tree.addTopLevelItem(required_item)
 
-    def populate_tree_item(self, parent_item, items):
-        for sub_item in items:
-            if isinstance(sub_item, tuple) and len(sub_item) == 3:
-                parent_item.addChild(QTreeWidgetItem([sub_item[1], sub_item[2]]))
-            elif isinstance(sub_item, dict) and sub_item.get("type") == "one_of":
-                main_item = QTreeWidgetItem([sub_item["main"][1], sub_item["main"][2]])
-                alt_item = QTreeWidgetItem([sub_item["alternative"][1], sub_item["alternative"][2]])
-                parent_item.addChild(main_item)
-                main_item.addChild(alt_item)
+            else:
+                # Add all the rest of the packages
+                stuff = getattr(self.data, field.name)
+
+                if isinstance(stuff, dict):
+                    for category, items in stuff.items():
+                        item = QTreeWidgetItem([category])
+                        for sub_item in items:
+                            if sub_item.alternative is not None:
+                                # Make this sub item have another sub item
+                                main_item = QTreeWidgetItem([sub_item.name, sub_item.description])
+                                alt_item = QTreeWidgetItem([sub_item.alternative.name, sub_item.alternative.description])
+                                item.addChild(main_item)
+                                main_item.addChild(alt_item)
+                            else:
+                                item.addChild(QTreeWidgetItem([sub_item.name, sub_item.description]))
+
+                        self.tree.addTopLevelItem(item)
+                else:
+                    item = QTreeWidgetItem([field.name.capitalize()])
+                    for sub_item in stuff:
+                        item.addChild(QTreeWidgetItem([sub_item.name, sub_item.description]))
+                    self.tree.addTopLevelItem(item)
+
         self.tree.expandAll()
 
 

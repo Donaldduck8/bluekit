@@ -21,11 +21,12 @@ import uuid
 import winreg
 from typing import List
 
+import jsonpickle
 import pythoncom
 import win32com.client
 from qfluentwidgets import InfoBarIcon
 
-from app import utils
+from app import data, utils
 from app.common.config import cfg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -248,7 +249,7 @@ def scoop_install_git() -> None:
     try_log_installation_step("Success: Installed Git", InfoBarIcon.SUCCESS)
 
 
-def scoop_add_buckets(buckets: List[str]):
+def scoop_add_buckets(buckets: List[data.BasePackageStructure]):
     """
     Adds Scoop buckets to the package manager.
 
@@ -261,27 +262,17 @@ def scoop_add_buckets(buckets: List[str]):
     logger.info("Scoop: Add buckets")
 
     for bucket in buckets:
-        if isinstance(bucket, str):
-            bucket_name = bucket
-        elif isinstance(bucket, (list, tuple)):
-            bucket_name = bucket[0]
-        else:
-            logger.warning("Bucket data is of unknown format, skipping...")
+        bucket_id = bucket.id
+        bucket_command = bucket_id
 
-            try_log_installation_step("Warning: Scoop bucket data is of unknown format, skipping!", InfoBarIcon.WARNING)
-
-            continue
-
-        bucket_command = bucket_name
-
-        if " " in bucket_name:
-            bucket_name = bucket_name.split(" ")[0]
+        if " " in bucket_id:
+            bucket_id = bucket_id.split(" ")[0]
 
         run_shell_command(command=f"scoop.cmd bucket add {bucket_command}")
 
         # Double-check if the bucket was added successfully, since this shit likes to fucking fail
-        bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_name}")
-        bucket_bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_name}\\bucket")
+        bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_id}")
+        bucket_bucket_p = utils.resolve_path(f"%USERPROFILE%\\scoop\\buckets\\{bucket_id}\\bucket")
 
         retry = 0
 
@@ -290,17 +281,16 @@ def scoop_add_buckets(buckets: List[str]):
 
             if retry >= 5:
                 # Show error message box
-
                 ctypes.windll.user32.MessageBoxW(
                     0,
-                    f"Could not add Scoop bucket {bucket_name} despite repeated attempts.",
+                    f"Could not add Scoop bucket {bucket.name} despite repeated attempts.",
                     "Error",
                     0x10,
                 )
-                raise RuntimeError(f"Could not add Scoop bucket {bucket_name}.")
+                raise RuntimeError(f"Could not add Scoop bucket {bucket.name}.")
 
             if os.path.isdir(bucket_p):
-                run_shell_command(command=f"scoop.cmd bucket rm {bucket_name}")
+                run_shell_command(command=f"scoop.cmd bucket rm {bucket_id}")
 
             run_shell_command(command=f"scoop.cmd bucket add {bucket_command}")
 
@@ -309,33 +299,34 @@ def scoop_add_buckets(buckets: List[str]):
     try_log_installation_step("Success: Added Scoop buckets", InfoBarIcon.SUCCESS)
 
 
-def pip_install_packages(packages: List[str]):
+def pip_install_packages(packages: List[data.PipPackage]):
     """
     Installs Python packages using pip.
 
     Args:
-        packages (List[str]): A list of Python packages to install.
+        packages (List[data.PipPackage]): A list of Python packages to install.
 
     Returns:
         None
     """
     logger.info("PIP: Install packages")
 
-    for package in packages:
-        if isinstance(package, str):
-            package_name = package
-            package_name_pretty = package_name
+    run_shell_command(command="pip.exe install --upgrade pipx", failure_okay=False)
 
-        elif isinstance(package, (list, tuple)):
-            package_name = package[0]
-            package_name_pretty = package[1]
+    for package in packages:
+        package_id = package.id
+        package_name = package.name
+
+        if package.mode == "pip":
+            run_shell_command(command=f"pip.exe install {package_id}", failure_okay=True)
+            try_log_installation_step(f"Success: Installed {package_name} (PIP)", InfoBarIcon.SUCCESS)
+
+        elif package.mode == "pipx":
+            run_shell_command(command=f"pipx.exe install {package_id}", failure_okay=True)
+            try_log_installation_step(f"Success: Installed {package_name} (PIPX)", InfoBarIcon.SUCCESS)
 
         else:
-            try_log_installation_step("Warning: PIP package data is of unknown format, skipping!", InfoBarIcon.WARNING)
-
-        run_shell_command(command=f"pip.exe install {package_name}", failure_okay=True)
-
-        try_log_installation_step(f"Success: Installed {package_name_pretty} (PIP)", InfoBarIcon.SUCCESS)
+            try_log_installation_step("Warning: PIP package mode is unknown, skipping!", InfoBarIcon.WARNING)
 
 
 def install_build_tools():
@@ -398,76 +389,56 @@ def scoop_install_tool(tool_name: str, tool_name_pretty: str = None, keep_cache:
     return True
 
 
-def scoop_install_tooling(tools: dict, install_context=True, install_associations=True, keep_cache=False):
+def scoop_install_tooling(tools: dict[str, list[data.ScoopPackage]], install_context=True, install_associations=True, keep_cache=False):
     """
     Installs tools using Scoop package manager.
-
-    Args:
-        tools dict: TODO
-        install_context (bool, optional): Whether to install context menu items. Defaults to True.
-        install_associations (bool, optional): Whether to install file associations. Defaults to True.
-
-    Returns:
-        None
     """
     logger.info("Scoop: Install Tooling")
 
-    for category, data in tools.items():
-        if category == "Buckets":
-            continue
-
-        if not isinstance(data, list):
+    for _category, packages in tools.items():
+        if not isinstance(packages, list):
             logger.warning("Data is not list, skipping...")
 
             try_log_installation_step("Warning: Scoop data is not a list, skipping!", InfoBarIcon.WARNING)
 
             continue
 
-        for tool in data:
-            if isinstance(tool, str):
-                tool_name = tool
-                tool_name_pretty = tool_name
-                scoop_install_tool(tool, keep_cache=keep_cache)
+        for package in packages:
+            if not isinstance(package, data.ScoopPackage):
+                logger.warning("Package is not ScoopPackage, skipping...")
 
-            elif isinstance(tool, (list, tuple)):
-                tool_name = tool[0]
-                tool_name_pretty = tool[1]
-                scoop_install_tool(tool_name, tool_name_pretty, keep_cache=keep_cache)
-
-            elif isinstance(tool, dict):
-                if not tool.get("type") == "one_of":
-                    logger.warning("Tool type is not one_of, skipping...")
-
-                    try_log_installation_step("Warning: Scoop tool type is not 'one_of', skipping!", InfoBarIcon.WARNING)
-
-                    continue
-
-                tool_name = tool.get("main")[0]
-                tool_name_pretty = tool.get("main")[1]
-                if not scoop_install_tool(tool_name, tool_name_pretty, keep_cache=keep_cache):
-                    tool_name = tool.get("alternative")[0]
-                    tool_name_pretty = tool.get("alternative")[1]
-                    scoop_install_tool(tool_name, tool_name_pretty)
-            else:
-                logger.warning("Tool is not string, list, tuple, or dict, skipping...")
-
-                try_log_installation_step("Warning: Scoop tool is of unknown format, skipping!", InfoBarIcon.WARNING)
+                try_log_installation_step("Warning: Scoop package is not ScoopPackage, skipping!", InfoBarIcon.WARNING)
 
                 continue
 
+            package_id = package.id
+            package_name = package.name
+
+            if not scoop_install_tool(package_id, package_name, keep_cache=keep_cache):
+                if package.alternative is not None:
+                    package_id = package.alternative.id
+                    package_name = package.alternative.name
+
+                    scoop_install_tool(package_id, package_name, keep_cache=keep_cache)
+
             # Install context menu items and file associations
-            tool_dir = os.path.join(utils.SCOOP_DIR, "apps", tool_name, "current")
+            package_dir = os.path.join(utils.SCOOP_DIR, "apps", package_id, "current")
 
-            tool_context_reg_p = os.path.join(tool_dir, "install-context.reg")
-            tool_file_associations_reg_p = os.path.join(tool_dir, "install-file-associations.reg")
+            package_context_reg_p = os.path.join(package_dir, "install-context.reg")
+            package_file_associations_reg_p = os.path.join(package_dir, "install-file-associations.reg")
 
-            if install_context and os.path.isfile(tool_context_reg_p):
-                run_shell_command(f"regedit /s {tool_context_reg_p}")
+            python_reg_p = os.path.join(package_dir, "install-pep-514.reg")
 
-            if install_associations and os.path.isfile(tool_file_associations_reg_p):
-                run_shell_command(f"regedit /s {tool_file_associations_reg_p}")
+            if install_context and os.path.isfile(package_context_reg_p):
+                run_shell_command(f"regedit /s {package_context_reg_p}")
 
-            try_log_installation_step(f"Success: Installed {tool_name_pretty}", InfoBarIcon.SUCCESS)
+            if install_associations and os.path.isfile(package_file_associations_reg_p):
+                run_shell_command(f"regedit /s {package_file_associations_reg_p}")
+
+            if os.path.isfile(python_reg_p):
+                run_shell_command(f"regedit /s {python_reg_p}")
+
+            try_log_installation_step(f"Success: Installed {package_name}", InfoBarIcon.SUCCESS)
 
 
 def prepare_quick_access():
@@ -509,7 +480,7 @@ def prepare_quick_access():
     unpin_all_except(user_folder_path)
 
 
-def install_vscode_extensions(extensions: List):
+def install_vscode_extensions(extensions: List[data.VscodeExtension]):
     """
     Installs Visual Studio Code extensions using the Code/Codium command line.
     """
@@ -517,17 +488,8 @@ def install_vscode_extensions(extensions: List):
     vscodium_cmd_p = utils.resolve_path(r"%USERPROFILE%\scoop\apps\vscodium\current\bin\codium.cmd")
 
     for extension in extensions:
-        if isinstance(extension, str):
-            extension_id = extension
-            extension_name = extension_id
-
-        elif isinstance(extension, (list, tuple)):
-            extension_id = extension[0]
-            extension_name = extension[1]
-
-        else:
-            logger.warning("Extension data is of unknown format, skipping...")
-            continue
+        extension_id = extension.id
+        extension_name = extension.name
 
         if os.path.isfile(vscode_cmd_p):
             run_shell_command(command=f"{vscode_cmd_p} --install-extension {extension_id}", failure_okay=True)
@@ -570,7 +532,7 @@ def remove_taskbar_pin(app_name):
     run_shell_command(powershell_command=command, failure_okay=True)
 
 
-def pin_apps_to_taskbar(apps: List[str]):
+def pin_apps_to_taskbar(taskbar_pins: List[data.TaskbarPin]):
     """
     Pins applications to the taskbar using a startLayout.xml file.
 
@@ -578,15 +540,10 @@ def pin_apps_to_taskbar(apps: List[str]):
     """
     app_paths = []
 
-    for app in apps:
-        if isinstance(app, str):
-            app_paths.append(app)
-        elif isinstance(app, (list, tuple)):
-            app_paths.append(app[0])
+    for taskbar_pin in taskbar_pins:
+        app_paths.append(taskbar_pin.id)
 
     xml_content = utils.create_start_layout_xml(apps=app_paths)
-
-    # Write layout .XML file
     xml_p = utils.resolve_path(r"%USERPROFILE%\Documents\startLayout.xml")
 
     with open(xml_p, "w+", encoding="UTF-8") as xml_f:
@@ -945,25 +902,18 @@ def set_fta(extension, program_p, arguments: list[str] = None):
     run_shell_command(command=setuserfta_cmd)
 
 
-def set_file_type_associations(configuration: dict):
+def set_file_type_associations(associations: dict[str, data.FileTypeAssociation]):
     """
     Sets file-type associations based on the configuration.
     """
-    if not configuration:
-        return
-
-    if not isinstance(configuration, dict):
+    if not isinstance(associations, dict):
         logger.warning("Configuration is not dictionary, skipping...")
         return
 
-    for category, data in configuration.items():
-        if not isinstance(data, dict):
-            logger.warning("Data is not dictionary, skipping...")
-            continue
-
-        program_p = utils.resolve_path(data.get("path"))
-        arguments = data.get("arguments")
-        extensions = data.get("file_types")
+    for category, association in associations.items():
+        program_p = utils.resolve_path(association.path)
+        arguments = association.arguments
+        extensions = association.file_types
 
         if not program_p or not extensions:
             logger.warning("Path or extensions not found, skipping...")
@@ -1004,26 +954,14 @@ def git_clone_repository(url, output_dir=None):
     run_shell_command(command=f"git.exe clone {url} {output_dir}")
 
 
-def clone_git_repositories(repositories: List[str]):
+def clone_git_repositories(repositories: List[data.GitRepository]):
     """
     Clones a list of Git repositories to the %USERPROFILE%\\repositories directory.
-
-    Args:
-        repositories (List[str]): A list of Git repository URLs to clone.
     """
     logger.info("Git: Clone configured repositories")
 
     for repository in repositories:
-        if isinstance(repository, str):
-            repo_url = repository
-
-        elif isinstance(repository, (list, tuple)):
-            repo_url = repository[0]
-
-        else:
-            logger.warning("Repository is not string, list, or tuple, skipping...")
-            continue
-
+        repo_url = repository.id
         git_clone_repository(repo_url)
 
         repo_name = repo_url.split("/")[-1].replace(".git", "")
@@ -1031,12 +969,9 @@ def clone_git_repositories(repositories: List[str]):
         try_log_installation_step(f"Success: Cloned Git repository {repo_name}", InfoBarIcon.SUCCESS)
 
 
-def npm_install_libraries(libs: List[str]):
+def npm_install_libraries(libs: List[data.NpmPackage]):
     """
     Installs a list of NPM libraries globally.
-
-    Args:
-        libs (List[str], optional): A list of NPM libraries to install.
     """
     logger.info("NPM: Install libraries")
 
@@ -1044,29 +979,16 @@ def npm_install_libraries(libs: List[str]):
 
     if not os.path.isfile(npm_cmd_p):
         logger.warning("npm not found, skipping...")
-
         try_log_installation_step("Warning: No NodeJS package manager found", InfoBarIcon.WARNING)
-
         return
 
     for lib in libs:
-        if isinstance(lib, str):
-            lib_name = lib
-            lib_name_pretty = lib_name
+        lib_id = lib.id
+        lib_name = lib.name
 
-        elif isinstance(lib, (list, tuple)):
-            lib_name = lib[0]
-            lib_name_pretty = lib[1]
+        run_shell_command(command=f"{npm_cmd_p} install -g {lib_id}", failure_okay=True)
 
-        else:
-            logger.warning("Library is not string, list, or tuple, skipping...")
-
-            try_log_installation_step("Warning: Library is of unknown format, skipping!", InfoBarIcon.WARNING)
-            continue
-
-        run_shell_command(command=f"{npm_cmd_p} install -g {lib_name}", failure_okay=True)
-
-        try_log_installation_step(f"Success: Installed {lib_name_pretty} (NPM)", InfoBarIcon.SUCCESS)
+        try_log_installation_step(f"Success: Installed {lib_name} (NPM)", InfoBarIcon.SUCCESS)
 
 
 def extract_bundled_zip():
@@ -1257,12 +1179,9 @@ def scoop_install_pwsh():
     try_log_installation_step("Success: Installed PowerShell 7", InfoBarIcon.SUCCESS)
 
 
-def install_ida_plugins(plugins: List[str]):
+def install_ida_plugins(plugins: List[data.IdaPlugin]):
     """
     Installs a list of IDA Pro plugins.
-
-    Args:
-        plugins (List[str]): A list of python files to place into the plugins folder
     """
     logger.info("Install IDA Pro plugins")
 
@@ -1272,17 +1191,7 @@ def install_ida_plugins(plugins: List[str]):
     possible_plugin_paths = [path for path in possible_plugin_paths if os.path.isdir(path)]
 
     for plugin in plugins:
-        if isinstance(plugin, str):
-            plugin_url = plugin
-        elif isinstance(plugin, (list, tuple)):
-            plugin_url = plugin[0]
-        else:
-            logger.warning("Invalid plugin format, skipping...")
-
-            try_log_installation_step("Warning: Invalid IDA plugin data format, skipping!", InfoBarIcon.WARNING)
-
-            continue
-
+        plugin_url = plugin.id
         plugin_name = plugin_url.split("/")[-1]
 
         for plugin_folder_p in possible_plugin_paths:
@@ -1290,13 +1199,10 @@ def install_ida_plugins(plugins: List[str]):
 
             if os.path.isfile(plugin_p):
                 logger.info("Plugin %s already installed.", plugin_name)
-
                 try_log_installation_step(f"Info: IDA Plugin {plugin_name} already exists", InfoBarIcon.INFORMATION)
-
                 continue
 
             run_shell_command(command=f"curl.exe -L -o {plugin_p} {plugin_url}")
-
             try_log_installation_step(f"Success: Installed IDA plugin {plugin_name}", InfoBarIcon.SUCCESS)
 
 
@@ -1336,7 +1242,7 @@ def convert_winreg_str_to_hive(hive_s: str) -> int:
     return hive
 
 
-def make_registry_changes(registry_changes_data: dict):
+def make_registry_changes(registry_changes_data: dict[str, list[data.RegistryChange]]):
     """
     Makes a list of registry changes.
 
@@ -1351,44 +1257,46 @@ def make_registry_changes(registry_changes_data: dict):
             continue
 
         for registry_change in registry_changes:
-            if not isinstance(registry_change, dict):
-                logger.warning("Registry change is not a dictionary, skipping...")
-                continue
+            key = registry_change.key
+            value = registry_change.value
+            registry_change_data = registry_change.data
 
-            key = registry_change.get("key")
-            value = registry_change.get("value")
-            data = registry_change.get("data")
+            data_type = registry_change.type
 
-            data_type_s = registry_change.get("type")
-            data_type = convert_winreg_str_to_type(data_type_s)
-            if data_type is None:
-                logger.warning(f"Invalid data type {data_type_s}, skipping...")
-                continue
+            if isinstance(data_type, str):
+                try:
+                    data_type = getattr(winreg, data_type)
+                except Exception:
+                    logger.warning("Invalid hive, skipping...")
+                    continue
 
-            hive_s = registry_change.get("hive")
-            hive = convert_winreg_str_to_hive(hive_s)
-            if hive is None:
-                logger.warning("Invalid hive, skipping...")
-                continue
+            hive = registry_change.hive
 
-            if key is None or value is None or data is None:
+            if isinstance(hive, str):
+                try:
+                    hive = getattr(winreg, hive)
+                except Exception:
+                    logger.warning("Invalid hive, skipping...")
+                    continue
+
+            if key is None or value is None or registry_change_data is None:
                 logger.warning("Key, value, or data not found, skipping...")
                 continue
 
             # Resolve the data if it's a path
             if data_type == winreg.REG_SZ:
-                data_resolved = utils.resolve_path(data)
+                data_resolved = utils.resolve_path(registry_change_data)
 
                 if data_resolved:
-                    data = data_resolved
+                    registry_change_data = data_resolved
 
             if data_type == winreg.REG_DWORD:
-                data = int(data)
+                registry_change_data = int(registry_change_data)
 
             try:
                 winreg.CreateKey(hive, key)
                 with winreg.OpenKey(hive, key, 0, winreg.KEY_WRITE) as reg_key:
-                    winreg.SetValueEx(reg_key, value, 0, data_type, data)
+                    winreg.SetValueEx(reg_key, value, 0, data_type, registry_change_data)
 
             except Exception as e:
                 print(f"Failed to update the registry: {e}")
@@ -1397,29 +1305,26 @@ def make_registry_changes(registry_changes_data: dict):
     try_log_installation_step("Success: Made registry changes", InfoBarIcon.SUCCESS)
 
 
-def install_miscellaneous_files(data: dict):
+def install_miscellaneous_files(misc_files: dict[str, list[data.MiscFile]]):
     """
     Downloads and places miscellaneous files to the specified target directories.
     """
-    if not isinstance(data, dict):
-        logger.warning("Data is not dictionary, skipping...")
-        return
+    logger.info("Install miscellaneous files")
 
-    for _category, entries in data.items():
+    for _category, entries in misc_files.items():
         if not isinstance(entries, list):
             logger.warning("Entries are not a list, skipping...")
             continue
 
         for entry in entries:
-            if not isinstance(entry, dict):
-                logger.warning("Entry is not a dictionary, skipping...")
+            if not isinstance(entry, data.MiscFile):
+                logger.warning("Entry is not a MiscFile, skipping...")
                 continue
 
-            description = entry.get("description")
-            source = entry.get("sources")
-            target = entry.get("target")
+            sources = entry.sources
+            target = entry.target
 
-            if not source or not target:
+            if not sources or not target:
                 logger.warning("Source or target not found, skipping...")
                 continue
 
@@ -1431,10 +1336,7 @@ def install_miscellaneous_files(data: dict):
 
             os.makedirs(target_folder, exist_ok=True)
 
-            if isinstance(source, str):
-                source = [source]
-
-            for url in source:
+            for url in sources:
                 destination = os.path.join(target_folder, os.path.basename(url))
 
                 if " " in destination:
@@ -1447,7 +1349,7 @@ def install_miscellaneous_files(data: dict):
                 if destination.endswith(".zip"):
                     utils.extract_zip(destination, target_folder)
 
-            try_log_installation_step(f"Success: Installed {description} (Miscellaneous)", InfoBarIcon.SUCCESS)
+            try_log_installation_step(f"Success: Installed {entry.description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
 
 def apply_registry_change(hive: int, key: str, value: str, data_type: int, data: str):
@@ -1555,12 +1457,12 @@ def register_windows_safer_path(malware_p: str):
         apply_registry_change(hive, malware_path_key, "SaferFlags", winreg.REG_DWORD, 0)
 
 
-def install_bluekit(data: dict, should_restart: bool = True):
+def install_bluekit(data: data.Configuration, should_restart: bool = True):
     """
     Overall method for performing all of Bluekit's installations steps.
     """
     with open(configuration_out_p, "w+", encoding="utf-8") as configuration_out_f:
-        configuration_out_f.write(json.dumps(data, indent=4))
+        configuration_out_f.write(jsonpickle.dumps(data, indent=4))
 
     common_pre_install()
     remove_worthless_python_exes()
@@ -1573,30 +1475,34 @@ def install_bluekit(data: dict, should_restart: bool = True):
     scoop_install_pwsh()
 
     # Registry changes early in case they are relevant during installation
-    make_registry_changes(data["registry_changes"])
+    make_registry_changes(data.registry_changes.changes)
 
-    scoop_add_buckets(data["scoop"]["Buckets"])
+    scoop_add_buckets(data.scoop.buckets)
 
-    # Required packages first, in case others depend on them
-    if "Required" in data["scoop"]:
-        scoop_install_tooling({"Required": data["scoop"]["Required"]}, keep_cache=cfg.scoopKeepCache.value)
+    # Required packages and pip packages first
+    scoop_install_tooling({"Required": data.scoop.required}, keep_cache=cfg.scoopKeepCache.value)
+    pip_install_packages(data.pip.required)
 
     # Add MSVC_BIN and SDK_BIN to path because PortableBuildTools is inexplicably unstable
     add_paths_to_path([utils.resolve_path("%MSVC_BIN%"), utils.resolve_path("%SDK_BIN%")], at_start=True)
 
-    scoop_install_tooling(data["scoop"], keep_cache=True)
+    # Add pipx output directory to PATH
+    add_paths_to_path([utils.resolve_path(r"%USERPROFILE%\.local\bin")])
 
-    pip_install_packages(data["pip"])
-    npm_install_libraries(data["npm"])
-    install_ida_plugins(data["ida_plugins"])
-    set_file_type_associations(data["file_type_associations"])
-    pin_apps_to_taskbar(data["taskbar_pins"])
-    clone_git_repositories(data["git_repositories"])
-    install_vscode_extensions(data["vscode_extensions"])
-    install_miscellaneous_files(data["misc_files"])
+    # Install pip packages immediately because some Scoop packages rely on binary-refinery
+    pip_install_packages(data.pip.packages)
+
+    scoop_install_tooling(data.scoop.packages, keep_cache=cfg.scoopKeepCache.value)
+    npm_install_libraries(data.npm.packages)
+    install_ida_plugins(data.ida_plugins.plugins)
+    set_file_type_associations(data.file_type_associations.associations)
+    pin_apps_to_taskbar(data.taskbar_pins.pins)
+    clone_git_repositories(data.git_repositories.repositories)
+    install_vscode_extensions(data.vscode_extensions.extensions)
+    install_miscellaneous_files(data.misc_files.files)
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
-    ida_py_switch(data["ida_py_switch"])
+    ida_py_switch(data.settings.ida_py_switch)
 
     # Make Bindiff available to other programs
     if cfg.makeBindiffAvailable.value:

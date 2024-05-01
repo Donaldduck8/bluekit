@@ -8,7 +8,7 @@ from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (FluentWindow, MessageBox, NavigationItemPosition,
                             SplashScreen)
 
-import data
+import app.data as data
 
 from .. import utils
 from ..common import resource
@@ -39,16 +39,16 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.scoopInterface = PackageTreeWidget(self, "Scoop Packages", data.configuration["scoop"])
-        self.pipInterface = PackageTreeWidget(self, "PIP Packages", data.configuration["pip"])
-        self.npmInterface = PackageTreeWidget(self, "NodeJS Packages", data.configuration["npm"])
-        self.idaPluginInterface = PackageTreeWidget(self, "IDA Plugins", data.configuration["ida_plugins"])
-        self.vsCodeExtensionInterface = PackageTreeWidget(self, "VSCode Extensions", data.configuration["vscode_extensions"])
-        self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", data.configuration["taskbar_pins"])
-        self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", data.configuration["file_type_associations"])
-        self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", data.configuration["git_repositories"])
-        self.registryChangesInterface = RegistryChangesWidget(self, "Registry", data.configuration["registry_changes"])
-        self.miscFilesInterface = MiscFilesTreeWidget(self, "Miscellaneous Files", data.configuration["misc_files"])
+        self.scoopInterface = PackageTreeWidget(self, "Scoop Packages", data.configuration.scoop)
+        self.pipInterface = PackageTreeWidget(self, "PIP Packages", data.configuration.pip)
+        self.npmInterface = PackageTreeWidget(self, "NodeJS Packages", data.configuration.npm)
+        self.idaPluginInterface = PackageTreeWidget(self, "IDA Plugins", data.configuration.ida_plugins)
+        self.vsCodeExtensionInterface = PackageTreeWidget(self, "VSCode Extensions", data.configuration.vscode_extensions)
+        self.taskbarPinsInterface = PackageTreeWidget(self, "Taskbar Pins", data.configuration.taskbar_pins)
+        self.fileTypeAssociationsInterface = FileTypeAssocWidget(self, "File Type Associations", data.configuration.file_type_associations)
+        self.gitRepositoryInterface = PackageTreeWidget(self, "Git Repositories", data.configuration.git_repositories)
+        self.registryChangesInterface = RegistryChangesWidget(self, "Registry", data.configuration.registry_changes)
+        self.miscFilesInterface = MiscFilesTreeWidget(self, "Miscellaneous Files", data.configuration.misc_files)
         self.executionInterface = ExecutionInterface(self)
 
         self.settingsInterface = SettingsInterface(self)
@@ -116,28 +116,26 @@ class MainWindow(FluentWindow):
                 self.miscFilesInterface
             ]
 
-            execution_data = {
-                'scoop': self.scoopInterface.data,
-                'pip': self.pipInterface.data,
-                'npm': self.npmInterface.data,
-                'ida_plugins': self.idaPluginInterface.data,
-                'vscode_extensions': self.vsCodeExtensionInterface.data,
-                'taskbar_pins': self.taskbarPinsInterface.data,
-                'file_type_associations': self.fileTypeAssociationsInterface.data,
-                'git_repositories': self.gitRepositoryInterface.data,
+            execution_settings = {
+                'enable_windows_safer': cfg.saferEnabled.value,
+                'malware_folders': [utils.resolve_path(x) for x in cfg.malwareFolders.value],
+                'install_zsh_over_git': cfg.installZsh.value,
+                'make_bindiff_available': cfg.makeBindiffAvailable.value,
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
-                "registry_changes": self.registryChangesInterface.data,
-                "misc_files": self.miscFilesInterface.data,
-                "config": {
-                    'enable_windows_safer': cfg.saferEnabled.value,
-                    'malware_folders': [utils.resolve_path(x) for x in cfg.malwareFolders.value],
-                    'install_zsh_over_git': cfg.installZsh.value,
-                    'make_bindiff_available': cfg.makeBindiffAvailable.value
-                }
             }
 
-            if not data.validateConfiguration(self, execution_data):
-                return
+            execution_data = data.Configuration.empty()
+            execution_data.scoop = self.scoopInterface.data
+            execution_data.pip = self.pipInterface.data
+            execution_data.npm = self.npmInterface.data
+            execution_data.ida_plugins = self.idaPluginInterface.data
+            execution_data.vscode_extensions = self.vsCodeExtensionInterface.data
+            execution_data.taskbar_pins = self.taskbarPinsInterface.data
+            execution_data.file_type_associations = self.fileTypeAssociationsInterface.data
+            execution_data.git_repositories = self.gitRepositoryInterface.data
+            execution_data.registry_changes = self.registryChangesInterface.data
+            execution_data.misc_files = self.miscFilesInterface.data
+            execution_data.settings = data.BluekitSettings(**execution_settings)
 
             # Show a confirmation pop-up
             title = 'Start the installation?'
@@ -171,7 +169,7 @@ class MainWindow(FluentWindow):
         self.resize(960, 780)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(':/gallery/images/jellyfish_logo_small.png'))
-        self.setWindowTitle(f"Bluekit {data.version}")
+        self.setWindowTitle(f"Bluekit {data.VERSION}")
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 
