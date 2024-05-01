@@ -83,7 +83,7 @@ def get_registry_environment(key_handle, sub_key):
     return environment
 
 
-def update_environment_from_registry():
+def update_environment_from_registry():  # pylint: disable=too-many-branches
     # Get system and user environment variables from registry
     # system_env = get_registry_environment(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment")
     user_env = get_registry_environment(winreg.HKEY_CURRENT_USER, r"Environment")
@@ -144,7 +144,7 @@ def update_environment_from_registry():
     subprocess.run(["powershell", "-Command", "$(" + commands_joined + ")"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
-def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3, needs_refresh: bool = False) -> None:
+def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3, needs_refresh: bool = False) -> None:  # pylint: disable=too-many-branches
     """
     Executes a shell command or a PowerShell command.
 
