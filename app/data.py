@@ -519,7 +519,7 @@ default_configuration = {
             ("unicorn", "Unicorn", "A lightweight, multi-platform, multi-architecture CPU emulator framework."),
             ("olefile", "olefile", "A Python package to parse, read, and write Microsoft OLE2 files."),
             ("oletools[full]", "oletools", "A set of tools to analyze Microsoft OLE2 files."),
-            ("git+https://github.com/Donaldduck8/rustbinsign", "RustBinSign", "A tool to generate FLIRT / SIGKIT signatures from Rust binaries.", "pipx"),
+            ("git+https://github.com/N0fix/rustbinsign", "RustBinSign", "A tool to generate FLIRT / SIGKIT signatures from Rust binaries.", "pipx"),
 
             # Donut Shellcode
             ("git+https://github.com/volexity/chaskey-lts", "chaskey-lts", "A Python implementation of the Chaskey-LTS block cipher."),
@@ -639,7 +639,9 @@ default_configuration = {
                     "xml",
                     "csv",
                     "ini",
-                    "cfg"
+                    "cfg",
+                    "yaml",
+                    "yml",
                 ]
             },
 
