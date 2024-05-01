@@ -622,6 +622,7 @@ default_configuration = {
             ("https://github.com/SentineLabs/AlphaGolang", "AlphaGolang", "A collection of scripts to reverse-engineer Go binaries."),
             ("https://github.com/struppigel/hedgehog-tools", "Hedgehog Tools", "A collection of tools for reverse engineering and malware analysis, written by Karsten Hahn."),
             ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
+            ("https://github.com/Fadi002/de4py", "de4py", "A toolkit for Python reverse engineering."),
         ]
     },
 
