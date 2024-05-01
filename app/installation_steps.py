@@ -1489,10 +1489,8 @@ def install_bluekit(data: data.Configuration, should_restart: bool = True):
     # Add pipx output directory to PATH
     add_paths_to_path([utils.resolve_path(r"%USERPROFILE%\.local\bin")])
 
-    # Install pip packages immediately because some Scoop packages rely on binary-refinery
-    pip_install_packages(data.pip.packages)
-
     scoop_install_tooling(data.scoop.packages, keep_cache=cfg.scoopKeepCache.value)
+    pip_install_packages(data.pip.packages)
     npm_install_libraries(data.npm.packages)
     install_ida_plugins(data.ida_plugins.plugins)
     set_file_type_associations(data.file_type_associations.associations)
