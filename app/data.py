@@ -20,7 +20,7 @@ class BasePackageListStructure():
 class ScoopPackage(BasePackageStructure):
     alternative: BasePackageStructure
 
-    def __init__(self, id, name, description, alternative=None):
+    def __init__(self, id, name, description, alternative=None):  # pylint: disable=redefined-builtin
         super().__init__(id, name, description)
         if alternative:
             self.alternative = BasePackageStructure(**alternative) if isinstance(alternative, dict) else BasePackageStructure(*alternative)
@@ -42,7 +42,7 @@ class ScoopPackages(BasePackageListStructure):
 class PipPackage(BasePackageStructure):
     mode: str
 
-    def __init__(self, id, name, description, mode="pip"):
+    def __init__(self, id, name, description, mode="pip"):  # pylint: disable=redefined-builtin
         super().__init__(id, name, description)
         self.mode = mode
 
@@ -133,7 +133,7 @@ class RegistryChange():
     data: str
     type: str
 
-    def __init__(self, description, hive, key, value, data, type):
+    def __init__(self, description, hive, key, value, data, type):  # pylint: disable=redefined-builtin
         # Validate hive and type
         if hive not in ["HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER", "HKEY_LOCAL_MACHINE", "HKEY_USERS", "HKEY_CURRENT_CONFIG"]:
             raise ValueError(f"Invalid hive: {hive}")

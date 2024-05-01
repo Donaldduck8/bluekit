@@ -13,8 +13,8 @@ class PackageTreeFrame(BaseTreeFrame):
         super().__init__(parent, headers, data)
         self.update_data(data)
 
-    def populate_tree(self):
-        for field in fields(self.data):
+    def populate_tree(self):  # pylint: disable=too-many-branches
+        for field in fields(self.data):  # pylint: disable=too-many-nested-blocks
             if field.name == "buckets":
                 # Add all buckets
                 buckets_item = QTreeWidgetItem(["Buckets"])

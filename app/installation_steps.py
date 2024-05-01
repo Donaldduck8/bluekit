@@ -1352,7 +1352,7 @@ def install_miscellaneous_files(misc_files: dict[str, list[data.MiscFile]]):
             try_log_installation_step(f"Success: Installed {entry.description} (Miscellaneous)", InfoBarIcon.SUCCESS)
 
 
-def apply_registry_change(hive: int, key: str, value: str, data_type: int, data: str):
+def apply_registry_change(hive: int, key: str, value: str, data_type: int, data: any):  # pylint: disable=redefined-outer-name
     winreg.CreateKey(hive, key)
     with winreg.OpenKey(hive, key, 0, winreg.KEY_WRITE) as reg_key:
         winreg.SetValueEx(reg_key, value, 0, data_type, data)
@@ -1457,12 +1457,12 @@ def register_windows_safer_path(malware_p: str):
         apply_registry_change(hive, malware_path_key, "SaferFlags", winreg.REG_DWORD, 0)
 
 
-def install_bluekit(data: data.Configuration, should_restart: bool = True):
+def install_bluekit(configuration: data.Configuration, should_restart: bool = True):
     """
     Overall method for performing all of Bluekit's installations steps.
     """
     with open(configuration_out_p, "w+", encoding="utf-8") as configuration_out_f:
-        configuration_out_f.write(jsonpickle.dumps(data, indent=4))
+        configuration_out_f.write(jsonpickle.dumps(configuration, indent=4))
 
     common_pre_install()
     remove_worthless_python_exes()
@@ -1475,13 +1475,13 @@ def install_bluekit(data: data.Configuration, should_restart: bool = True):
     scoop_install_pwsh()
 
     # Registry changes early in case they are relevant during installation
-    make_registry_changes(data.registry_changes.changes)
+    make_registry_changes(configuration.registry_changes.changes)
 
-    scoop_add_buckets(data.scoop.buckets)
+    scoop_add_buckets(configuration.scoop.buckets)
 
     # Required packages and pip packages first
-    scoop_install_tooling({"Required": data.scoop.required}, keep_cache=cfg.scoopKeepCache.value)
-    pip_install_packages(data.pip.required)
+    scoop_install_tooling({"Required": configuration.scoop.required}, keep_cache=cfg.scoopKeepCache.value)
+    pip_install_packages(configuration.pip.required)
 
     # Add MSVC_BIN and SDK_BIN to path because PortableBuildTools is inexplicably unstable
     add_paths_to_path([utils.resolve_path("%MSVC_BIN%"), utils.resolve_path("%SDK_BIN%")], at_start=True)
@@ -1489,18 +1489,18 @@ def install_bluekit(data: data.Configuration, should_restart: bool = True):
     # Add pipx output directory to PATH
     add_paths_to_path([utils.resolve_path(r"%USERPROFILE%\.local\bin")])
 
-    scoop_install_tooling(data.scoop.packages, keep_cache=cfg.scoopKeepCache.value)
-    pip_install_packages(data.pip.packages)
-    npm_install_libraries(data.npm.packages)
-    install_ida_plugins(data.ida_plugins.plugins)
-    set_file_type_associations(data.file_type_associations.associations)
-    pin_apps_to_taskbar(data.taskbar_pins.pins)
-    clone_git_repositories(data.git_repositories.repositories)
-    install_vscode_extensions(data.vscode_extensions.extensions)
-    install_miscellaneous_files(data.misc_files.files)
+    scoop_install_tooling(configuration.scoop.packages, keep_cache=cfg.scoopKeepCache.value)
+    pip_install_packages(configuration.pip.packages)
+    npm_install_libraries(configuration.npm.packages)
+    install_ida_plugins(configuration.ida_plugins.plugins)
+    set_file_type_associations(configuration.file_type_associations.associations)
+    pin_apps_to_taskbar(configuration.taskbar_pins.pins)
+    clone_git_repositories(configuration.git_repositories.repositories)
+    install_vscode_extensions(configuration.vscode_extensions.extensions)
+    install_miscellaneous_files(configuration.misc_files.files)
 
     # Run IDAPySwitch to ensure that IDA Pro works immediately after installation
-    ida_py_switch(data.settings.ida_py_switch)
+    ida_py_switch(configuration.settings.ida_py_switch)
 
     # Make Bindiff available to other programs
     if cfg.makeBindiffAvailable.value:
