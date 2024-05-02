@@ -156,7 +156,7 @@ def format_output(stream: bytes):
         str: The formatted output.
     """
     temp = stream.decode("utf-8", errors="replace").strip()
-    
+
     while ("\r\n\r\n" in temp) or ("\n\n" in temp) or ("\r\r" in temp):
         temp = temp.replace("\r\n\r\n", "\r\n").replace("\n\n", "\n").replace("\r\r", "\r")
 
