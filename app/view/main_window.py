@@ -1,4 +1,7 @@
 # coding: utf-8
+import os
+import zipfile
+
 from argparse import Namespace
 
 from PyQt5.QtCore import QSize
@@ -101,6 +104,55 @@ class MainWindow(FluentWindow):
         # Incredible hack to make the icons actually spaced properly !! :SMILE:
         self.navigationInterface.resize(48, self.height() + 1000)
 
+    def validateBundledApplications(self, bluekit_configuration: data.Configuration):
+        potentially_bundled_packages: list[data.ScoopPackage] = []
+        for _category, packages in bluekit_configuration.scoop.packages.items():
+            packages: list[data.ScoopPackage]
+
+            potentially_bundled_packages += [package for package in packages if package.id.endswith(".json")]
+
+        actually_bundled_manifests = []
+        actually_bundled_zips = []
+
+        if cfg.bundledZipFile.value and os.path.isfile(cfg.bundledZipFile.value) and zipfile.is_zipfile(cfg.bundledZipFile.value):
+            with zipfile.ZipFile(cfg.bundledZipFile.value, 'r') as zip_ref:
+                actually_bundled_manifests = [name for name in zip_ref.namelist() if name.endswith(".json")]
+                actually_bundled_zips = [name for name in zip_ref.namelist() if name.endswith(".zip")]
+
+        not_bundled_packages = [package for package in potentially_bundled_packages if package.id not in actually_bundled_manifests or package.id.replace(".json", ".zip") not in actually_bundled_zips]
+
+        if len(not_bundled_packages) == 0:
+            return True
+
+        not_bundled_messages = []
+
+        for package in not_bundled_packages:
+            if package.alternative is not None:
+                not_bundled_messages.append(f"{package.name} ({package.id}) - Installing {package.alternative.name}")
+            else:
+                not_bundled_messages.append(f"{package.name} ({package.id}) - No alternative specified")
+
+        not_bundled_message = '\n'.join(not_bundled_messages)
+
+        # Show an information pop-up
+        title = 'Bundled Applications'
+
+        content = f"""The following bundled applications are not present in the provided .zip file:
+
+{not_bundled_message}
+
+Would you like to proceed anyway?"""
+        w = MessageBox(title, content, self)
+        w.show()
+
+        if not w.exec():
+            w.close()
+            return False
+
+        w.close()
+        return True
+
+
     def onExecute(self, _):
         if not self._executing:
             interfaces = [
@@ -124,18 +176,21 @@ class MainWindow(FluentWindow):
                 "ida_py_switch": utils.resolve_path("%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll"),
             }
 
-            execution_data = data.Configuration.empty()
-            execution_data.scoop = self.scoopInterface.data
-            execution_data.pip = self.pipInterface.data
-            execution_data.npm = self.npmInterface.data
-            execution_data.ida_plugins = self.idaPluginInterface.data
-            execution_data.vscode_extensions = self.vsCodeExtensionInterface.data
-            execution_data.taskbar_pins = self.taskbarPinsInterface.data
-            execution_data.file_type_associations = self.fileTypeAssociationsInterface.data
-            execution_data.git_repositories = self.gitRepositoryInterface.data
-            execution_data.registry_changes = self.registryChangesInterface.data
-            execution_data.misc_files = self.miscFilesInterface.data
-            execution_data.settings = data.BluekitSettings(**execution_settings)
+            bluekit_configuration = data.Configuration.empty()
+            bluekit_configuration.scoop = self.scoopInterface.data
+            bluekit_configuration.pip = self.pipInterface.data
+            bluekit_configuration.npm = self.npmInterface.data
+            bluekit_configuration.ida_plugins = self.idaPluginInterface.data
+            bluekit_configuration.vscode_extensions = self.vsCodeExtensionInterface.data
+            bluekit_configuration.taskbar_pins = self.taskbarPinsInterface.data
+            bluekit_configuration.file_type_associations = self.fileTypeAssociationsInterface.data
+            bluekit_configuration.git_repositories = self.gitRepositoryInterface.data
+            bluekit_configuration.registry_changes = self.registryChangesInterface.data
+            bluekit_configuration.misc_files = self.miscFilesInterface.data
+            bluekit_configuration.settings = data.BluekitSettings(**execution_settings)
+
+            if not self.validateBundledApplications(bluekit_configuration):
+                return
 
             # Show a confirmation pop-up
             title = 'Start the installation?'
@@ -159,7 +214,7 @@ class MainWindow(FluentWindow):
                 interface.on_execution_started()
 
             self.executionInterface.execute(
-                execution_data
+                bluekit_configuration
             )
 
         # Open the executionInterface
