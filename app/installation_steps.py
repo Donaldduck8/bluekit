@@ -36,6 +36,7 @@ if "_MEI" in HERE and getattr(sys, "frozen", False):
     HERE = os.path.dirname(sys.executable)
 
 log_p = os.path.join(HERE, "install.log")
+errors_p = os.path.join(HERE, "errors.log")
 configuration_out_p = os.path.join(HERE, "configuration_dump.json")
 
 
@@ -144,6 +145,27 @@ def update_environment_from_registry():  # pylint: disable=too-many-branches
     subprocess.run(["powershell", "-Command", "$(" + commands_joined + ")"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
+def format_output(stream: bytes):
+    """
+    Formats the output of a subprocess.
+
+    Args:
+        stream (bytes): The output stream to format.
+
+    Returns:
+        str: The formatted output.
+    """
+    temp = stream.decode("utf-8", errors="replace").strip()
+    
+    while ("\r\n\r\n" in temp) or ("\n\n" in temp) or ("\r\r" in temp):
+        temp = temp.replace("\r\n\r\n", "\r\n").replace("\n\n", "\n").replace("\r\r", "\r")
+
+    if not temp.endswith("\n"):
+        temp += "\n"
+
+    return temp.strip()
+
+
 def run_shell_command(command: str = None, powershell_command: str = None, command_parts: List[str] = None, failure_okay: bool = False, total_attempts: int = 3, needs_refresh: bool = False) -> None:  # pylint: disable=too-many-branches
     """
     Executes a shell command or a PowerShell command.
@@ -177,14 +199,13 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
             if p.returncode != 0:
                 raise subprocess.CalledProcessError(p.returncode, p.args, p.stdout, p.stderr)
 
-            stdout = p.stdout.decode("utf-8", errors="replace").strip()
-            stdout = stdout.replace("\r\n\r\n", "\r\n")
-            stdout = stdout.replace("\n\n", "\n")
+            stdout = format_output(p.stdout)
+            stderr = format_output(p.stderr)
 
             if len(stdout) > 0:
                 logger.info(stdout)
 
-            if len(stderr := p.stderr.decode("utf-8", errors="replace").strip()) > 0:
+            if len(stderr) > 0:
                 logger.info(stderr)
 
             break
@@ -192,15 +213,27 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to run command: {e.cmd}")
             if e.stdout:
-                logger.warning(f"Output: {e.stdout.decode('utf-8', errors='replace')}")
+                stdout = format_output(e.stdout)
+                logger.warning(f"Output: {stdout}")
+
+                with open(errors_p, "a+", encoding="utf-8") as f:
+                    f.write(stdout)
+
             if e.stderr:
-                logger.warning(f"Error: {e.stderr.decode('utf-8', errors='replace')}")
+                stderr = format_output(e.stderr)
+                logger.warning(f"Output: {stderr}")
+
+                with open(errors_p, "a+", encoding="utf-8") as f:
+                    f.write(stderr)
 
             if not failure_okay:
                 raise e
         except Exception as e:
             trace = traceback.format_exc()
             logger.warning(f"Failed to run command: {trace}")
+
+            with open(errors_p, "a+", encoding="utf-8") as f:
+                f.write(trace + "\n")
 
             if not failure_okay:
                 raise e
@@ -227,7 +260,7 @@ def install_scoop() -> None:
 
     command = f"""
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    Invoke-RestMethod -Uri https://get.scoop.sh -O {install_script_p}
+    Invoke-RestMethod -Uri https://raw.githubusercontent.com/scoopinstaller/install/master/install.ps1 -O {install_script_p}
     {install_script_p} -RunAsAdmin
     """
 
@@ -1521,6 +1554,20 @@ def install_bluekit(configuration: data.Configuration, should_restart: bool = Tr
         clean_up_disk(keep_cache=True)
     else:
         clean_up_disk()
+
+    # Format the log files after the fact because they just KEEP having those damn doubled newlines
+    for p in [log_p, errors_p]:
+        if not os.path.isfile(p):
+            continue
+
+        with open(p, "r", encoding="utf-8") as f:
+            content = f.read()
+
+            while ("\r\n\r\n" in content) or ("\n\n" in content) or ("\r\r" in content):
+                content = content.replace("\r\n\r\n", "\r\n").replace("\n\n", "\n").replace("\r\r", "\r")
+
+        with open(p, "w+", encoding="utf-8") as f:
+            f.write(content)
 
     if should_restart:
         restart()
