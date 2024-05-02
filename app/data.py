@@ -623,6 +623,7 @@ default_configuration = {
             ("https://github.com/struppigel/hedgehog-tools", "Hedgehog Tools", "A collection of tools for reverse engineering and malware analysis, written by Karsten Hahn."),
             ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
             ("https://github.com/Fadi002/de4py", "de4py", "A toolkit for Python reverse engineering."),
+            ("https://github.com/Konloch/bytecode-viewer", "Bytecode Viewer", "A Java reverse-engineering tool, included here to collect its plug-ins."),
         ]
     },
 
@@ -943,6 +944,15 @@ default_configuration = {
                     ],
                     "target": "%LOCALAPPDATA%\\Chromium\\User Data\\Default"
                 },
+            ],
+            "Java Disassembler": [
+                {
+                    "description": "MapleIR Plugin",
+                    "sources": [
+                        "https://github.com/LLVM-but-worse/java-disassembler/releases/download/1.2.0/jdaplugin-0.0.1-SNAPSHOT.jar",    
+                    ],
+                    "target": "%USERPROFILE%\\.jda\\plugins"
+                }
             ]
         }
     },
