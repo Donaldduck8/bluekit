@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-VERSION = "1.0.0"
+VERSION = "1.0.0-b.1"
 
 @dataclass
 class BasePackageStructure():
