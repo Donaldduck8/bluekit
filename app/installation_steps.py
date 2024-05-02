@@ -748,7 +748,6 @@ def clean_up_disk(keep_cache: bool = False):
     temp_dir = utils.resolve_path(r"%LOCALAPPDATA%\Temp")
     software_distribution_dir = utils.resolve_path(r"C:\Windows\SoftwareDistribution\Download")
     windows_temp_dir = utils.resolve_path(r"C:\Windows\Temp")
-    onedrive_dir = utils.resolve_path(r"%LOCALAPPDATA%\Microsoft\OneDrive")
     random_cache_dir = utils.resolve_path(r"C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache")
     package_cache_dir = r"C:\ProgramData\Package Cache"
 
@@ -756,7 +755,6 @@ def clean_up_disk(keep_cache: bool = False):
         temp_dir,
         software_distribution_dir,
         windows_temp_dir,
-        onedrive_dir,
         random_cache_dir,
         package_cache_dir
     ]
