@@ -5,3 +5,4 @@ PyQt5_sip
 PyQt_Fluent_Widgets
 pywin32
 pyinstaller
+jsonpickle
