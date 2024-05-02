@@ -7,7 +7,6 @@ install Git using Scoop, add Scoop buckets, install Python packages using pip, i
 and install tools using Scoop package manager.
 """
 
-from collections import OrderedDict
 import ctypes
 import hashlib
 import json
@@ -19,9 +18,10 @@ import sys
 import traceback
 import uuid
 import winreg
+from collections import OrderedDict
+from dataclasses import asdict
 from typing import List
 
-import jsonpickle
 import pythoncom
 import win32com.client
 from qfluentwidgets import InfoBarIcon
@@ -1460,7 +1460,7 @@ def install_bluekit(configuration: data.Configuration, should_restart: bool = Tr
     Overall method for performing all of Bluekit's installations steps.
     """
     with open(configuration_out_p, "w+", encoding="utf-8") as configuration_out_f:
-        configuration_out_f.write(jsonpickle.dumps(configuration, indent=4))
+        configuration_out_f.write(json.dumps(configuration, default=asdict, indent=4))
 
     common_pre_install()
     remove_worthless_python_exes()

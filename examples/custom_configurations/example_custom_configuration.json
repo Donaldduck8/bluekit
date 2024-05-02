@@ -1,1041 +1,1185 @@
 {
     "scoop": {
         "buckets": [
-            [
-                "extras",
-                "Extras",
-                "Extra software that doesn't fit in the main bucket."
-            ],
-            [
-                "versions",
-                "Versions",
-                "Older versions of software."
-            ],
-            [
-                "nerd-fonts",
-                "Nerd Fonts",
-                "Patched fonts with a high number of glyphs."        
-            ],
-            [
-                "java",
-                "Java",
-                "Java Development Kit and Java Runtime Environment." 
-            ],
-            [
-                "malware-analysis-bucket https://github.com/Donaldduck8/malware-analysis-bucket",
-                "Malware Analysis Bucket",
-                "Tools for analyzing malware."
-            ]
+            {
+                "id": "extras",
+                "name": "Extras",
+                "description": "Extra software that doesn't fit in the main bucket."
+            },
+            {
+                "id": "versions",
+                "name": "Versions",
+                "description": "Older versions of software."
+            },
+            {
+                "id": "nerd-fonts",
+                "name": "Nerd Fonts",
+                "description": "Patched fonts with a high number of glyphs."
+            },
+            {
+                "id": "java",
+                "name": "Java",
+                "description": "Java Development Kits and Java Runtime Environments."
+            },
+            {
+                "id": "malware-analysis-bucket https://github.com/Donaldduck8/malware-analysis-bucket",
+                "name": "Malware Analysis Bucket",
+                "description": "Tools for analyzing malware."
+            }
         ],
         "required": [
-            [
-                "git",
-                "Git",
-                "A distributed version control system."
-            ],
-            [
-                "pwsh",
-                "PowerShell",
-                "A task automation and configuration management framework."
-            ],
-            [
-                "malware-analysis-bucket/python27-no-pollute",
-                "Python 2.7",
-                "The newest Python 2.x version available, required for Java bytecode editing."
-            ],
-            [
-                "python311",
-                "Python 3.11",
-                "The newest Python version currently compatible with IDA Pro."
-            ],
-            [
-                "malware-analysis-bucket/portable_build_tools",
-                "Portable Build Tools",
-                "A portable version of Visual C++ build tools."
-            ],
-            [
-                "zulufx17-jdk",
-                "Zulu JDK FX 17",
-                "A Java Development Kit with JavaFX 17."
-            ]
+            {
+                "id": "git",
+                "name": "Git",
+                "description": "A distributed version control system.",
+                "alternative": null
+            },
+            {
+                "id": "pwsh",
+                "name": "PowerShell",
+                "description": "A task automation and configuration management framework.",
+                "alternative": null
+            },
+            {
+                "id": "malware-analysis-bucket/python27-no-pollute",
+                "name": "Python 2.7",
+                "description": "The newest Python 2.x version available, required for Java bytecode editing.",
+                "alternative": null
+            },
+            {
+                "id": "python311",
+                "name": "Python 3.11",
+                "description": "The newest Python version currently compatible with IDA Pro.",
+                "alternative": null
+            },
+            {
+                "id": "malware-analysis-bucket/portable_build_tools",
+                "name": "Portable Build Tools",
+                "description": "A portable version of Visual C++ build tools.",
+                "alternative": null
+            },
+            {
+                "id": "zulufx17-jdk",
+                "name": "Zulu JDK FX 17",
+                "description": "A Java Development Kit with JavaFX 17.",
+                "alternative": null
+            }
         ],
         "packages": {
             "Basics": [
-                [
-                    "FiraCode-NF-Mono",
-                    "Fira Code (Mono)",
-                    "A monospaced font with programming ligatures."
-                ],
-                [
-                    "chromium",
-                    "Chromium",
-                    "A web browser that is the basis for Google Chrome."
-                ],
-                [
-                    "sublime-text",
-                    "Sublime Text",
-                    "A sophisticated text editor for code, markup, and prose."
-                ],
-                [
-                    "7zip",
-                    "7-Zip",
-                    "A file archiver with a high compression ratio."
-                ],
-                [
-                    "vscodium",
-                    "Codium",
-                    "A code editor redefined and optimized for building and debugging modern web and cloud applications."
-                ]
+                {
+                    "id": "FiraCode-NF-Mono",
+                    "name": "Fira Code (Mono)",
+                    "description": "A monospaced font with programming ligatures.",
+                    "alternative": null
+                },
+                {
+                    "id": "chromium",
+                    "name": "Chromium",
+                    "description": "A web browser that is the basis for Google Chrome.",
+                    "alternative": null
+                },
+                {
+                    "id": "sublime-text",
+                    "name": "Sublime Text",
+                    "description": "A sophisticated text editor for code, markup, and prose.",
+                    "alternative": null
+                },
+                {
+                    "id": "7zip",
+                    "name": "7-Zip",
+                    "description": "A file archiver with a high compression ratio.",
+                    "alternative": null
+                },
+                {
+                    "id": "vscodium",
+                    "name": "Codium",
+                    "description": "A code editor redefined and optimized for building and debugging modern web and cloud applications.",
+                    "alternative": null
+                }
             ],
             "Miscellaneous": [
-                [
-                    "malware-analysis-bucket/glazewm_extra",
-                    "Glaze Window Manager",
-                    "A tiling window manager for Windows."
-                ],
-                [
-                    "setuserfta",
-                    "SetUserFTA",
-                    "A tool to change the default program associated with a file type."
-                ],
-                [
-                    "upx",
-                    "UPX",
-                    "A free, portable, extendable, high-performance executable packer for several executable formats."
-                ],
-                [
-                    "malware-analysis-bucket/openssl-light-no-pollute",
-                    "OpenSSL",
-                    "A robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."
-                ],
-                [
-                    "malware-analysis-bucket/onenoteanalyzer",
-                    "OneNote Analyzer",
-                    "A tool for analyzing OneNote files."
-                ],
-                [
-                    "malware-analysis-bucket/pycdc",
-                    "Decompyle++",
-                    "A C++ python bytecode disassembler and decompiler."
-                ],
-                [
-                    "meld",
-                    "Meld",
-                    "A visual diff and merge tool., useful for bloated script files."
-                ]
+                {
+                    "id": "malware-analysis-bucket/glazewm_extra",
+                    "name": "Glaze Window Manager",
+                    "description": "A tiling window manager for Windows.",
+                    "alternative": null
+                },
+                {
+                    "id": "setuserfta",
+                    "name": "SetUserFTA",
+                    "description": "A tool to change the default program associated with a file type.",
+                    "alternative": null
+                },
+                {
+                    "id": "upx",
+                    "name": "UPX",
+                    "description": "A free, portable, extendable, high-performance executable packer for several executable formats.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/openssl-light-no-pollute",
+                    "name": "OpenSSL",
+                    "description": "A robust, commercial-grade, and full-featured toolkit for TLS and SSL.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/onenoteanalyzer",
+                    "name": "OneNote Analyzer",
+                    "description": "A tool for analyzing OneNote files.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/pycdc",
+                    "name": "Decompyle++",
+                    "description": "A C++ python bytecode disassembler and decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "meld",
+                    "name": "Meld",
+                    "description": "A visual diff and merge tool., useful for bloated script files.",
+                    "alternative": null
+                }
             ],
             "Shell": [
-                [
-                    "windows-terminal",
-                    "Windows Terminal",
-                    "A modern terminal application for users of command-line tools and shells."
-                ],
-                [
-                    "yazi",
-                    "Yazi",
-                    "A modern terminal file manager with outstanding performance."
-                ],
-                [
-                    "hexyl",
-                    "Hexyl",
-                    "A simple hex viewer for the terminal."
-                ],
-                [
-                    "rhash",
-                    "RHash",
-                    "A utility for computing and verifying hash sums of files."
-                ],
-                [
-                    "fzf",
-                    "FZF",
-                    "A command-line fuzzy finder."
-                ],
-                [
-                    "ripgrep",
-                    "Ripgrep",
-                    "A line-oriented search tool that recursively searches your current directory for a regex pattern."
-                ],
-                [
-                    "zoxide",
-                    "Zoxide",
-                    "A smarter cd command."
-                ],
-                [
-                    "sudo",
-                    "Sudo",
-                    "A program for providing privileged access to commands."
-                ],
-                [
-                    "malware-analysis-bucket/zsh",
-                    "Zsh",
-                    "A shell designed for interactive use."
-                ],
-                [
-                    "ouch",
-                    "Ouch",
-                    "A library for painless compression and decompression for your terminal."
-                ]
+                {
+                    "id": "windows-terminal",
+                    "name": "Windows Terminal",
+                    "description": "A modern terminal application for users of command-line tools and shells.",
+                    "alternative": null
+                },
+                {
+                    "id": "yazi",
+                    "name": "Yazi",
+                    "description": "A modern terminal file manager with outstanding performance.",
+                    "alternative": null
+                },
+                {
+                    "id": "hexyl",
+                    "name": "Hexyl",
+                    "description": "A simple hex viewer for the terminal.",
+                    "alternative": null
+                },
+                {
+                    "id": "rhash",
+                    "name": "RHash",
+                    "description": "A utility for computing and verifying hash sums of files.",
+                    "alternative": null
+                },
+                {
+                    "id": "fzf",
+                    "name": "FZF",
+                    "description": "A command-line fuzzy finder.",
+                    "alternative": null
+                },
+                {
+                    "id": "ripgrep",
+                    "name": "Ripgrep",
+                    "description": "A line-oriented search tool that recursively searches your current directory for a regex pattern.",
+                    "alternative": null
+                },
+                {
+                    "id": "zoxide",
+                    "name": "Zoxide",
+                    "description": "A smarter cd command.",
+                    "alternative": null
+                },
+                {
+                    "id": "sudo",
+                    "name": "Sudo",
+                    "description": "A program for providing privileged access to commands.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/zsh",
+                    "name": "Zsh",
+                    "description": "A shell designed for interactive use.",
+                    "alternative": null
+                },
+                {
+                    "id": "ouch",
+                    "name": "Ouch",
+                    "description": "A library for painless compression and decompression for your terminal.",
+                    "alternative": null
+                }
             ],
             "Triage": [
-                [
-                    "die",
-                    "Detect It Easy",
-                    "A program for determining types of files."
-                ],
-                [
-                    "malware-analysis-bucket/cyberchef",
-                    "Cyberchef",
-                    "A web app for analyzing and decoding data."
-                ],
-                [
-                    "malware-analysis-bucket/malcat",
-                    "MalCat",
-                    "A tool centered around static malware and binary analysis."
-                ],
-                [
-                    "010editor",
-                    "010 Editor",
-                    "A professional text/hex editor designed to edit any file."
-                ]
+                {
+                    "id": "die",
+                    "name": "Detect It Easy",
+                    "description": "A program for determining types of files.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/cyberchef",
+                    "name": "Cyberchef",
+                    "description": "A web app for analyzing and decoding data.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/malcat",
+                    "name": "MalCat",
+                    "description": "A tool centered around static malware and binary analysis.",
+                    "alternative": null
+                },
+                {
+                    "id": "010editor",
+                    "name": "010 Editor",
+                    "description": "A professional text/hex editor designed to edit any file.",
+                    "alternative": null
+                }
             ],
             "PE (Static)": [
-                [
-                    "yara",
-                    "YARA",
-                    "A tool aimed at helping malware researchers to identify and classify malware samples."
-                ],
+                {
+                    "id": "yara",
+                    "name": "YARA",
+                    "description": "A tool aimed at helping malware researchers to identify and classify malware samples.",
+                    "alternative": null
+                },
                 {
                     "id": "ida_pro.json",
                     "name": "IDA Pro",
                     "description": "A disassembler and debugger for analyzing binary files.",
-                    "alternative": [
-                        "ida-free",
-                        "IDA Free",
-                        "A free version of IDA Pro."
-                    ]
+                    "alternative": {
+                        "id": "ida-free",
+                        "name": "IDA Free",
+                        "description": "A free version of IDA Pro."
+                    }
                 },
                 {
                     "id": "binary_ninja.json",
                     "name": "Binary Ninja",
                     "description": "A reverse engineering platform.",
-                    "alternative": [
-                        "malware-analysis-bucket/binary_ninja_free",
-                        "Binary Ninja Free",
-                        "A free version of Binary Ninja."
-                    ]
+                    "alternative": {
+                        "id": "malware-analysis-bucket/binary_ninja_free",
+                        "name": "Binary Ninja Free",
+                        "description": "A free version of Binary Ninja."
+                    }
                 },
-                [
-                    "ghidra",
-                    "Ghidra",
-                    "A software reverse engineering (SRE) framework."
-                ],
-                [
-                    "malware-analysis-bucket/ghidrathon-np",
-                    "Ghidrathon",
-                    "A tool to use Python within Ghidra."
-                ],
-                [
-                    "cutter",
-                    "Cutter",
-                    "A reverse engineering platform powered by rizin/radare2 and Ghidra's decompiler."
-                ],
-                [
-                    "malware-analysis-bucket/floss",
-                    "FLOSS",
-                    "A tool designed to automatically deobfuscate strings from malware samples."
-                ],
-                [
-                    "malware-analysis-bucket/cffexplorer",
-                    "CFF Explorer",
-                    "A PE editor."
-                ],
-                [
-                    "innoextract",
-                    "Inno Setup Extractor",
-                    "A tool for extracting Inno Setup installers."
-                ],
-                [
-                    "uniextract2",
-                    "Universal Extractor 2",
-                    "A tool for extracting files from any type of archive."
-                ],
-                [
-                    "malware-analysis-bucket/bindiff",
-                    "BinDiff",
-                    "A tool for comparing binary files."
-                ]
+                {
+                    "id": "ghidra",
+                    "name": "Ghidra",
+                    "description": "A software reverse engineering (SRE) framework.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/ghidrathon-np",
+                    "name": "Ghidrathon",
+                    "description": "A tool to use Python within Ghidra.",
+                    "alternative": null
+                },
+                {
+                    "id": "cutter",
+                    "name": "Cutter",
+                    "description": "A reverse engineering platform powered by rizin/radare2 and Ghidra's decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/floss",
+                    "name": "FLOSS",
+                    "description": "A tool designed to automatically deobfuscate strings from malware samples.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/cffexplorer",
+                    "name": "CFF Explorer",
+                    "description": "A PE editor.",
+                    "alternative": null
+                },
+                {
+                    "id": "innoextract",
+                    "name": "Inno Setup Extractor",
+                    "description": "A tool for extracting Inno Setup installers.",
+                    "alternative": null
+                },
+                {
+                    "id": "uniextract2",
+                    "name": "Universal Extractor 2",
+                    "description": "A tool for extracting files from any type of archive.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/bindiff",
+                    "name": "BinDiff",
+                    "description": "A tool for comparing binary files.",
+                    "alternative": null
+                }
             ],
             "PE (Dynamic)": [
-                [
-                    "x64dbg",
-                    "x64dbg",
-                    "An open-source x64/x32 debugger for Windows."
-                ],
-                [
-                    "malware-analysis-bucket/x64dbg_plugin_manager",
-                    "x64dbg Plugin Manager",
-                    "A tool to manage and automatically install x64dbg plugins."
-                ],
-                [
-                    "windbg",
-                    "WinDbg",
-                    "A multipurpose x64/x32 debugger capable of handling context switching."
-                ],
-                [
-                    "pe-sieve",
-                    "PE-sieve",
-                    "a tool that helps to detect and collect malware running on the system."
-                ],
-                [
-                    "wireshark",
-                    "Wireshark",
-                    "A network protocol analyzer."
-                ],
-                [
-                    "hollows-hunter",
-                    "Hollows Hunter",
-                    "A tool to detect code injection techniques."
-                ],
-                [
-                    "sysinternals",
-                    "Sysinternals Suite",
-                    "A suite of utilities to manage, diagnose, troubleshoot, and monitor Windows."
-                ],
-                [
-                    "systeminformer-nightly",
-                    "System Informer",
-                    "A tool to gather information about your system."
-                ],
-                [
-                    "malware-analysis-bucket/pe_unmapper",
-                    "PE Unmapper",
-                    "A tool to unmap dumped PE files."
-                ],
-                [
-                    "malware-analysis-bucket/apimonitor",
-                    "API Monitor",
-                    "A tool to monitor and control Windows API calls made by applications."
-                ],
-                [
-                    "malware-analysis-bucket/pd32",
-                    "Process Dump (x86)",
-                    "A tool to dump processes."
-                ],
-                [
-                    "malware-analysis-bucket/pd64",
-                    "Process Dump (x64)",
-                    "A tool to dump processes."
-                ],
-                [
-                    "malware-analysis-bucket/xntsv64",
-                    "XNTSV64",
-                    "A tool to inspect process and thread structures of running programs."
-                ],
-                [
-                    "malware-analysis-bucket/regshot",
-                    "Regshot",
-                    "A tool to compare registry snapshots."
-                ],
-                [
-                    "malware-analysis-bucket/mal_unpack32",
-                    "Mal_Unpack32",
-                    "A tool to unpack malware."
-                ],
-                [
-                    "malware-analysis-bucket/mal_unpack64",
-                    "Mal_Unpack64",
-                    "A tool to unpack malware."
-                ],
-                [
-                    "malware-analysis-bucket/novmp",
-                    "NoVMP",
-                    "A tool to unpack malware."
-                ],
-                [
-                    "malware-analysis-bucket/xvolkolak",
-                    "XVolKolak",
-                    "A tool to unpack malware."
-                ],
-                [
-                    "malware-analysis-bucket/fermion",
-                    "Fermion",
-                    "An electron wrapper for Frida & Monaco"
-                ],
-                [
-                    "malware-analysis-bucket/fakenet",
-                    "Fakenet-NG",
-                    "A tool to analyze network traffic."
-                ]
+                {
+                    "id": "x64dbg",
+                    "name": "x64dbg",
+                    "description": "An open-source x64/x32 debugger for Windows.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/x64dbg_plugin_manager",
+                    "name": "x64dbg Plugin Manager",
+                    "description": "A tool to manage and automatically install x64dbg plugins.",
+                    "alternative": null
+                },
+                {
+                    "id": "windbg",
+                    "name": "WinDbg",
+                    "description": "A multipurpose x64/x32 debugger capable of handling context switching.",
+                    "alternative": null
+                },
+                {
+                    "id": "pe-sieve",
+                    "name": "PE-sieve",
+                    "description": "a tool that helps to detect and collect malware running on the system.",
+                    "alternative": null
+                },
+                {
+                    "id": "wireshark",
+                    "name": "Wireshark",
+                    "description": "A network protocol analyzer.",
+                    "alternative": null
+                },
+                {
+                    "id": "hollows-hunter",
+                    "name": "Hollows Hunter",
+                    "description": "A tool to detect code injection techniques.",
+                    "alternative": null
+                },
+                {
+                    "id": "sysinternals",
+                    "name": "Sysinternals Suite",
+                    "description": "A suite of utilities to manage, diagnose, troubleshoot, and monitor Windows.",
+                    "alternative": null
+                },
+                {
+                    "id": "systeminformer-nightly",
+                    "name": "System Informer",
+                    "description": "A tool to gather information about your system.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/pe_unmapper",
+                    "name": "PE Unmapper",
+                    "description": "A tool to unmap dumped PE files.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/apimonitor",
+                    "name": "API Monitor",
+                    "description": "A tool to monitor and control Windows API calls made by applications.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/pd32",
+                    "name": "Process Dump (x86)",
+                    "description": "A tool to dump processes.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/pd64",
+                    "name": "Process Dump (x64)",
+                    "description": "A tool to dump processes.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/xntsv64",
+                    "name": "XNTSV64",
+                    "description": "A tool to inspect process and thread structures of running programs.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/regshot",
+                    "name": "Regshot",
+                    "description": "A tool to compare registry snapshots.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/mal_unpack32",
+                    "name": "Mal_Unpack32",
+                    "description": "A tool to unpack malware.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/mal_unpack64",
+                    "name": "Mal_Unpack64",
+                    "description": "A tool to unpack malware.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/novmp",
+                    "name": "NoVMP",
+                    "description": "A tool to unpack malware.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/xvolkolak",
+                    "name": "XVolKolak",
+                    "description": "A tool to unpack malware.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/fermion",
+                    "name": "Fermion",
+                    "description": "An electron wrapper for Frida & Monaco",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/fakenet",
+                    "name": "Fakenet-NG",
+                    "description": "A tool to analyze network traffic.",
+                    "alternative": null
+                }
             ],
             "Themida (Dynamic)": [
-                [
-                    "malware-analysis-bucket/magicmida",
-                    "MagicMida",
-                    "A tool designed to unpack some 32-bit Themida-protected applications."
-                ],
-                [
-                    "malware-analysis-bucket/unlicense_64",
-                    "Unlicense (x64)",
-                    "A tool to unpack Themida-protected applications."
-                ],
-                [
-                    "malware-analysis-bucket/unlicense_32",
-                    "Unlicense (x86)",
-                    "A tool to unpack Themida-protected applications."
-                ]
+                {
+                    "id": "malware-analysis-bucket/magicmida",
+                    "name": "MagicMida",
+                    "description": "A tool designed to unpack some 32-bit Themida-protected applications.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/unlicense_64",
+                    "name": "Unlicense (x64)",
+                    "description": "A tool to unpack Themida-protected applications.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/unlicense_32",
+                    "name": "Unlicense (x86)",
+                    "description": "A tool to unpack Themida-protected applications.",
+                    "alternative": null
+                }
             ],
             "Shellcode (Static)": [
-                [
-                    "malware-analysis-bucket/scdbg",
-                    "SCDbg",
-                    "A shellcode emulation tool to extract Windows API calls."
-                ]
+                {
+                    "id": "malware-analysis-bucket/scdbg",
+                    "name": "SCDbg",
+                    "description": "A shellcode emulation tool to extract Windows API calls.",
+                    "alternative": null
+                }
             ],
             "Shellcode (Dynamic)": [
-                [
-                    "malware-analysis-bucket/blobrunner32",
-                    "BlobRunner (x86)",
-                    "A bootstrap program to execute shellcode within a debugger."
-                ],
-                [
-                    "malware-analysis-bucket/blobrunner64",
-                    "BlobRunner (x64)",
-                    "A bootstrap program to execute shellcode within a debugger."
-                ]
+                {
+                    "id": "malware-analysis-bucket/blobrunner32",
+                    "name": "BlobRunner (x86)",
+                    "description": "A bootstrap program to execute shellcode within a debugger.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/blobrunner64",
+                    "name": "BlobRunner (x64)",
+                    "description": "A bootstrap program to execute shellcode within a debugger.",
+                    "alternative": null
+                }
             ],
             "Golang (Static)": [
-                [
-                    "malware-analysis-bucket/goresym",
-                    "GoResym",
-                    "A Golang symbol parser that extracts metadata, embedded structures and types."
-                ],
-                [
-                    "malware-analysis-bucket/redress",
-                    "Redress",
-                    "A tool for analyzing stripped Go binaries compiled with the Go compiler."
-                ]
+                {
+                    "id": "malware-analysis-bucket/goresym",
+                    "name": "GoResym",
+                    "description": "A Golang symbol parser that extracts metadata, embedded structures and types.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/redress",
+                    "name": "Redress",
+                    "description": "A tool for analyzing stripped Go binaries compiled with the Go compiler.",
+                    "alternative": null
+                }
             ],
             "Golang (Dynamic)": [
-                [
-                    "malware-analysis-bucket/gftrace32",
-                    "GFTrace (x86)",
-                    "A command line Windows API tracing tool for Golang binaries."
-                ],
-                [
-                    "malware-analysis-bucket/gftrace64",
-                    "GFTrace (x64)",
-                    "A command line Windows API tracing tool for Golang binaries."
-                ]
+                {
+                    "id": "malware-analysis-bucket/gftrace32",
+                    "name": "GFTrace (x86)",
+                    "description": "A command line Windows API tracing tool for Golang binaries.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/gftrace64",
+                    "name": "GFTrace (x64)",
+                    "description": "A command line Windows API tracing tool for Golang binaries.",
+                    "alternative": null
+                }
             ],
             ".NET (Dependencies)": [
-                [
-                    "windowsdesktop-runtime-6.0",
-                    ".NET 6.0 Runtime",
-                    "Required for ILSpy"
-                ],
-                [
-                    "windowsdesktop-runtime-5.0_64",
-                    ".NET 5.0 (x64) Runtime",
-                    "Required for GarbageMan"
-                ],
-                [
-                    "windowsdesktop-runtime-5.0_32",
-                    ".NET 5.0 (x86) Runtime",
-                    "Required for GarbageMan"
-                ],
-                [
-                    "malware-analysis-bucket/dotnet7-sdk_32",
-                    ".NET 7.0 (x86) SDK",
-                    "Required for LINQPad"
-                ],
-                [
-                    "malware-analysis-bucket/dotnet7-sdk_64",
-                    ".NET 7.0 (x64) SDK",
-                    "Required for LINQPad"
-                ]
+                {
+                    "id": "windowsdesktop-runtime-6.0",
+                    "name": ".NET 6.0 Runtime",
+                    "description": "Required for ILSpy",
+                    "alternative": null
+                },
+                {
+                    "id": "windowsdesktop-runtime-5.0_64",
+                    "name": ".NET 5.0 (x64) Runtime",
+                    "description": "Required for GarbageMan",
+                    "alternative": null
+                },
+                {
+                    "id": "windowsdesktop-runtime-5.0_32",
+                    "name": ".NET 5.0 (x86) Runtime",
+                    "description": "Required for GarbageMan",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/dotnet7-sdk_32",
+                    "name": ".NET 7.0 (x86) SDK",
+                    "description": "Required for LINQPad",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/dotnet7-sdk_64",
+                    "name": ".NET 7.0 (x64) SDK",
+                    "description": "Required for LINQPad",
+                    "alternative": null
+                }
             ],
             ".NET (Static)": [
-                [
-                    "ilspy",
-                    "ILSpy",
-                    "A .NET assembly browser and decompiler."
-                ],
-                [
-                    "malware-analysis-bucket/dnspyex64",
-                    "dnSpyEx64",
-                    "A .NET debugger and assembly editor."
-                ],
-                [
-                    "malware-analysis-bucket/dnspyex32",
-                    "dnSpyEx32",
-                    "A .NET debugger and assembly editor."
-                ],
-                [
-                    "malware-analysis-bucket/de4dot-net45",
-                    "de4dot .NET 4.5",
-                    "A .NET deobfuscator and unpacker."
-                ],
-                [
-                    "malware-analysis-bucket/netreactorslayer",
-                    "NetReactor Slayer",
-                    "A tool to deobfuscate .NET Reactor-protected applications."
-                ]
+                {
+                    "id": "ilspy",
+                    "name": "ILSpy",
+                    "description": "A .NET assembly browser and decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/dnspyex64",
+                    "name": "dnSpyEx64",
+                    "description": "A .NET debugger and assembly editor.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/dnspyex32",
+                    "name": "dnSpyEx32",
+                    "description": "A .NET debugger and assembly editor.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/de4dot-net45",
+                    "name": "de4dot .NET 4.5",
+                    "description": "A .NET deobfuscator and unpacker.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/netreactorslayer",
+                    "name": "NetReactor Slayer",
+                    "description": "A tool to deobfuscate .NET Reactor-protected applications.",
+                    "alternative": null
+                }
             ],
             ".NET (Dynamic)": [
-                [
-                    "codetrack",
-                    "CodeTrack",
-                    "A tool to monitor and analyze .NET application performance."
-                ],
+                {
+                    "id": "codetrack",
+                    "name": "CodeTrack",
+                    "description": "A tool to monitor and analyze .NET application performance.",
+                    "alternative": null
+                },
                 {
                     "id": "linqpad_pro.json",
                     "name": "LINQPad",
                     "description": "A tool to easily write C# scripts to interact with .NET malware samples.",
-                    "alternative": [
-                        "linqpad",
-                        "LINQPad (Free)",
-                        "A tool to easily write C# scripts to interact with .NET malware samples."
-                    ]
+                    "alternative": {
+                        "id": "linqpad",
+                        "name": "LINQPad (Free)",
+                        "description": "A tool to easily write C# scripts to interact with .NET malware samples."
+                    }
                 },
-                [
-                    "malware-analysis-bucket/extreme_dumper",
-                    "Extreme Dumper",
-                    "A tool to dump .NET assemblies from running .NET applications by hooking Assembly-related functions."
-                ],
-                [
-                    "malware-analysis-bucket/dotdumper",
-                    "DotDumper",
-                    "An automatic unpacker and logger for DotNet Framework targeting files."
-                ],
-                [
-                    "malware-analysis-bucket/rundotnetdll",
-                    "RunDotNetDll",
-                    "A bootstrap program to execute non-executable .NET assemblies within a debugger."
-                ],
-                [
-                    "malware-analysis-bucket/psnotify-np",
-                    "PSNotify (non-portable) ",
-                    "A hooking engine required for GarbageMan."
-                ],
-                [
-                    "malware-analysis-bucket/garbageman",
-                    "GarbageMan",
-                    "A set of tools for analyzing .NET binaries through heap analysis."
-                ],
-                [
-                    "malware-analysis-bucket/sharpdllloader",
-                    "SharpDllLoader",
-                    "A bootstrap program to execute non-executable .NET assemblies within a debugger."
-                ]
+                {
+                    "id": "malware-analysis-bucket/extreme_dumper",
+                    "name": "Extreme Dumper",
+                    "description": "A tool to dump .NET assemblies from running .NET applications by hooking Assembly-related functions.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/dotdumper",
+                    "name": "DotDumper",
+                    "description": "An automatic unpacker and logger for DotNet Framework targeting files.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/rundotnetdll",
+                    "name": "RunDotNetDll",
+                    "description": "A bootstrap program to execute non-executable .NET assemblies within a debugger.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/psnotify-np",
+                    "name": "PSNotify (non-portable) ",
+                    "description": "A hooking engine required for GarbageMan.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/garbageman",
+                    "name": "GarbageMan",
+                    "description": "A set of tools for analyzing .NET binaries through heap analysis.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/sharpdllloader",
+                    "name": "SharpDllLoader",
+                    "description": "A bootstrap program to execute non-executable .NET assemblies within a debugger.",
+                    "alternative": null
+                }
             ],
             "PowerShell (Dynamic)": [
-                [
-                    "malware-analysis-bucket/powerdecode",
-                    "PowerDecode",
-                    "A tool to automatically deobfuscate some PowerShell scripts."
-                ]
+                {
+                    "id": "malware-analysis-bucket/powerdecode",
+                    "name": "PowerDecode",
+                    "description": "A tool to automatically deobfuscate some PowerShell scripts.",
+                    "alternative": null
+                }
             ],
             "JavaScript (Dynamic)": [
-                [
-                    "nodejs",
-                    "Node.js",
-                    "A JavaScript runtime built on Chrome's V8 JavaScript engine."
-                ]
+                {
+                    "id": "nodejs",
+                    "name": "Node.js",
+                    "description": "A JavaScript runtime built on Chrome's V8 JavaScript engine.",
+                    "alternative": null
+                }
             ],
             "JAVA (Static)": [
-                [
-                    "malware-analysis-bucket/recaf3",
-                    "Recaf 3.0.0-SNAPSHOT",
-                    "A snapshot of the current state of development of Recaf 3, which is a modern Java bytecode viewer and decompiler."
-                ],
-                [
-                    "malware-analysis-bucket/recaf4",
-                    "Recaf 4.0.0-SNAPSHOT",
-                    "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler."
-                ],
-                [
-                    "malware-analysis-bucket/java-disassembler",
-                    "Java Disassembler",
-                    "A tool to disassemble Java class files."
-                ],
-                [
-                    "malware-analysis-bucket/java-deobfuscator",
-                    "Java Deobfuscator",
-                    "A tool to deobfuscate Java class files."
-                ],
-                [
-                    "cfr",
-                    "CFR",
-                    "A Java decompiler."
-                ],
-                [
-                    "procyon",
-                    "Procyon",
-                    "A Java decompiler."
-                ],
-                [
-                    "malware-analysis-bucket/fernflower",
-                    "Fernflower",
-                    "A Java decompiler."
-                ]
+                {
+                    "id": "malware-analysis-bucket/recaf3",
+                    "name": "Recaf 3.0.0-SNAPSHOT",
+                    "description": "A snapshot of the current state of development of Recaf 3, which is a modern Java bytecode viewer and decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/recaf4",
+                    "name": "Recaf 4.0.0-SNAPSHOT",
+                    "description": "A snapshot of the current state of development of Recaf 4, which is a modern Java bytecode viewer and decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/java-disassembler",
+                    "name": "Java Disassembler",
+                    "description": "A tool to disassemble Java class files.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/java-deobfuscator",
+                    "name": "Java Deobfuscator",
+                    "description": "A tool to deobfuscate Java class files.",
+                    "alternative": null
+                },
+                {
+                    "id": "cfr",
+                    "name": "CFR",
+                    "description": "A Java decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "procyon",
+                    "name": "Procyon",
+                    "description": "A Java decompiler.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/fernflower",
+                    "name": "Fernflower",
+                    "description": "A Java decompiler.",
+                    "alternative": null
+                }
             ],
             "JAVA (Dynamic)": [
-                [
-                    "bytecode-viewer",
-                    "Bytecode Viewer",
-                    "A Java 8 Jar & Android APK Reverse Engineering Suite (Decompiler, Editor, Debugger & More)."
-                ]
+                {
+                    "id": "bytecode-viewer",
+                    "name": "Bytecode Viewer",
+                    "description": "A Java 8 Jar & Android APK Reverse Engineering Suite (Decompiler, Editor, Debugger & More).",
+                    "alternative": null
+                }
             ],
             "Android (Static)": [
-                [
-                    "jadx",
-                    "Jadx",
-                    "A lightweight and easy-to-use decompiler for Android applications."
-                ],
-                [
-                    "apktool",
-                    "Apktool",
-                    "A tool for reverse engineering Android APK files."
-                ]
+                {
+                    "id": "jadx",
+                    "name": "Jadx",
+                    "description": "A lightweight and easy-to-use decompiler for Android applications.",
+                    "alternative": null
+                },
+                {
+                    "id": "apktool",
+                    "name": "Apktool",
+                    "description": "A tool for reverse engineering Android APK files.",
+                    "alternative": null
+                }
             ],
             "OLE / Microsoft Office (Static)": [
-                [
-                    "malware-analysis-bucket/didier_stevens_suite",
-                    "Didier Stevens Suite",
-                    "A collection of tools to process Microsoft Office-adjacent files."
-                ],
-                [
-                    "oleviewdotnet",
-                    "OLEViewDotNet",
-                    "A tool to view all OLE class IDs present on the system."
-                ]
+                {
+                    "id": "malware-analysis-bucket/didier_stevens_suite",
+                    "name": "Didier Stevens Suite",
+                    "description": "A collection of tools to process Microsoft Office-adjacent files.",
+                    "alternative": null
+                },
+                {
+                    "id": "oleviewdotnet",
+                    "name": "OLEViewDotNet",
+                    "description": "A tool to view all OLE class IDs present on the system.",
+                    "alternative": null
+                }
             ],
             "MSI (Static)": [
-                [
-                    "malware-analysis-bucket/lessmsi",
-                    "LessMSI",
-                    "A tool to view and extract the contents of an MSI file."
-                ]
+                {
+                    "id": "malware-analysis-bucket/lessmsi",
+                    "name": "LessMSI",
+                    "description": "A tool to view and extract the contents of an MSI file.",
+                    "alternative": null
+                }
             ],
             "Rust": [
-                [
-                    "rustup",
-                    "Rustup",
-                    "A tool to manage Rust installations."
-                ]
+                {
+                    "id": "rustup",
+                    "name": "Rustup",
+                    "description": "A tool to manage Rust installations.",
+                    "alternative": null
+                }
             ],
             "AutoIt (Static)": [
-                [
-                    "autoit-script-editor",
-                    "AutoIt Script Editor",
-                    "A script editor for AutoIt3."
-                ]
+                {
+                    "id": "autoit-script-editor",
+                    "name": "AutoIt Script Editor",
+                    "description": "A script editor for AutoIt3.",
+                    "alternative": null
+                }
             ],
             "AutoIt (Dynamic)": [
-                [
-                    "autoit",
-                    "AutoIt",
-                    "A freeware automation language for Microsoft Windows."
-                ]
+                {
+                    "id": "autoit",
+                    "name": "AutoIt",
+                    "description": "A freeware automation language for Microsoft Windows.",
+                    "alternative": null
+                }
             ],
             "Visual Basic (Dynamic)": [
-                [
-                    "malware-analysis-bucket/vbsedit",
-                    "VbsEdit",
-                    "A tool to edit and debug VBScript files."
-                ]
+                {
+                    "id": "malware-analysis-bucket/vbsedit",
+                    "name": "VbsEdit",
+                    "description": "A tool to edit and debug VBScript files.",
+                    "alternative": null
+                }
             ],
             "Batch scripts (Dynamic)": [
-                [
-                    "malware-analysis-bucket/cmdebug",
-                    "CMDebug",
-                    "A tool to edit and debug batch files."
-                ]
+                {
+                    "id": "malware-analysis-bucket/cmdebug",
+                    "name": "CMDebug",
+                    "description": "A tool to edit and debug batch files.",
+                    "alternative": null
+                }
             ],
             "Delphi (Static)": [
-                [
-                    "malware-analysis-bucket/interactive_delphi_reconstructor",
-                    "Interactive Delphi Reconstructor",
-                    "A tool to reconstruct Delphi executables."
-                ],
-                [
-                    "malware-analysis-bucket/delphi_hand_rake",
-                    "Delphi Hand Rake",
-                    "A tool to utilize IDR's reconstruction results within Ghidra."
-                ]
+                {
+                    "id": "malware-analysis-bucket/interactive_delphi_reconstructor",
+                    "name": "Interactive Delphi Reconstructor",
+                    "description": "A tool to reconstruct Delphi executables.",
+                    "alternative": null
+                },
+                {
+                    "id": "malware-analysis-bucket/delphi_hand_rake",
+                    "name": "Delphi Hand Rake",
+                    "description": "A tool to utilize IDR's reconstruction results within Ghidra.",
+                    "alternative": null
+                }
             ]
         }
     },
     "pip": {
         "required": [
-            [
-                "binary-refinery[all]",
-                "Binary Refinery",
-                "A collection of tools for reverse engineering, binary analysis and pipeline creation.",
-                "pipx"
-            ]
+            {
+                "id": "binary-refinery[all]",
+                "name": "Binary Refinery",
+                "description": "A collection of tools for reverse engineering, binary analysis and pipeline creation.",
+                "mode": "pipx"
+            }
         ],
         "packages": [
-            [
-                "dumpulator",
-                "Dumpulator",
-                "An easy-to-use library for emulating code in minidump files"
-            ],
-            [
-                "skrapa[yara]",
-                "Skrapa",
-                "A tool to perform YARA matches against the memory of running processes."
-            ],
-            [
-                "envi",
-                "Envi",
-                "A minimal environment variables reader, required for IDAPython."
-            ],
-            [
-                "sip",
-                "SIP",
-                "A tool to generate Python bindings for C and C++ libraries, required for IDAPython."
-            ],
-            [
-                "PyQt5",
-                "PyQt5",
-                "A set of Python bindings for the Qt application framework, required for IDAPython."
-            ],
-            [
-                "construct",
-                "Construct",
-                "A powerful declarative parser (and builder) for binary data."
-            ],
-            [
-                "capstone",
-                "Capstone",
-                "A disassembly framework specialized for binary analysis."
-            ],
-            [
-                "dncil",
-                "dnCIL",
-                "A library that enables parsing of .NET assemblies."
-            ],
-            [
-                "dnfile",
-                "dnFile",
-                "A library that enables parsing of .NET assemblies."
-            ],
-            [
-                "yara-python",
-                "yara-python",
-                "A Python interface for YARA."
-            ],
-            [
-                "requests",
-                "Requests",
-                "A simple, yet elegant HTTP library."
-            ],
-            [
-                "mkyara",
-                "mkyara",
-                "A tool to generate YARA rules from malware samples."
-            ],
-            [
-                "unicorn",
-                "Unicorn",
-                "A lightweight, multi-platform, multi-architecture CPU emulator framework."
-            ],
-            [
-                "olefile",
-                "olefile",
-                "A Python package to parse, read, and write Microsoft OLE2 files."
-            ],
-            [
-                "oletools[full]",
-                "oletools",
-                "A set of tools to analyze Microsoft OLE2 files."
-            ],
-            [
-                "git+https://github.com/Donaldduck8/rustbinsign",
-                "RustBinSign",
-                "A tool to generate FLIRT / SIGKIT signatures from Rust binaries.",
-                "pipx"
-            ],
-            [
-                "git+https://github.com/volexity/chaskey-lts",
-                "chaskey-lts",
-                "A Python implementation of the Chaskey-LTS block cipher."
-            ],
-            [
-                "git+https://github.com/volexity/donut-decryptor",
-                "donut-decryptor",
-                "A tool to decrypt Donut shellcode."
-            ],
-            [
-                "z3-solver",
-                "z3-solver",
-                "A theorem prover from Microsoft Research."
-            ],
-            [
-                "uncompyle6",
-                "uncompyle6",
-                "A Python bytecode decompiler.",
-                "pipx"
-            ],
-            [
-                "decompyle3",
-                "decompyle3",
-                "A Python bytecode decompiler.",
-                "pipx"
-            ],
-            [
-                "git+https://github.com/Donaldduck8/deobshell@pip-installable",
-                "deobshell",
-                "A tool to statically deobfuscate PowerShell scripts.",
-                "pipx"
-            ],
-            [
-                "flare-capa",
-                "FLARE-Capa",
-                "A tool to identify capabilities in executable files."
-            ],
-            [
-                "git+https://github.com/mandiant/speakeasy",
-                "Speakeasy",
-                "A comprehensive shellcode emulator and analysis toolkit.",
-                "pipx"
-            ],
-            [
-                "frida-tools",
-                "Frida Tools",
-                "A collection of tools for the Frida instrumentation framework."
-            ],
-            [
-                "frida",
-                "Frida Python Bindings",
-                "Python bindings for Frida."
-            ],
-            [
-                "https://github.com/qilingframework/qiling/archive/dev.zip",
-                "Qiling",
-                "A high-level emulation framework for Linux, Windows, and macOS."
-            ],
-            [
-                "netifaces",
-                "netifaces",
-                "A package to query network interfaces."
-            ],
-            [
-                "jep",
-                "Jep",
-                "A Python-Java bridge."
-            ]
+            {
+                "id": "dumpulator",
+                "name": "Dumpulator",
+                "description": "An easy-to-use library for emulating code in minidump files",
+                "mode": "pip"
+            },
+            {
+                "id": "skrapa[yara]",
+                "name": "Skrapa",
+                "description": "A tool to perform YARA matches against the memory of running processes.",
+                "mode": "pip"
+            },
+            {
+                "id": "envi",
+                "name": "Envi",
+                "description": "A minimal environment variables reader, required for IDAPython.",
+                "mode": "pip"
+            },
+            {
+                "id": "sip",
+                "name": "SIP",
+                "description": "A tool to generate Python bindings for C and C++ libraries, required for IDAPython.",
+                "mode": "pip"
+            },
+            {
+                "id": "PyQt5",
+                "name": "PyQt5",
+                "description": "A set of Python bindings for the Qt application framework, required for IDAPython.",
+                "mode": "pip"
+            },
+            {
+                "id": "construct",
+                "name": "Construct",
+                "description": "A powerful declarative parser (and builder) for binary data.",
+                "mode": "pip"
+            },
+            {
+                "id": "capstone",
+                "name": "Capstone",
+                "description": "A disassembly framework specialized for binary analysis.",
+                "mode": "pip"
+            },
+            {
+                "id": "dncil",
+                "name": "dnCIL",
+                "description": "A library that enables parsing of .NET assemblies.",
+                "mode": "pip"
+            },
+            {
+                "id": "dnfile",
+                "name": "dnFile",
+                "description": "A library that enables parsing of .NET assemblies.",
+                "mode": "pip"
+            },
+            {
+                "id": "yara-python",
+                "name": "yara-python",
+                "description": "A Python interface for YARA.",
+                "mode": "pip"
+            },
+            {
+                "id": "requests",
+                "name": "Requests",
+                "description": "A simple, yet elegant HTTP library.",
+                "mode": "pip"
+            },
+            {
+                "id": "mkyara",
+                "name": "mkyara",
+                "description": "A tool to generate YARA rules from malware samples.",
+                "mode": "pip"
+            },
+            {
+                "id": "unicorn",
+                "name": "Unicorn",
+                "description": "A lightweight, multi-platform, multi-architecture CPU emulator framework.",
+                "mode": "pip"
+            },
+            {
+                "id": "olefile",
+                "name": "olefile",
+                "description": "A Python package to parse, read, and write Microsoft OLE2 files.",
+                "mode": "pip"
+            },
+            {
+                "id": "oletools[full]",
+                "name": "oletools",
+                "description": "A set of tools to analyze Microsoft OLE2 files.",
+                "mode": "pip"
+            },
+            {
+                "id": "git+https://github.com/N0fix/rustbinsign",
+                "name": "RustBinSign",
+                "description": "A tool to generate FLIRT / SIGKIT signatures from Rust binaries.",
+                "mode": "pipx"
+            },
+            {
+                "id": "git+https://github.com/volexity/chaskey-lts",
+                "name": "chaskey-lts",
+                "description": "A Python implementation of the Chaskey-LTS block cipher.",
+                "mode": "pip"
+            },
+            {
+                "id": "git+https://github.com/volexity/donut-decryptor",
+                "name": "donut-decryptor",
+                "description": "A tool to decrypt Donut shellcode.",
+                "mode": "pip"
+            },
+            {
+                "id": "z3-solver",
+                "name": "z3-solver",
+                "description": "A theorem prover from Microsoft Research.",
+                "mode": "pip"
+            },
+            {
+                "id": "uncompyle6",
+                "name": "uncompyle6",
+                "description": "A Python bytecode decompiler.",
+                "mode": "pipx"
+            },
+            {
+                "id": "decompyle3",
+                "name": "decompyle3",
+                "description": "A Python bytecode decompiler.",
+                "mode": "pipx"
+            },
+            {
+                "id": "git+https://github.com/Donaldduck8/deobshell@pip-installable",
+                "name": "deobshell",
+                "description": "A tool to statically deobfuscate PowerShell scripts.",
+                "mode": "pipx"
+            },
+            {
+                "id": "flare-capa",
+                "name": "FLARE-Capa",
+                "description": "A tool to identify capabilities in executable files.",
+                "mode": "pip"
+            },
+            {
+                "id": "git+https://github.com/mandiant/speakeasy",
+                "name": "Speakeasy",
+                "description": "A comprehensive shellcode emulator and analysis toolkit.",
+                "mode": "pipx"
+            },
+            {
+                "id": "frida-tools",
+                "name": "Frida Tools",
+                "description": "A collection of tools for the Frida instrumentation framework.",
+                "mode": "pip"
+            },
+            {
+                "id": "frida",
+                "name": "Frida Python Bindings",
+                "description": "Python bindings for Frida.",
+                "mode": "pip"
+            },
+            {
+                "id": "https://github.com/qilingframework/qiling/archive/dev.zip",
+                "name": "Qiling",
+                "description": "A high-level emulation framework for Linux, Windows, and macOS.",
+                "mode": "pip"
+            },
+            {
+                "id": "netifaces",
+                "name": "netifaces",
+                "description": "A package to query network interfaces.",
+                "mode": "pip"
+            },
+            {
+                "id": "jep",
+                "name": "Jep",
+                "description": "A Python-Java bridge.",
+                "mode": "pip"
+            }
         ]
     },
     "npm": {
         "packages": [
-            [
-                "axios",
-                "axios",
-                "A promise-based HTTP client for the browser and Node.js."
-            ],
-            [
-                "adm-zip",
-                "adm-zip",
-                "A zip library for NodeJS."
-            ],
-            [
-                "crypto",
-                "crypto",
-                "A package to provide cryptographic functionality."
-            ],
-            [
-                "sqlite3",
-                "sqlite3",
-                "A package to provide SQLite3 bindings."
-            ],
-            [
-                "systeminformation",
-                "systeminformation",
-                "A package to provide system information."
-            ],
-            [
-                "@primno/dpapi",
-                "@primno/dpapi",
-                "A package to provide DPAPI bindings."
-            ],
-            [
-                "obfuscator-io-deobfuscator",
-                "obfuscator.io Deobfuscator",
-                "A tool to deobfuscate JavaScript from obfuscator.io."
-            ],
-            [
-                "js-deobfuscator",
-                "js-deobfuscator",
-                "A tool to deobfuscate JavaScript."
-            ],
-            [
-                "deobfuscator",
-                "deobfuscator",
-                "A tool to deobfuscate JavaScript."
-            ],
-            [
-                "@babel/core",
-                "@babel/core",
-                "A tool to compile JavaScript."
-            ],
-            [
-                "commander",
-                "commander",
-                "A tool to create command-line interfaces in Node.js."
-            ]
+            {
+                "id": "axios",
+                "name": "axios",
+                "description": "A promise-based HTTP client for the browser and Node.js."
+            },
+            {
+                "id": "adm-zip",
+                "name": "adm-zip",
+                "description": "A zip library for NodeJS."
+            },
+            {
+                "id": "crypto",
+                "name": "crypto",
+                "description": "A package to provide cryptographic functionality."
+            },
+            {
+                "id": "sqlite3",
+                "name": "sqlite3",
+                "description": "A package to provide SQLite3 bindings."
+            },
+            {
+                "id": "systeminformation",
+                "name": "systeminformation",
+                "description": "A package to provide system information."
+            },
+            {
+                "id": "@primno/dpapi",
+                "name": "@primno/dpapi",
+                "description": "A package to provide DPAPI bindings."
+            },
+            {
+                "id": "obfuscator-io-deobfuscator",
+                "name": "obfuscator.io Deobfuscator",
+                "description": "A tool to deobfuscate JavaScript from obfuscator.io."
+            },
+            {
+                "id": "js-deobfuscator",
+                "name": "js-deobfuscator",
+                "description": "A tool to deobfuscate JavaScript."
+            },
+            {
+                "id": "deobfuscator",
+                "name": "deobfuscator",
+                "description": "A tool to deobfuscate JavaScript."
+            },
+            {
+                "id": "@babel/core",
+                "name": "@babel/core",
+                "description": "A tool to compile JavaScript."
+            },
+            {
+                "id": "commander",
+                "name": "commander",
+                "description": "A tool to create command-line interfaces in Node.js."
+            }
         ]
     },
     "ida_plugins": {
         "plugins": [
-            [
-                "https://github.com/OALabs/hashdb-ida/raw/main/hashdb.py",
-                "HashDB",
-                "A plugin to identify API hashing algorithms in malware samples."
-            ],
-            [
-                "https://github.com/mandiant/capa/raw/master/capa/ida/plugin/capa_explorer.py",
-                "Capa Explorer",
-                "A plugin to analyze and explore the capabilities of a malware sample."
-            ],
-            [
-                "https://github.com/fox-it/mkYARA/raw/master/mkyara/ida/mkyara_plugin.py",
-                "mkYARA",
-                "A plugin to generate YARA rules from malware samples."
-            ],
-            [
-                "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/better_annotator.py",
-                "Better Annotator",
-                "A plugin to import decrypted strings into IDA Pro."
-            ],
-            [
-                "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/donald_ida_plugin.py",
-                "Donald IDA Plugin",
-                "A hotkey to create a synchronized disassembly view."
-            ],
-            [
-                "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/donald_ida_utils.py",
-                "Donald IDA Utils",
-                "A collection of utilities for IDA Pro."
-            ],
-            [
-                "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/dump_bytes.py",
-                "Dump Bytes",
-                "A plugin to dump embedded blobs from malware samples."
-            ]
+            {
+                "id": "https://github.com/OALabs/hashdb-ida/raw/main/hashdb.py",
+                "name": "HashDB",
+                "description": "A plugin to identify API hashing algorithms in malware samples."
+            },
+            {
+                "id": "https://github.com/mandiant/capa/raw/master/capa/ida/plugin/capa_explorer.py",
+                "name": "Capa Explorer",
+                "description": "A plugin to analyze and explore the capabilities of a malware sample."
+            },
+            {
+                "id": "https://github.com/fox-it/mkYARA/raw/master/mkyara/ida/mkyara_plugin.py",
+                "name": "mkYARA",
+                "description": "A plugin to generate YARA rules from malware samples."
+            },
+            {
+                "id": "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/better_annotator.py",
+                "name": "Better Annotator",
+                "description": "A plugin to import decrypted strings into IDA Pro."
+            },
+            {
+                "id": "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/donald_ida_plugin.py",
+                "name": "Donald IDA Plugin",
+                "description": "A hotkey to create a synchronized disassembly view."
+            },
+            {
+                "id": "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/donald_ida_utils.py",
+                "name": "Donald IDA Utils",
+                "description": "A collection of utilities for IDA Pro."
+            },
+            {
+                "id": "https://github.com/Donaldduck8/IDA-Scripts-and-Tools/raw/master/dump_bytes.py",
+                "name": "Dump Bytes",
+                "description": "A plugin to dump embedded blobs from malware samples."
+            }
         ]
     },
     "vscode_extensions": {
         "extensions": [
-            [
-                "ms-python.debugpy",
-                "Python Debug",
-                "A Python debugger for Visual Studio Code."
-            ],
-            [
-                "ms-python.python",
-                "Python",
-                "A Python language server for Visual Studio Code."
-            ],
-            [
-                "infosec-intern.yara",
-                "Yara",
-                "A YARA language server for Visual Studio Code."
-            ],
-            [
-                "akamud.vscode-theme-onedark",
-                "One Dark Pro",
-                "A dark theme for Visual Studio Code."
-            ],
-            [
-                "ms-vscode.powershell",
-                "PowerShell",
-                "A PowerShell extension for Visual Studio Code."
-            ],
-            [
-                "vscjava.vscode-java-pack",
-                "Java Extension Pack",
-                "A collection of popular Java extensions for Visual Studio Code."
-            ]
+            {
+                "id": "ms-python.debugpy",
+                "name": "Python Debug",
+                "description": "A Python debugger for Visual Studio Code."
+            },
+            {
+                "id": "ms-python.python",
+                "name": "Python",
+                "description": "A Python language server for Visual Studio Code."
+            },
+            {
+                "id": "infosec-intern.yara",
+                "name": "Yara",
+                "description": "A YARA language server for Visual Studio Code."
+            },
+            {
+                "id": "akamud.vscode-theme-onedark",
+                "name": "One Dark Pro",
+                "description": "A dark theme for Visual Studio Code."
+            },
+            {
+                "id": "ms-vscode.powershell",
+                "name": "PowerShell",
+                "description": "A PowerShell extension for Visual Studio Code."
+            },
+            {
+                "id": "vscjava.vscode-java-pack",
+                "name": "Java Extension Pack",
+                "description": "A collection of popular Java extensions for Visual Studio Code."
+            }
         ]
     },
     "taskbar_pins": {
         "pins": [
-            [
-                "Microsoft.Windows.Explorer",
-                "Windows Explorer",
-                "The file manager for Windows."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\chromium\\current\\chrome.exe",
-                "Chromium",
-                "A web browser that is the basis for Google Chrome."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\sysinternals\\current\\procexp64.exe",
-                "Process Explorer",
-                "A tool to manage processes and system information."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\sysinternals\\current\\procmon64.exe",
-                "Process Monitor",
-                "A tool to monitor system activity."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\x64dbg\\current\\release\\x96dbg.exe",
-                "x64dbg",
-                "An open-source x64/x32 debugger for Windows."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\ida*\\current\\ida64.exe",
-                "IDA Pro",
-                "A disassembler and debugger for analyzing binary files."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\binary_nin*\\current\\binaryninja.exe",
-                "Binary Ninja",
-                "A reverse engineering platform."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\vscode\\current\\Code.exe",
-                "Visual Studio Code",
-                "A code editor redefined and optimized for building and debugging modern web and cloud applications."
-            ],
-            [
-                "%USERPROFILE%\\scoop\\apps\\windows-terminal\\current\\wt.exe",
-                "Windows Terminal",
-                "A modern terminal application for users of command-line tools and shells."
-            ]
+            {
+                "id": "Microsoft.Windows.Explorer",
+                "name": "Windows Explorer",
+                "description": "The file manager for Windows."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\chromium\\current\\chrome.exe",
+                "name": "Chromium",
+                "description": "A web browser that is the basis for Google Chrome."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\sysinternals\\current\\procexp64.exe",
+                "name": "Process Explorer",
+                "description": "A tool to manage processes and system information."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\sysinternals\\current\\procmon64.exe",
+                "name": "Process Monitor",
+                "description": "A tool to monitor system activity."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\x64dbg\\current\\release\\x96dbg.exe",
+                "name": "x64dbg",
+                "description": "An open-source x64/x32 debugger for Windows."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\ida*\\current\\ida64.exe",
+                "name": "IDA Pro",
+                "description": "A disassembler and debugger for analyzing binary files."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\binary_nin*\\current\\binaryninja.exe",
+                "name": "Binary Ninja",
+                "description": "A reverse engineering platform."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\vscode\\current\\Code.exe",
+                "name": "Visual Studio Code",
+                "description": "A code editor redefined and optimized for building and debugging modern web and cloud applications."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\windows-terminal\\current\\wt.exe",
+                "name": "Windows Terminal",
+                "description": "A modern terminal application for users of command-line tools and shells."
+            }
         ]
     },
     "git_repositories": {
         "repositories": [
-            [
-                "https://github.com/Donaldduck8/fuxnet",
-                "Fuxnet",
-                "A collection of Python scripts to emulate various server types."
-            ],
-            [
-                "https://github.com/mandiant/capa-rules",
-                "CAPA Rules",
-                "A collection of rules for the Capa malware analysis framework."
-            ],
-            [
-                "https://github.com/SentineLabs/AlphaGolang",
-                "AlphaGolang",
-                "A collection of scripts to reverse-engineer Go binaries."
-            ],
-            [
-                "https://github.com/struppigel/hedgehog-tools",
-                "Hedgehog Tools",
-                "A collection of tools for reverse engineering and malware analysis, written by Karsten Hahn."
-            ],
-            [
-                "https://github.com/HynekPetrak/malware-jail",
-                "Malware Jail",
-                "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."
-            ]
+            {
+                "id": "https://github.com/Donaldduck8/fuxnet",
+                "name": "Fuxnet",
+                "description": "A collection of Python scripts to emulate various server types."
+            },
+            {
+                "id": "https://github.com/mandiant/capa-rules",
+                "name": "CAPA Rules",
+                "description": "A collection of rules for the Capa malware analysis framework."
+            },
+            {
+                "id": "https://github.com/SentineLabs/AlphaGolang",
+                "name": "AlphaGolang",
+                "description": "A collection of scripts to reverse-engineer Go binaries."
+            },
+            {
+                "id": "https://github.com/struppigel/hedgehog-tools",
+                "name": "Hedgehog Tools",
+                "description": "A collection of tools for reverse engineering and malware analysis, written by Karsten Hahn."
+            },
+            {
+                "id": "https://github.com/HynekPetrak/malware-jail",
+                "name": "Malware Jail",
+                "description": "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."
+            },
+            {
+                "id": "https://github.com/Fadi002/de4py",
+                "name": "de4py",
+                "description": "A toolkit for Python reverse engineering."
+            },
+            {
+                "id": "https://github.com/Konloch/bytecode-viewer",
+                "name": "Bytecode Viewer",
+                "description": "A Java reverse-engineering tool, included here to collect its plug-ins."
+            }
         ]
     },
     "file_type_associations": {
@@ -1051,7 +1195,9 @@
                     "xml",
                     "csv",
                     "ini",
-                    "cfg"
+                    "cfg",
+                    "yaml",
+                    "yml"
                 ]
             },
             "Browser": {
@@ -1351,15 +1497,24 @@
                     ],
                     "target": "%LOCALAPPDATA%\\Chromium\\User Data\\Default"
                 }
+            ],
+            "Java Disassembler": [
+                {
+                    "description": "MapleIR Plugin",
+                    "sources": [
+                        "https://github.com/LLVM-but-worse/java-disassembler/releases/download/1.2.0/jdaplugin-0.0.1-SNAPSHOT.jar"
+                    ],
+                    "target": "%USERPROFILE%\\.jda\\plugins"
+                }
             ]
         }
     },
     "settings": {
         "enable_windows_safer": true,
         "malware_folders": [
-            "%USERPROFILE%\\malware"
+            "C:\\Users\\Donald\\malware"
         ],
-        "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python*\\current\\python3*.dll",
+        "ida_py_switch": "C:\\Users\\Donald\\scoop\\apps\\python311\\current\\python311.dll",
         "install_zsh_over_git": true,
         "make_bindiff_available": true
     }

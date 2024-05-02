@@ -1,7 +1,8 @@
 # coding:utf-8
+import json
 import traceback
+from dataclasses import asdict
 
-import jsonpickle
 import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox, QStackedWidget, QVBoxLayout, QWidget
@@ -45,7 +46,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
         self.json_edit = TextEdit(parent=self)
         self.json_edit.setContentsMargins(0, 0, 0, 0)
         self.json_edit.setCurrentFont(PyQt5.QtGui.QFont('Helvetica', 10))
-        self.json_edit.setText(jsonpickle.dumps(self.data, indent=8))
+        self.json_edit.setText(json.dumps(self.data, default=asdict, indent=8))
         self.json_edit.setFontWeight(PyQt5.QtGui.QFont.Light)
         self.json_save_button = PrimaryPushButton(parent=self, text='Save')
 
@@ -86,7 +87,9 @@ class BaseTreeAndJsonEditWidget(QWidget):
 
     def update_data_from_json(self):
         try:
-            data = jsonpickle.loads(self.json_edit.toPlainText())
+            data_class = type(self.data)
+            json_data = json.loads(self.json_edit.toPlainText())
+            data = data_class(**json_data)
             self.custom_view.update_data(data)
             InfoBar.success(
                 title='Success!',

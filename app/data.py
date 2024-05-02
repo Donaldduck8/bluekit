@@ -1,7 +1,4 @@
-import winreg
-
 from dataclasses import dataclass
-
 
 VERSION = "1.0.0"
 
@@ -138,15 +135,11 @@ class RegistryChange():
         if hive not in ["HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER", "HKEY_LOCAL_MACHINE", "HKEY_USERS", "HKEY_CURRENT_CONFIG"]:
             raise ValueError(f"Invalid hive: {hive}")
 
-        # Convert hive to winreg constant
-        self.hive = getattr(winreg, hive)
-
         if type not in ["REG_SZ", "REG_EXPAND_SZ", "REG_MULTI_SZ", "REG_DWORD", "REG_QWORD", "REG_BINARY"]:
             raise ValueError(f"Invalid type: {type}")
 
-        # Convert type to winreg constant
-        self.type = getattr(winreg, type)
-
+        self.hive = hive
+        self.type = type
         self.description = description
         self.key = key
         self.value = value
@@ -242,7 +235,7 @@ default_configuration = {
             ("extras", "Extras", "Extra software that doesn't fit in the main bucket."),
             ("versions", "Versions", "Older versions of software."),
             ("nerd-fonts", "Nerd Fonts", "Patched fonts with a high number of glyphs."),
-            ("java", "Java", "Java Development Kit and Java Runtime Environment."),
+            ("java", "Java", "Java Development Kits and Java Runtime Environments."),
             ("malware-analysis-bucket https://github.com/Donaldduck8/malware-analysis-bucket", "Malware Analysis Bucket", "Tools for analyzing malware."),
         ],
 
