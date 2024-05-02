@@ -192,9 +192,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to run command: {e.cmd}")
             if e.stdout:
-                logger.warning(f"Output: {e.stdout.decode('utf-8')}")
+                logger.warning(f"Output: {e.stdout.decode('utf-8', errors='replace')}")
             if e.stderr:
-                logger.warning(f"Error: {e.stderr.decode('utf-8')}")
+                logger.warning(f"Error: {e.stderr.decode('utf-8', errors='replace')}")
 
             if not failure_okay:
                 raise e
