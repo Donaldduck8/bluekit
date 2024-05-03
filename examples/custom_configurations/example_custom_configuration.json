@@ -1512,9 +1512,9 @@
     "settings": {
         "enable_windows_safer": true,
         "malware_folders": [
-            "C:\\Users\\Donald\\malware"
+            "%USERPROFILE%\\malware"
         ],
-        "ida_py_switch": "C:\\Users\\Donald\\scoop\\apps\\python311\\current\\python311.dll",
+        "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll",
         "install_zsh_over_git": true,
         "make_bindiff_available": true
     }
