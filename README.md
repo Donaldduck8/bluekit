@@ -1,4 +1,4 @@
-# Bluekit (Beta)
+# Bluekit
 
 Bluekit is a cybersecurity-focused workstation setup script that aims to provide a well-rounded and complete analysis environment all in one go.
 
