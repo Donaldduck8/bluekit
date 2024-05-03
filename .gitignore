@@ -1,14 +1,11 @@
+/dist
+/build
+/.vscode
 
 *.pyc
-app/common/resource.py
-*.pyc
-/dist
 *.spec
 *.exe
-/build
-log.txt
-.vscode/launch.json
+
+app/common/resource.py
 app/install.log
-/.vscode
-app/configuration.json
 app/configuration_dump.json
