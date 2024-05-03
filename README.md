@@ -17,7 +17,7 @@ The full list of tools is available [here](https://github.com/Donaldduck8/blueki
 
 * Windows 10 / 11
 * PowerShell > 5.1
-* Disk capacity > 30 GB
+* Disk capacity > 40 GB
 * Memory > 2GB
 * Internet connection
 * Windows Defender disabled or removed
