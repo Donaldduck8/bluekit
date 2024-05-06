@@ -4,7 +4,7 @@ Bluekit is a cybersecurity-focused workstation setup script that aims to provide
 
 Bluekit is centered around the [Scoop](https://scoop.sh/) package manager and is complemented by the [Malware Analysis bucket](https://github.com/Donaldduck8/malware-analysis-bucket).
 
-The full list of tools is available [here](https://github.com/Donaldduck8/bluekit/blob/master/data.py).
+The full list of tools is available [here](https://github.com/Donaldduck8/bluekit/blob/master/app/data.py).
 
 <p align="center">
   <img src="img/hero_2.webp" alt="Bluekit Hero">
