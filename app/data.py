@@ -270,6 +270,7 @@ default_configuration = {
                 ("malware-analysis-bucket/openssl-light-no-pollute", "OpenSSL", "A robust, commercial-grade, and full-featured toolkit for TLS and SSL."),
 
                 ("malware-analysis-bucket/onenoteanalyzer", "OneNote Analyzer", "A tool for analyzing OneNote files."),
+                ("malware-analysis-bucket/pyinstxtractor-ng", "PyInstXtractor", "A tool to extract Pyinstaller executables."),
                 ("malware-analysis-bucket/pycdc", "Decompyle++", "A C++ python bytecode disassembler and decompiler."),
                 ("meld", "Meld", "A visual diff and merge tool., useful for bloated script files."),
             ],
@@ -291,7 +292,12 @@ default_configuration = {
             "Triage": [
                 ("die", "Detect It Easy", "A program for determining types of files."),
                 ("malware-analysis-bucket/cyberchef", "Cyberchef", "A web app for analyzing and decoding data."),
-                ("malware-analysis-bucket/malcat", "MalCat", "A tool centered around static malware and binary analysis."),
+                {
+                    "id": "malcat.json", 
+                    "name": "MalCat (Pro)", 
+                    "description": "A tool centered around static malware and binary analysis.",
+                    "alternative": ("malware-analysis-bucket/malcat", "MalCat", "A tool centered around static malware and binary analysis.")
+                },
                 ("010editor", "010 Editor", "A professional text/hex editor designed to edit any file."),
             ],
 
@@ -389,6 +395,7 @@ default_configuration = {
                 ("malware-analysis-bucket/dnspyex64", "dnSpyEx64", "A .NET debugger and assembly editor."),
                 ("malware-analysis-bucket/dnspyex32", "dnSpyEx32", "A .NET debugger and assembly editor."),
                 ("malware-analysis-bucket/de4dot-net45", "de4dot .NET 4.5", "A .NET deobfuscator and unpacker."),
+                ("malware-analysis-bucket/de4dot-cex", "de4dot CEX", "A fork of de4dot with native support for ConfuserEX."),
                 ("malware-analysis-bucket/netreactorslayer", "NetReactor Slayer", "A tool to deobfuscate .NET Reactor-protected applications."),
             ],
 
@@ -823,6 +830,14 @@ default_configuration = {
                     "hive": "HKEY_CURRENT_USER",
                     "key": "Environment",
                     "value": "DISTUTILS_USE_SDK",
+                    "data": "1",
+                    "type": "REG_SZ"
+                },
+                {
+                    "description": "Disable binref band-aid since Powershell 7 is installed",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Environment",
+                    "value": "DISABLE_PS1_BANDAID",
                     "data": "1",
                     "type": "REG_SZ"
                 },
