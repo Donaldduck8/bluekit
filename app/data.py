@@ -258,7 +258,8 @@ default_configuration = {
                 ("chromium", "Chromium", "A web browser that is the basis for Google Chrome."),
                 ("sublime-text", "Sublime Text", "A sophisticated text editor for code, markup, and prose."),
                 ("7zip", "7-Zip", "A file archiver with a high compression ratio."),
-                ("vscodium", "Codium", "A code editor redefined and optimized for building and debugging modern web and cloud applications."),
+                ("vscode", "Visual Studio Code", "A code editor redefined and optimized for building and debugging modern web and cloud applications."),
+                ("flow-launcher", "Flow Launcher", "A productivity tool that helps you access everything on your computer faster."),
             ],
 
             "Miscellaneous": [
@@ -624,6 +625,7 @@ default_configuration = {
             ("https://github.com/HynekPetrak/malware-jail", "Malware Jail", "A tool to dynamically evaluate JavaScript to deobfuscate opaque predicates."),
             ("https://github.com/Fadi002/de4py", "de4py", "A toolkit for Python reverse engineering."),
             ("https://github.com/Konloch/bytecode-viewer", "Bytecode Viewer", "A Java reverse-engineering tool, included here to collect its plug-ins."),
+            ("https://github.com/corkami/pics", "Corkami's File Type Diagrams", "A collection of exploded file type diagrams."),
         ]
     },
 
@@ -961,6 +963,22 @@ default_configuration = {
                     ],
                     "target": "%USERPROFILE%\\.jda\\plugins"
                 }
+            ],
+            "Binary Ninja": [
+                {
+                    "description": "Theme",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/binary_ninja/homesick.bntheme"
+                    ],
+                    "target": "%APPDATA%\\Binary Ninja\\themes"
+                },
+                {
+                    "description": "Settings",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/binary_ninja/settings.json"
+                    ],
+                    "target": "%APPDATA%\\Binary Ninja"
+                },
             ]
         }
     },
