@@ -90,6 +90,7 @@ class BaseTreeAndJsonEditWidget(QWidget):
             data_class = type(self.data)
             json_data = json.loads(self.json_edit.toPlainText())
             data = data_class(**json_data)
+            self.data = data
             self.custom_view.update_data(data)
             InfoBar.success(
                 title='Success!',
