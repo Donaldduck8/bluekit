@@ -196,6 +196,9 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 logger.info(f"Shell: '{json.dumps(command_parts)}'")
                 p = subprocess.run(command_parts, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+            else:
+                raise ValueError("No command provided.")
+
             if p.returncode != 0:
                 raise subprocess.CalledProcessError(p.returncode, p.args, p.stdout, p.stderr)
 
