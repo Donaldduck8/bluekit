@@ -1,0 +1,483 @@
+{
+    "scoop": {
+        "buckets": [
+            {
+                "id": "extras",
+                "name": "Extras",
+                "description": "Extra software that doesn't fit in the main bucket."
+            },
+            {
+                "id": "versions",
+                "name": "Versions",
+                "description": "Older versions of software."
+            },
+            {
+                "id": "nerd-fonts",
+                "name": "Nerd Fonts",
+                "description": "Patched fonts with a high number of glyphs."
+            },
+            {
+                "id": "malware-analysis-bucket https://github.com/Donaldduck8/malware-analysis-bucket",
+                "name": "Malware Analysis Bucket",
+                "description": "Tools for analyzing malware."
+            }
+        ],
+        "required": [
+            {
+                "id": "git",
+                "name": "Git",
+                "description": "A distributed version control system.",
+                "alternative": null
+            },
+            {
+                "id": "python311",
+                "name": "Python 3.11",
+                "description": "The newest Python version currently compatible with IDA Pro.",
+                "alternative": null
+            },
+            {
+                "id": "malware-analysis-bucket/portable_build_tools",
+                "name": "Portable Build Tools",
+                "description": "A portable version of Visual C++ build tools.",
+                "alternative": null
+            }
+        ],
+        "packages": {
+            "Basics": [
+                {
+                    "id": "FiraCode-NF-Mono",
+                    "name": "Fira Code (Mono)",
+                    "description": "A monospaced font with programming ligatures.",
+                    "alternative": null
+                },
+                {
+                    "id": "sublime-text",
+                    "name": "Sublime Text",
+                    "description": "A sophisticated text editor for code, markup, and prose.",
+                    "alternative": null
+                },
+                {
+                    "id": "7zip",
+                    "name": "7-Zip",
+                    "description": "A file archiver with a high compression ratio.",
+                    "alternative": null
+                },
+                {
+                    "id": "vscodium",
+                    "name": "Codium",
+                    "description": "A code editor redefined and optimized for building and debugging modern web and cloud applications.",
+                    "alternative": null
+                }
+            ],
+            "Miscellaneous": [
+                {
+                    "id": "malware-analysis-bucket/openssl-light-no-pollute",
+                    "name": "OpenSSL",
+                    "description": "A robust, commercial-grade, and full-featured toolkit for TLS and SSL.",
+                    "alternative": null
+                }
+            ],
+            "Shell": [
+                {
+                    "id": "windows-terminal",
+                    "name": "Windows Terminal",
+                    "description": "A modern terminal application for users of command-line tools and shells.",
+                    "alternative": null
+                }
+            ],
+            "Triage": [
+                {
+                    "id": "010editor",
+                    "name": "010 Editor",
+                    "description": "A professional text/hex editor designed to edit any file.",
+                    "alternative": null
+                }
+            ],
+            "PE (Dynamic)": [
+                {
+                    "id": "wireshark",
+                    "name": "Wireshark",
+                    "description": "A network protocol analyzer.",
+                    "alternative": null
+                }
+            ]
+        }
+    },
+    "pip": {
+        "required": [
+            {
+                "id": "binary-refinery[all]",
+                "name": "Binary Refinery",
+                "description": "A collection of tools for reverse engineering, binary analysis and pipeline creation.",
+                "mode": "pipx"
+            }
+        ],
+        "packages": [
+            {
+                "id": "construct",
+                "name": "Construct",
+                "description": "A powerful declarative parser (and builder) for binary data.",
+                "mode": "pip"
+            },
+            {
+                "id": "requests",
+                "name": "Requests",
+                "description": "A simple, yet elegant HTTP library.",
+                "mode": "pip"
+            },
+            {
+                "id": "flask",
+                "name": "Flask",
+                "description": "A lightweight WSGI web application framework.",
+                "mode": "pip"
+            },
+            {
+                "id": "netifaces",
+                "name": "netifaces",
+                "description": "A package to query network interfaces.",
+                "mode": "pip"
+            }
+        ]
+    },
+    "npm": {
+        "packages": [
+        ]
+    },
+    "ida_plugins": {
+        "plugins": [
+        ]
+    },
+    "vscode_extensions": {
+        "extensions": [
+            {
+                "id": "ms-python.debugpy",
+                "name": "Python Debug",
+                "description": "A Python debugger for Visual Studio Code."
+            },
+            {
+                "id": "ms-python.python",
+                "name": "Python",
+                "description": "A Python language server for Visual Studio Code."
+            },
+            {
+                "id": "akamud.vscode-theme-onedark",
+                "name": "One Dark Pro",
+                "description": "A dark theme for Visual Studio Code."
+            }
+        ]
+    },
+    "taskbar_pins": {
+        "pins": [
+            {
+                "id": "Microsoft.Windows.Explorer",
+                "name": "Windows Explorer",
+                "description": "The file manager for Windows."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\vscode\\current\\Code.exe",
+                "name": "Visual Studio Code",
+                "description": "A code editor redefined and optimized for building and debugging modern web and cloud applications."
+            },
+            {
+                "id": "%USERPROFILE%\\scoop\\apps\\windows-terminal\\current\\wt.exe",
+                "name": "Windows Terminal",
+                "description": "A modern terminal application for users of command-line tools and shells."
+            }
+        ]
+    },
+    "git_repositories": {
+        "repositories": [
+            {
+                "id": "https://github.com/Donaldduck8/fuxnet",
+                "name": "Fuxnet",
+                "description": "A collection of Python scripts to emulate various server types."
+            }
+        ]
+    },
+    "file_type_associations": {
+        "associations": {
+            "Text": {
+                "path": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\sublime_text.exe",
+                "program_name": "Sublime Text",
+                "arguments": [],
+                "file_types": [
+                    "txt",
+                    "log",
+                    "json",
+                    "xml",
+                    "csv",
+                    "ini",
+                    "cfg",
+                    "yaml",
+                    "yml"
+                ]
+            },
+            "Browser": {
+                "path": "%USERPROFILE%\\scoop\\apps\\chromium\\current\\chrome.exe",
+                "program_name": "Chromium",
+                "arguments": [],
+                "file_types": [
+                    "html",
+                    "htm",
+                    "shtml",
+                    "xht",
+                    "xhtml",
+                    "svg",
+                    "webp",
+                    "mhtml",
+                    "mht",
+                    "url",
+                    "webloc"
+                ]
+            },
+            "Archive": {
+                "path": "%USERPROFILE%\\scoop\\apps\\7zip\\current\\7zFM.exe",
+                "program_name": "7-Zip",
+                "arguments": [],
+                "file_types": [
+                    "7z",
+                    "zip",
+                    "rar",
+                    "tar",
+                    "gz",
+                    "bz2",
+                    "xz",
+                    "iso"
+                ]
+            }
+        }
+    },
+    "registry_changes": {
+        "changes": {
+            "Basics": [
+                {
+                    "description": "Add NpCapInstaller to RunOnce to install Npcap after a reboot.",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+                    "value": "NpCapInstaller",
+                    "data": "%USERPROFILE%\\scoop\\apps\\wireshark\\current\\npcap-installer.exe",
+                    "type": "REG_SZ"
+                },
+                {
+                    "description": "Enable dark mode for applications.",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                    "value": "AppsUseLightTheme",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Remove the task view button from the taskbar.",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                    "value": "ShowTaskViewButton",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Hide desktop icons.",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                    "value": "HideIcons",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Show full directory path in Explorer title bar",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState",
+                    "value": "FullPath",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Show known file extensions",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                    "value": "HideFileExt",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Show hidden files",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+                    "value": "Hidden",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Disable Windows Firewall (Standard Profile)",
+                    "hive": "HKEY_LOCAL_MACHINE",
+                    "key": "SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\StandardProfile",
+                    "value": "EnableFirewall",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Fix rare error (0xd000003a) when opening Windows Terminal",
+                    "hive": "HKEY_LOCAL_MACHINE",
+                    "key": "SYSTEM\\CurrentControlSet\\Services\\condrv",
+                    "value": "Start",
+                    "data": "2",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Disable search bar suggestions",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Policies\\Microsoft\\Windows",
+                    "value": "DisableSearchBoxSuggestions",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Disable search bar widget",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Search",
+                    "value": "SearchboxTaskbarMode",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Use Taskbar Pins",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer",
+                    "value": "LockedStartLayout",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Specify Taskbar Pins",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+                    "value": "StartLayoutFile",
+                    "data": "%USERPROFILE%\\Documents\\startLayout.xml",
+                    "type": "REG_SZ"
+                },
+                {
+                    "description": "Remove OneDrive pin from the Explorer window",
+                    "hive": "HKEY_CLASSES_ROOT",
+                    "key": "CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}",
+                    "value": "System.IsPinnedToNameSpaceTree",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Remove Taskbar Widgets",
+                    "hive": "HKEY_LOCAL_MACHINE",
+                    "key": "Software\\Policies\\Microsoft\\Dsh",
+                    "value": "AllowNewsAndInterests",
+                    "data": "0",
+                    "type": "REG_DWORD"
+                },
+                {
+                    "description": "Disable stupid ass path expansion in git Bash",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Environment",
+                    "value": "MSYS_NO_PATHCONV",
+                    "data": "1",
+                    "type": "REG_SZ"
+                },
+                {
+                    "description": "Make distutils use Windows SDK to enable portable build tools",
+                    "hive": "HKEY_CURRENT_USER",
+                    "key": "Environment",
+                    "value": "DISTUTILS_USE_SDK",
+                    "data": "1",
+                    "type": "REG_SZ"
+                }
+            ]
+        }
+    },
+    "misc_files": {
+        "files": {
+            "Yazi": [
+                {
+                    "description": "Configuration",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/init.lua",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/keymap.toml",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/theme.toml",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/yazi.toml"
+                    ],
+                    "target": "%APPDATA%\\yazi\\config"
+                },
+                {
+                    "description": "Donald's Previewer",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/yazi/plugins/donald.yazi/init.lua"
+                    ],
+                    "target": "%APPDATA%\\yazi\\config\\plugins\\donald.yazi"
+                },
+                {
+                    "description": "Ouch Previewer",
+                    "sources": [
+                        "https://github.com/ndtoan96/ouch.yazi/raw/main/init.lua"
+                    ],
+                    "target": "%APPDATA%\\yazi\\config\\plugins\\ouch.yazi"
+                }
+            ],
+            "Zsh": [
+                {
+                    "description": "Configuration",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.bash_profile",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.bashrc",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.p10k.zsh",
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/zsh/.zshrc"
+                    ],
+                    "target": "%USERPROFILE%"
+                }
+            ],
+            "VSCode": [
+                {
+                    "description": "Configuration",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/vscode_settings/settings.json"
+                    ],
+                    "target": "%USERPROFILE%\\scoop\\apps\\vscode\\current\\data\\user-data\\User"
+                },
+                {
+                    "description": "Configuration (Codium)",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/vscode_settings/settings.json"
+                    ],
+                    "target": "%USERPROFILE%\\scoop\\apps\\vscodium\\current\\data\\user-data\\User"
+                }
+            ],
+            "Terminal": [
+                {
+                    "description": "Configuration",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/terminal/settings.json"
+                    ],
+                    "target": "%USERPROFILE%\\scoop\\apps\\windows-terminal\\current\\settings"
+                }
+            ],
+            "Sublime Text": [
+                {
+                    "description": "Theme",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/sublime_packages/Packages/tokyonight_night.tmTheme"
+                    ],
+                    "target": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\Data\\Packages"
+                },
+                {
+                    "description": "Configuration",
+                    "sources": [
+                        "https://github.com/Donaldduck8/malware-analysis-configurations/raw/main/sublime_packages/Packages/User/Preferences.sublime-settings"
+                    ],
+                    "target": "%USERPROFILE%\\scoop\\apps\\sublime-text\\current\\Data\\Packages\\User"
+                }
+            ]
+        }
+    },
+    "settings": {
+        "enable_windows_safer": false,
+        "malware_folders": [
+        ],
+        "ida_py_switch": "%USERPROFILE%\\scoop\\apps\\python311\\current\\python311.dll",
+        "install_zsh_over_git": true,
+        "make_bindiff_available": false
+    }
+}
