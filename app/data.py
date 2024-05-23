@@ -323,6 +323,7 @@ default_configuration = {
                 ("malware-analysis-bucket/floss", "FLOSS", "A tool designed to automatically deobfuscate strings from malware samples."),
                 ("malware-analysis-bucket/cffexplorer", "CFF Explorer", "A PE editor."),
                 ("innoextract", "Inno Setup Extractor", "A tool for extracting Inno Setup installers."),
+                ("inno-setup", "Inno Setup", "A tool for creating installers which includes a Pascal Script Decompiler."),
                 ("uniextract2", "Universal Extractor 2", "A tool for extracting files from any type of archive."),
                 ("malware-analysis-bucket/bindiff", "BinDiff", "A tool for comparing binary files."),
             ],
@@ -843,6 +844,14 @@ default_configuration = {
                     "data": "1",
                     "type": "REG_SZ"
                 },
+                {
+                    "description": "Enable native sudo in new Windows releases",
+                    "hive": "HKEY_LOCAL_MACHINE",
+                    "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Sudo",
+                    "value": "Enabled",
+                    "data": "1",
+                    "type": "REG_DWORD"
+                }
             ]
         }
     },
