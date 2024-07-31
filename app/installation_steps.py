@@ -181,7 +181,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
     Raises:
         Exception: If the command execution fails and failure_okay is False.
     """
-    for _ in range(total_attempts):
+    for attempt_number in range(total_attempts):
         try:
             if command:
                 logger.info(f"Shell: '{command}'")
@@ -229,7 +229,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
                 with open(errors_p, "a+", encoding="utf-8") as f:
                     f.write(stderr)
 
-            if not failure_okay:
+            if not failure_okay and attempt_number >= total_attempts - 1:
                 raise e
         except Exception as e:
             trace = traceback.format_exc()
@@ -238,7 +238,7 @@ def run_shell_command(command: str = None, powershell_command: str = None, comma
             with open(errors_p, "a+", encoding="utf-8") as f:
                 f.write(trace + "\n")
 
-            if not failure_okay:
+            if not failure_okay and attempt_number >= total_attempts - 1:
                 raise e
 
     if needs_refresh:
@@ -985,7 +985,7 @@ def git_clone_repository(url, output_dir=None):
 
     os.makedirs(output_dir, exist_ok=True)
 
-    run_shell_command(command=f"git.exe clone {url} {output_dir}")
+    run_shell_command(command=f"git.exe clone {url} {output_dir}", failure_okay=True)
 
 
 def clone_git_repositories(repositories: List[data.GitRepository]):
