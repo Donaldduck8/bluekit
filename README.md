@@ -48,6 +48,7 @@ Bluekit supports the following command-line arguments:
 - `--config <path>`: Provide the installer with a custom configuration.
 - `--bundle <path>`: Provide the installer with a bundled file containing bundled applications and/or a Scoop cache.
 - `--keep-cache`: Do not delete Scoop cache files.
+- `--ignore-defender`: Skip the real-time protection check.
 
 ## Bundled Files
 
