@@ -29,6 +29,7 @@ parser.add_argument('-s', '--silent', action='store_true', help='Run the script 
 parser.add_argument('-c', '--config', help='Path to the configuration file', type=Path)
 parser.add_argument('--bundle', help='Path to the bundled .zip file', type=Path)
 parser.add_argument('--keep-cache', action='store_true', help='Keep the cache directory after the script finishes')
+parser.add_argument('--ignore-defender', action='store_true', help='Ignore Windows Defender Real-Time Protection')
 args = parser.parse_args()
 
 if args and args.keep_cache:
@@ -66,7 +67,7 @@ def ensure_suitable_environment():
             )
             sys.exit()
 
-        if utils.is_defender_real_time_protection_enabled():
+        if not args.ignore_defender and utils.is_defender_real_time_protection_enabled():
             if pyi_splash:
                 pyi_splash.close()
 
